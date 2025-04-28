@@ -1,4 +1,4 @@
-package br.ifsp.demo.security.user;
+package br.ifsp.web.security.user;
 
 import jakarta.persistence.*;
 import lombok.*;

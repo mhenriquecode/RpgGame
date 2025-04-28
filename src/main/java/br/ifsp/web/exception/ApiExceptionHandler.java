@@ -1,4 +1,4 @@
-package br.ifsp.demo.exception;
+package br.ifsp.web.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
