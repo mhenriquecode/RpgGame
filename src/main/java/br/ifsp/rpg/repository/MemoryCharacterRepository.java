@@ -22,4 +22,9 @@ public class MemoryCharacterRepository implements CharacterRepository {
     public Optional<RpgCharacter> findById(UUID id) {
         return Optional.ofNullable(characters.get(id));
     }
+
+    @Override
+    public void delete(UUID id) {
+        characters.remove(id);
+    }
 }

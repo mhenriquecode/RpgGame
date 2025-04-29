@@ -34,11 +34,14 @@ public class CharacterService {
         repository.save(character);
     }
 
-    public Optional<RpgCharacter> getCharacter(UUID uuid) {
-        return repository.findById(uuid);
+    public Optional<RpgCharacter> getCharacter(UUID id) {
+        if(repository.findById(id).isEmpty()) throw new NullPointerException("Character not found");
+        return repository.findById(id);
     }
 
 
-
-
+    public void delete(UUID id) {
+        if(repository.findById(id).isEmpty()) throw new NullPointerException("Character not found");
+        repository.delete(id);
+    }
 }

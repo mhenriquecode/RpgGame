@@ -67,7 +67,7 @@ public class RpgCharacterRepositoryTest {
     void deleteExistingCharacterTest(){
         when(repository.findById(Mockito.any())).thenReturn(Optional.of(character));
 
-        service.delete(character);
+        service.delete(character.getId());
 
         assertThat(service.getCharacter(character.getId())).isEqualTo(Optional.empty());
     }
