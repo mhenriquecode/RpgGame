@@ -41,7 +41,8 @@ public class CharacterService {
 
 
     public void delete(UUID id) {
-        if(repository.findById(id).isEmpty()) throw new NullPointerException("Character not found");
+        if(repository.findById(id).isEmpty())
+            throw new NullPointerException("Character not found");
         repository.delete(id);
     }
 }

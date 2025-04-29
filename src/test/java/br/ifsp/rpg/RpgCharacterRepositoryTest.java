@@ -18,6 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
@@ -70,4 +71,11 @@ public class RpgCharacterRepositoryTest {
         verify(repository).delete(character.getId());
     }
 
+    @Test
+    @Tag("Unit Test")
+    @DisplayName("Delete non existing character test")
+    void deleteNonExistingCharacterTest(){
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> service.delete(UUID.randomUUID()));
+    }
 }
