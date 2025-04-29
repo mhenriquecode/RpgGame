@@ -3,6 +3,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import br.ifsp.rpg.model.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -10,6 +12,9 @@ import java.util.Random;
 public class RpgTest {
 
     @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Creating valid character test")
     public void creatingValidCharacterTest() {
         Weapon axe = new Weapon("Axe", 2, 6);
         Race orc = new Race("Orc", 0, 5, 0, 0);
@@ -24,7 +29,10 @@ public class RpgTest {
     }
 
     @Test
-    public void calculateAttributesTest(){
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Calculate character attributes test")
+    public void calculateCharacterAttributesTest(){
         Weapon sword = new Weapon("Sword", 3, 4);
         Race dwarf = new Race("Dwarf", 20, 0, 5, 0);
         ClassType paladin = ClassType.PALADIN;
@@ -37,6 +45,9 @@ public class RpgTest {
     }
 
     @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Must create valid combat between two character")
     void mustCreateValidCombatBetweenTwoCharacters(){
         Race human = new Race("Human", 5, 2, 2, 2);
         Weapon sword = new Weapon("Sword", 3, 4);
@@ -51,6 +62,9 @@ public class RpgTest {
     }
 
     @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Player one starts the combat when his speed is grater than player two's speed")
     void playerOneWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerTwoTest(){
         Race human = new Race("Human", 5, 2, 2, 2);
         Weapon sword = new Weapon("Sword", 3, 4);
@@ -67,7 +81,11 @@ public class RpgTest {
 
         assertThat(first).isEqualTo(player1);
     }
+
     @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Player two starts the combat when his speed is grater than player one's speed")
     void playerTwoWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerOneTest(){
         Race human = new Race("Human", 5, 2, 2, 2);
         Weapon sword = new Weapon("Sword", 3, 4);
@@ -86,6 +104,9 @@ public class RpgTest {
     }
 
     @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Player one starts when speed is equal to player two's speed")
     void playerOneStartsWhenSpeedIsEqualToThePlayerTwo(){
         Race human = new Race("Human", 5, 2, 2, 2);
         Weapon sword = new Weapon("Sword", 3, 4);
