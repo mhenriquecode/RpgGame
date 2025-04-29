@@ -11,6 +11,8 @@ import java.util.UUID;
 public class MemoryCharacterRepository implements CharacterRepository {
     Map<UUID, RpgCharacter> characters = new HashMap<>();
 
+
+
     @Override
     public void save(RpgCharacter character) {
         characters.put(character.getId(), character);

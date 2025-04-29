@@ -17,6 +17,18 @@ public class CharacterService {
     }
 
     public void save(RpgCharacter character) {
+        if(character.getId() == null) throw new NullPointerException("Character id is null");
+        if(character.getName() == null || character.getName().isEmpty())
+            throw new NullPointerException("Character name is null or empty");
+        if(character.getClassType() == null)
+            throw new NullPointerException("Character class type is null");
+        if(character.getRace() == null)
+            throw new NullPointerException("Character race is null");
+        if(character.getWeapon() == null)
+            throw new NullPointerException("Character weapon is null");
+        if(repository.findById(character.getId()).isPresent())
+            throw new IllegalArgumentException("Character already exists");
+
         repository.save(character);
     }
 
