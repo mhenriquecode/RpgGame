@@ -15,7 +15,7 @@ public class RpgTest {
     @Tag("Unit Test")
     @Tag("TDD")
     @DisplayName("Creating valid character test")
-    public void creatingValidCharacterTest() {
+    void creatingValidCharacterTest() {
         Weapon axe = new Weapon("Axe", 2, 6);
         Race orc = new Race("Orc", 0, 5, 0, 0);
         ClassType warrior = ClassType.WARRIOR;
@@ -32,7 +32,7 @@ public class RpgTest {
     @Tag("Unit Test")
     @Tag("TDD")
     @DisplayName("Calculate character attributes test")
-    public void calculateCharacterAttributesTest(){
+    void calculateCharacterAttributesTest(){
         Weapon sword = new Weapon("Sword", 3, 4);
         Race dwarf = new Race("Dwarf", 20, 0, 5, 0);
         ClassType paladin = ClassType.PALADIN;
