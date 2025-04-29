@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class RpgTest {
 
     @Test
-    public void creatingValidCharcaterTest() {
+    public void creatingValidCharacterTest() {
         Weapon axe = new Weapon("Axe", 2, 6);
         Race orc = new Race("Orc", 0, 5, 0, 0);
         ClassType warrior = ClassType.WARRIOR;
@@ -24,14 +24,15 @@ public class RpgTest {
     }
 
     @Test
-    public void test(){
+    public void calculateAttributesTest(){
         Weapon sword = new Weapon("Sword", 3, 4);
         Race dwarf = new Race("Dwarf", 20, 0, 5, 0);
         ClassType paladin = ClassType.PALADIN;
         RpgCharacter character = new RpgCharacter("Character", paladin, dwarf, sword);
 
-        assertThat(character.getId()).isNotNull();
         assertThat(character.getHealth()).isEqualTo(130);
-        assertThat(character.getStrength()).isEqualTo();
+        assertThat(character.getStrength()).isEqualTo(10);
+        assertThat(character.getDefense()).isEqualTo(5);
+        assertThat(character.getSpeed()).isEqualTo(5);
     }
 }
