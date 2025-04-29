@@ -9,9 +9,9 @@ public class RpgCharacter {
     @Getter private String name;
     @Getter private String className;
     @Getter private String race;
-    @Getter private String weapon;
+    @Getter private Weapon weapon;
 
-    public RpgCharacter(String name, String className, String race, String weapon) {
+    public RpgCharacter(String name, String className, String race, Weapon weapon) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.className = className;
