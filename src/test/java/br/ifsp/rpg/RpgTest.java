@@ -16,7 +16,7 @@ public class RpgTest {
 
         assertThat(character.getId()).isNotNull();
         assertThat(character.getName()).isEqualTo("Character");
-        assertThat(character.getRace().getName()).isEqualTo(orc.getName);
+        assertThat(character.getRace().name()).isEqualTo(orc.name());
         assertThat(character.getWeapon().name()).isEqualTo(axe.name());
     }
 }
