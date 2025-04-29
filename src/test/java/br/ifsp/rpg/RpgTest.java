@@ -35,4 +35,18 @@ public class RpgTest {
         assertThat(character.getDefense()).isEqualTo(15);
         assertThat(character.getSpeed()).isEqualTo(5);
     }
+
+    @Test
+    void mustCreateValidCombatBetweenTwoCharacters(){
+        Race human = new Race("Human", 5, 2, 2, 2);
+        Weapon sword = new Weapon("Sword", 3, 4);
+        RpgCharacter rpgCharacter1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
+
+        Race orc = new Race("Orc", 0, 5, 0, 0);
+        Weapon axe = new Weapon("Axe", 2, 6);
+        RpgCharacter rpgCharacter2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
+
+        Combat combat = new Combat(rpgCharacter1, rpgCharacter2);
+        assertThat(combat).isNotNull();
+    }
 }
