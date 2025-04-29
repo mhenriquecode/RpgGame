@@ -6,30 +6,47 @@ import br.ifsp.rpg.model.Race;
 import br.ifsp.rpg.model.RpgCharacter;
 import br.ifsp.rpg.model.Weapon;
 import br.ifsp.rpg.repository.MemoryCharacterRepository;
+import br.ifsp.rpg.service.CharacterService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(MockitoExtension.class)
 public class RpgCharacterRepositoryTest {
+
+    @Mock CharacterRepository repository;
+    @InjectMocks CharacterService service;
+
+    RpgCharacter character;
+
+    @BeforeEach
+    void setUp() {
+        Race human = new Race("Human", 5, 2, 2, 2);
+        Weapon dagger = new Weapon("Dagger", 4, 3);
+        character = new RpgCharacter("Character", ClassType.DUELIST, human, dagger);
+    }
 
     @Test
     @Tag("Unit Test")
     @Tag("TDD")
     @DisplayName("Save character test")
     void saveCharacterTest(){
-        Race human = new Race("Human", 5, 2, 2, 2);
-        Weapon dagger = new Weapon("Dagger", 4, 3);
-        ClassType duelist = ClassType.DUELIST;
-        RpgCharacter character = new RpgCharacter("Character", duelist, human, dagger);
+        when(repository.findById(Mockito.any())).thenReturn(Optional.of(character));
 
-        MemoryCharacterRepository repository = new MemoryCharacterRepository();
-        repository.save(character);
+        service.save(character);
 
         assertThat(character.getId()).isNotNull();
-        assertThat(repository.findById(character.getId())).isEqualTo(Optional.of(character));
+        assertThat(service.getCharacter(character.getId())).isEqualTo(Optional.of(character));
     }
 }
