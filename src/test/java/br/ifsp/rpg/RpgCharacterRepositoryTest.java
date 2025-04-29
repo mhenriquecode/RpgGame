@@ -52,7 +52,6 @@ public class RpgCharacterRepositoryTest {
 
     @Test
     @Tag("Unit Test")
-    @Tag("TDD")
     @DisplayName("Trying to save invalid character test")
     void tryingToSaveInvalidCharacterTest(){
         Race human = new Race("Human", 5, 2, 2, 2);
@@ -60,4 +59,17 @@ public class RpgCharacterRepositoryTest {
                 .isThrownBy(() -> service.save(new RpgCharacter(
                         "New Character", ClassType.BERSERK, human,null)));
     }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Delete existing character test")
+    void deleteExistingCharacterTest(){
+        when(repository.findById(Mockito.any())).thenReturn(Optional.of(character));
+
+        service.delete(character);
+
+        assertThat(service.getCharacter(character.getId())).isEqualTo(Optional.empty());
+    }
+
 }

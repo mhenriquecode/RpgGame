@@ -5,10 +5,12 @@ import br.ifsp.rpg.model.ClassType;
 import br.ifsp.rpg.model.Race;
 import br.ifsp.rpg.model.RpgCharacter;
 import br.ifsp.rpg.model.Weapon;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class CharacterService {
     private final CharacterRepository repository;
 
@@ -35,6 +37,8 @@ public class CharacterService {
     public Optional<RpgCharacter> getCharacter(UUID uuid) {
         return repository.findById(uuid);
     }
+
+
 
 
 }
