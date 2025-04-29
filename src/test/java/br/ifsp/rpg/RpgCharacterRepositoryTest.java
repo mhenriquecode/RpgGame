@@ -1,12 +1,16 @@
 package br.ifsp.rpg;
 
+import br.ifsp.rpg.interfaces.CharacterRepository;
 import br.ifsp.rpg.model.ClassType;
 import br.ifsp.rpg.model.Race;
 import br.ifsp.rpg.model.RpgCharacter;
 import br.ifsp.rpg.model.Weapon;
+import br.ifsp.rpg.repository.MemoryCharacterRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,10 +26,10 @@ public class RpgCharacterRepositoryTest {
         ClassType duelist = ClassType.DUELIST;
         RpgCharacter character = new RpgCharacter("Character", duelist, human, dagger);
 
-        CharacterRepository repository = new CharacterRepository();
+        MemoryCharacterRepository repository = new MemoryCharacterRepository();
         repository.save(character);
 
         assertThat(character.getId()).isNotNull();
-        assertThat(repository.findById(character.getId())).isEqualTo(character);
+        assertThat(repository.findById(character.getId())).isEqualTo(Optional.of(character));
     }
 }
