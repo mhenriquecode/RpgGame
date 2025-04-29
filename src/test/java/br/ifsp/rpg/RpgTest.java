@@ -102,7 +102,25 @@ public class RpgTest {
 
         RpgCharacter first = combat.getFirstToPlay();
         assertThat(first).isEqualTo(player1);
+    }
 
+    @Test
+    void playerTwoStartsWhenSpeedIsEqualToThePlayerOne(){
+        Race human = new Race("Human", 5, 2, 2, 2);
+        Weapon sword = new Weapon("Sword", 3, 4);
+        RpgCharacter player1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
+        Weapon axe = new Weapon("Axe", 2, 6);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, human, axe);
+
+        Combat combat = new Combat(player1, player2) {
+            @Override
+            public int rollD2() {
+                return 2;
+            }
+        };
+
+        RpgCharacter first = combat.getFirstToPlay();
+        assertThat(first).isEqualTo(player2);
     }
 
 }
