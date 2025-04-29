@@ -46,4 +46,23 @@ public class RpgTest {
         Combat combat = new Combat(rpgCharacter1, rpgCharacter2);
         assertThat(combat).isNotNull();
     }
+
+    @Test
+    void playerOneWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerTwoTest(){
+        Race human = new Race("Human", 5, 2, 2, 2);
+        Weapon sword = new Weapon("Sword", 3, 4);
+        RpgCharacter player1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
+
+        Weapon axe = new Weapon("Axe", 2, 6);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, human, axe);
+
+        // Ambos personagens com mesma velocidade
+        Combat combat = new Combat(player1, player2);
+        assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
+
+        RpgCharacter first = combat.getFirstToPlay();
+
+        assertThat(first).isEqualTo(player1);
+    }
+
 }
