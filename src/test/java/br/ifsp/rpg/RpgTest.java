@@ -1,6 +1,7 @@
 package br.ifsp.rpg;
 import static org.assertj.core.api.Assertions.*;
 
+import br.ifsp.rpg.model.Race;
 import br.ifsp.rpg.model.RpgCharacter;
 import br.ifsp.rpg.model.Weapon;
 import org.junit.jupiter.api.Test;
