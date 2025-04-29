@@ -5,9 +5,9 @@ import lombok.Getter;
 @Getter
 public enum ClassType {
     BERSERK(20, 5, 0, 0),
-    DUELIST(0, 5, 5, 0),
-    PALADIN(10, 0, 0, 5),
-    WARRIOR(0, 5, 0, 5);
+    DUELIST(0, 5, 0, 5),
+    PALADIN(10, 0, 5, 0),
+    WARRIOR(0, 5, 5, 0);
 
     private final int bonusHealth;
     private final int bonusStrength;

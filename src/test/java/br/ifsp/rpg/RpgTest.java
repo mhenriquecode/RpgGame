@@ -30,9 +30,9 @@ public class RpgTest {
         ClassType paladin = ClassType.PALADIN;
         RpgCharacter character = new RpgCharacter("Character", paladin, dwarf, sword);
 
-        assertThat(character.getHealth()).isEqualTo(130);
+        assertThat(character.getMaxHealth()).isEqualTo(130);
         assertThat(character.getStrength()).isEqualTo(10);
-        assertThat(character.getDefense()).isEqualTo(5);
+        assertThat(character.getDefense()).isEqualTo(15);
         assertThat(character.getSpeed()).isEqualTo(5);
     }
 }
