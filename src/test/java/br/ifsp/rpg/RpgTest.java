@@ -126,6 +126,9 @@ public class RpgTest {
     }
 
     @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Player two starts when speed is equal to player one's speed")
     void playerTwoStartsWhenSpeedIsEqualToThePlayerOne(){
         Race human = new Race("Human", 5, 2, 2, 2);
         Weapon sword = new Weapon("Sword", 3, 4);
