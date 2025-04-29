@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RpgCharacterRepositoryTest {
@@ -48,5 +48,16 @@ public class RpgCharacterRepositoryTest {
 
         assertThat(character.getId()).isNotNull();
         assertThat(service.getCharacter(character.getId())).isEqualTo(Optional.of(character));
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Trying to save invalid character test")
+    void tryingToSaveInvalidCharacterTest(){
+        Race human = new Race("Human", 5, 2, 2, 2);
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> service.save(new RpgCharacter(
+                        "New Character", ClassType.BERSERK, human,null)));
     }
 }
