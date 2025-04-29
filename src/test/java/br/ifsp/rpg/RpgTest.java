@@ -1,8 +1,11 @@
 package br.ifsp.rpg;
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import br.ifsp.rpg.model.*;
 import org.junit.jupiter.api.Test;
+
+import java.util.Random;
 
 public class RpgTest {
 
@@ -90,13 +93,16 @@ public class RpgTest {
         Weapon axe = new Weapon("Axe", 2, 6);
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, human, axe);
 
-        assertThat(player1.getSpeed()).isEqualTo(player2.getSpeed());
-
-        Combat combat = new Combat(player1, player2);
+        Combat combat = new Combat(player1, player2) {
+            @Override
+            public int rollD2() {
+                return 1;
+            }
+        };
 
         RpgCharacter first = combat.getFirstToPlay();
-
         assertThat(first).isEqualTo(player1);
+
     }
 
 }

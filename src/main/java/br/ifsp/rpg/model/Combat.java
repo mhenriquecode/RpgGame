@@ -1,5 +1,7 @@
 package br.ifsp.rpg.model;
 
+import lombok.Getter;
+
 import java.util.Random;
 
 public class Combat {
@@ -18,9 +20,13 @@ public class Combat {
         } else if (player2.getSpeed() > player1.getSpeed()) {
             return player2;
         } else {
-            int d2 = random.nextInt(2) + 1;
+            int d2 = rollD2();
             return d2 == 1 ? player1 : player2;
         }
+    }
+
+    public int rollD2() {
+        return random.nextInt(2) + 1;
     }
 
 }
