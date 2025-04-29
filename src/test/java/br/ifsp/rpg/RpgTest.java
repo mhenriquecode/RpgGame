@@ -1,6 +1,7 @@
 package br.ifsp.rpg;
 import static org.assertj.core.api.Assertions.*;
 
+import br.ifsp.rpg.model.Race;
 import br.ifsp.rpg.model.RpgCharacter;
 import br.ifsp.rpg.model.Weapon;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ public class RpgTest {
 
         assertThat(character.getId()).isNotNull();
         assertThat(character.getName()).isEqualTo("Character");
-        assertThat(character.getRace().getName()).isEqualTo(orc.getName);
+        assertThat(character.getRace().name()).isEqualTo(orc.name());
         assertThat(character.getWeapon().name()).isEqualTo(axe.name());
     }
 }
