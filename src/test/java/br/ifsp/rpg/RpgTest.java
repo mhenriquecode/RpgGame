@@ -22,4 +22,16 @@ public class RpgTest {
         assertThat(character.getWeapon().name()).isEqualTo(axe.name());
         assertThat(character.getClassType()).isEqualTo(warrior);
     }
+
+    @Test
+    public void test(){
+        Weapon sword = new Weapon("Sword", 3, 4);
+        Race dwarf = new Race("Dwarf", 20, 0, 5, 0);
+        ClassType paladin = ClassType.PALADIN;
+        RpgCharacter character = new RpgCharacter("Character", paladin, dwarf, sword);
+
+        assertThat(character.getId()).isNotNull();
+        assertThat(character.getHealth()).isEqualTo(130);
+        assertThat(character.getStrength()).isEqualTo();
+    }
 }
