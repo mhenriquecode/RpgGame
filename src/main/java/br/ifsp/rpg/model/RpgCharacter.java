@@ -7,14 +7,14 @@ import java.util.UUID;
 public class RpgCharacter {
     @Getter private final UUID id;
     @Getter private String name;
-    @Getter private String className;
+    @Getter private ClassType classType;
     @Getter private Race race;
     @Getter private Weapon weapon;
 
-    public RpgCharacter(String name, String className, Race race, Weapon weapon) {
+    public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon) {
         this.id = UUID.randomUUID();
         this.name = name;
-        this.className = className;
+        this.classType = classType;
         this.race = race;
         this.weapon = weapon;
     }
