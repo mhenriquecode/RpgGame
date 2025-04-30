@@ -147,4 +147,22 @@ public class RpgTest {
         assertThat(first).isEqualTo(player2);
     }
 
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Must create valid turn between one combat with two characters")
+    void mustCreateValidTurnBetweenOneCombatWithTwoCharacters(){
+        Race human = new Race("Human", 5, 2, 2, 2);
+        Weapon sword = new Weapon("Sword", 3, 4);
+        RpgCharacter rpgCharacter1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
+
+        Race orc = new Race("Orc", 0, 5, 0, 0);
+        Weapon axe = new Weapon("Axe", 2, 6);
+        RpgCharacter rpgCharacter2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
+
+        Turn turn = new Turn(rpgCharacter1, rpgCharacter2);
+        assertThat(turn).isNotNull();
+    }
+
+
 }
