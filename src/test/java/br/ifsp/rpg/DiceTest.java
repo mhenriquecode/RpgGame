@@ -7,6 +7,8 @@ import br.ifsp.rpg.model.Weapon;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Random;
 
@@ -21,12 +23,26 @@ public class DiceTest {
     @DisplayName("hit dice should return minimum value")
     void hitDiceShouldReturnMinimumValue(){
         Random mockRandom = mock(Random.class);
-        when(mockRandom.nextInt(20)).thenReturn(0); // +1 => 1
+        when(mockRandom.nextInt(20)).thenReturn(0);
 
         DiceRoll hitDice = new RollHitDice(mockRandom);
         int result = hitDice.roll();
 
         assertEquals(1, result);
+        verify(mockRandom).nextInt(20);
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @DisplayName("hit dice should return max value")
+    void hitDiceShouldReturnMaxValue(){
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextInt(20)).thenReturn(19);
+
+        DiceRoll hitDice = new RollHitDice(mockRandom);
+        int result = hitDice.roll();
+
+        assertEquals(20, result);
         verify(mockRandom).nextInt(20);
     }
 
@@ -38,7 +54,7 @@ public class DiceTest {
         Weapon weapon = new Weapon("testeWeapon", 2, 6);
 
         Random mockRandom = mock(Random.class);
-        when(mockRandom.nextInt(6)).thenReturn(0, 5); // 1 + 6
+        when(mockRandom.nextInt(6)).thenReturn(0, 5);
 
         DiceRoll attackDice = new RollAttackDice(weapon, mockRandom);
         int result = attackDice.roll();
