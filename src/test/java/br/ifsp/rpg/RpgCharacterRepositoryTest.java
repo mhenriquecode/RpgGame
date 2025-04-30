@@ -40,6 +40,14 @@ public class RpgCharacterRepositoryTest {
 
     @Test
     @Tag("Unit Test")
+    @DisplayName("Find character by id")
+    void findCharacterByIdTest(){
+        when(repository.findById(character.getId())).thenReturn(Optional.of(character));
+        assertThat(service.getCharacter(character.getId())).isEqualTo(Optional.of(character));
+    }
+
+    @Test
+    @Tag("Unit Test")
     @Tag("TDD")
     @DisplayName("Save character test")
     void saveCharacterTest(){
@@ -91,7 +99,6 @@ public class RpgCharacterRepositoryTest {
                 .isThrownBy(() -> service.update(UUID.randomUUID(), "New Name", ClassType.WARRIOR, newRace, newWeapon));
     }
 
-
     @Test
     @Tag("Unit Test")
     @Tag("TDD")
@@ -109,4 +116,5 @@ public class RpgCharacterRepositoryTest {
         assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> service.delete(UUID.randomUUID()));
     }
+
 }

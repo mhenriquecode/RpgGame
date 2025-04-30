@@ -43,5 +43,5 @@ public class RpgTest {
         assertThat(character.getDefense()).isEqualTo(15);
         assertThat(character.getSpeed()).isEqualTo(5);
     }
-    
+
 }
