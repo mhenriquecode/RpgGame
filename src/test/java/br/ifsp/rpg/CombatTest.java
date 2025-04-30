@@ -18,6 +18,7 @@ public class CombatTest {
     private Race orc;
     private Weapon sword;
     private Weapon axe;
+    private RpgCharacter player1;
     private Random mockRandom;
 
     @BeforeEach
@@ -27,6 +28,7 @@ public class CombatTest {
         orc = new Race("Orc", 0, 5, 0, 0);
         axe = new Weapon("Axe", 2, 6);
         mockRandom = mock(Random.class);
+        player1 = new RpgCharacter("Character1", ClassType.PALADIN, human, sword);
     }
 
     @Test
@@ -34,9 +36,8 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Must create valid combat between two character")
     void mustCreateValidCombatBetweenTwoCharacters(){
-        RpgCharacter rpgCharacter1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
-        RpgCharacter rpgCharacter2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
-        Combat combat = new Combat(rpgCharacter1, rpgCharacter2);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
+        Combat combat = new Combat(player1, player2);
 
         assertThat(combat).isNotNull();
     }
@@ -46,7 +47,6 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Player one starts the combat when his speed is grater than player two's speed")
     void playerOneWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerTwoTest(){
-        RpgCharacter player1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
         Combat combat = new Combat(player1, player2);
 
@@ -62,15 +62,14 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Player two starts the combat when his speed is grater than player one's speed")
     void playerTwoWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerOneTest(){
-        RpgCharacter player1 = new RpgCharacter("Candidor", ClassType.PALADIN, orc, sword);
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, human, axe);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
         Combat combat = new Combat(player1, player2);
 
-        assertThat(player2.getSpeed()).isGreaterThan(player1.getSpeed());
+        assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
 
         RpgCharacter first = combat.getFirstToPlay();
 
-        assertThat(first).isEqualTo(player2);
+        assertThat(first).isEqualTo(player1);
     }
 
     @Test
@@ -80,7 +79,6 @@ public class CombatTest {
     void playerOneStartsWhenSpeedIsEqualToThePlayerTwo(){
         when(mockRandom.nextInt(2)).thenReturn(0);
 
-        RpgCharacter player1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, human, axe);
 
         Combat combat = new Combat(player1, player2, mockRandom);
@@ -96,7 +94,6 @@ public class CombatTest {
     void playerTwoStartsWhenSpeedIsEqualToThePlayerOne(){
         when(mockRandom.nextInt(2)).thenReturn(1);
 
-        RpgCharacter player1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, human, axe);
 
         Combat combat = new Combat(player1, player2, mockRandom);
@@ -110,11 +107,17 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Must create valid turn between one combat with two characters")
     void mustCreateValidTurnBetweenOneCombatWithTwoCharacters(){
-        RpgCharacter rpgCharacter1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
-        RpgCharacter rpgCharacter2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
-        Turn turn = new Turn(rpgCharacter1, rpgCharacter2);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
+        Turn turn = new Turn(player1, player2);
 
         assertThat(turn).isNotNull();
     }
 
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Calculate character attack test")
+    void calculateCharacterAttackTest(){
+        assertThat(player.attack()).isGratherThan(10);
+    }
 }

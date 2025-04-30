@@ -125,5 +125,4 @@ public class RpgCharacterRepositoryTest {
         assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> service.delete(UUID.randomUUID()));
     }
-
 }
