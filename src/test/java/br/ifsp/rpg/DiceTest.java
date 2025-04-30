@@ -4,6 +4,7 @@ import br.ifsp.rpg.interfaces.DiceRoll;
 import br.ifsp.rpg.model.RollAttackDice;
 import br.ifsp.rpg.model.RollHitDice;
 import br.ifsp.rpg.model.Weapon;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -16,13 +17,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class DiceTest {
+    private Random mockRandom;
+
+    @BeforeEach
+    void setup() {
+        mockRandom = mock(Random.class);
+    }
 
     @Test
     @Tag("Unit Test")
     @Tag("TDD")
     @DisplayName("hit dice should return minimum value")
     void hitDiceShouldReturnMinimumValue(){
-        Random mockRandom = mock(Random.class);
         when(mockRandom.nextInt(20)).thenReturn(0);
 
         DiceRoll hitDice = new RollHitDice(mockRandom);
@@ -36,7 +42,6 @@ public class DiceTest {
     @Tag("Unit Test")
     @DisplayName("hit dice should return max value")
     void hitDiceShouldReturnMaxValue(){
-        Random mockRandom = mock(Random.class);
         when(mockRandom.nextInt(20)).thenReturn(19);
 
         DiceRoll hitDice = new RollHitDice(mockRandom);
@@ -53,7 +58,6 @@ public class DiceTest {
     void shouldReturnSumofSimulatedValuesForWeapon(){
         Weapon weapon = new Weapon("testeWeapon", 2, 6);
 
-        Random mockRandom = mock(Random.class);
         when(mockRandom.nextInt(6)).thenReturn(0, 5);
 
         DiceRoll attackDice = new RollAttackDice(weapon, mockRandom);
