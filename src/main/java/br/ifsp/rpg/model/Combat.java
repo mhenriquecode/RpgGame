@@ -19,6 +19,15 @@ public class Combat {
         RpgCharacter slower = faster == player1 ? player2 : player1;
 
         while(player1.getMaxHealth() > 0 && player2.getMaxHealth() > 0){
+            Turn turn = new Turn(faster, slower);
+
+            if (slower.getMaxHealth() <= 0) {
+                break;
+            }
+
+            RpgCharacter temp = faster;
+            faster = slower;
+            slower = temp;
 
         }
     }
