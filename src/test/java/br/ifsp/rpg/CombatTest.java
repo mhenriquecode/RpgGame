@@ -6,14 +6,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Random;
+
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CombatTest {
-    Race human;
-    Race orc;
-    Weapon sword;
-    Weapon axe;
-
+    private Race human;
+    private Race orc;
+    private Weapon sword;
+    private Weapon axe;
+    private Random mockRandom;
 
     @BeforeEach
     void setUp() {
@@ -21,6 +26,7 @@ public class CombatTest {
         sword = new Weapon("Sword", 3, 4);
         orc = new Race("Orc", 0, 5, 0, 0);
         axe = new Weapon("Axe", 2, 6);
+        mockRandom = mock(Random.class);
     }
 
     @Test
@@ -56,8 +62,8 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Player two starts the combat when his speed is grater than player one's speed")
     void playerTwoWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerOneTest(){
-        RpgCharacter player1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
+        RpgCharacter player1 = new RpgCharacter("Candidor", ClassType.PALADIN, orc, sword);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, human, axe);
         Combat combat = new Combat(player1, player2);
 
         assertThat(player2.getSpeed()).isGreaterThan(player1.getSpeed());
@@ -72,17 +78,14 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Player one starts when speed is equal to player two's speed")
     void playerOneStartsWhenSpeedIsEqualToThePlayerTwo(){
+        when(mockRandom.nextInt(2)).thenReturn(0); // retorna player1
+
         RpgCharacter player1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, human, axe);
 
-        Combat combat = new Combat(player1, player2) {
-            @Override
-            public int rollD2() {
-                return 1;
-            }
-        };
-
+        Combat combat = new Combat(player1, player2, mockRandom);
         RpgCharacter first = combat.getFirstToPlay();
+
         assertThat(first).isEqualTo(player1);
     }
 
