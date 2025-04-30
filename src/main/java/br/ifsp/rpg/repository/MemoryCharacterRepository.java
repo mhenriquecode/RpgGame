@@ -11,8 +11,6 @@ import java.util.UUID;
 public class MemoryCharacterRepository implements CharacterRepository {
     Map<UUID, RpgCharacter> characters = new HashMap<>();
 
-
-
     @Override
     public void save(RpgCharacter character) {
         characters.put(character.getId(), character);
@@ -22,6 +20,12 @@ public class MemoryCharacterRepository implements CharacterRepository {
     public Optional<RpgCharacter> findById(UUID id) {
         return Optional.ofNullable(characters.get(id));
     }
+
+    @Override
+    public void update(RpgCharacter character) {
+
+    }
+
 
     @Override
     public void delete(UUID id) {

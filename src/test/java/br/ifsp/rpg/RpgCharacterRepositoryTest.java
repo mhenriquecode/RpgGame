@@ -41,6 +41,23 @@ public class RpgCharacterRepositoryTest {
     @Test
     @Tag("Unit Test")
     @Tag("TDD")
+    @DisplayName("Find character by id test")
+    void findCharacterByIdTest(){
+        when(repository.findById(character.getId())).thenReturn(Optional.of(character));
+        assertThat(service.getCharacter(character.getId())).isEqualTo(Optional.of(character));
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @DisplayName("Trying to find character that does not exists")
+    void findCharacterThatDoesNotExistTest(){
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> service.getCharacter(UUID.randomUUID()));
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
     @DisplayName("Save character test")
     void saveCharacterTest(){
         when(repository.findById(Mockito.any())).thenReturn(Optional.of(character));
@@ -64,6 +81,36 @@ public class RpgCharacterRepositoryTest {
     @Test
     @Tag("Unit Test")
     @Tag("TDD")
+    @DisplayName("Update character test")
+    void updateCharacterTest(){
+        when(repository.findById(character.getId())).thenReturn(Optional.of(character));
+
+        Race newRace = new Race("Orc", 0, 5, 0, 0);
+        Weapon newWeapon = new Weapon("Sword", 3, 4);
+        service.update(character.getId(), "New Name", ClassType.PALADIN, newRace, newWeapon);
+
+        assertThat(character.getName()).isEqualTo("New Name");
+        assertThat(character.getClassType()).isEqualTo(ClassType.PALADIN);
+        assertThat(character.getRace()).isEqualTo(newRace);
+        assertThat(character.getWeapon()).isEqualTo(newWeapon);
+
+        verify(repository).update(character);
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @DisplayName("Trying to update non existing character")
+    void tryingToUpdateNonExistingCharacterTest(){
+        Race newRace = new Race("Orc", 0, 5, 0, 0);
+        Weapon newWeapon = new Weapon("Hammer", 1, 12);
+
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> service.update(UUID.randomUUID(), "New Name", ClassType.WARRIOR, newRace, newWeapon));
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
     @DisplayName("Delete existing character test")
     void deleteExistingCharacterTest(){
         when(repository.findById(Mockito.any())).thenReturn(Optional.of(character));
@@ -78,4 +125,5 @@ public class RpgCharacterRepositoryTest {
         assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> service.delete(UUID.randomUUID()));
     }
+
 }
