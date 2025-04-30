@@ -1,6 +1,7 @@
 package br.ifsp.rpg;
 
 import br.ifsp.rpg.interfaces.DiceRoll;
+import br.ifsp.rpg.model.RollAttackDice;
 import br.ifsp.rpg.model.RollHitDice;
 import br.ifsp.rpg.model.Weapon;
 import org.junit.jupiter.api.DisplayName;
@@ -34,16 +35,16 @@ public class DiceTest {
     @Tag("TDD")
     @DisplayName("should return sum of simulated values for weapon")
     void shouldReturnSumofSimulatedValuesForWeapon(){
-        Weapon weapon = new Weapon("testeWeapn", 2, 6);
+        Weapon weapon = new Weapon("testeWeapon", 2, 6);
 
         Random mockRandom = mock(Random.class);
-        when(mockRandom.nextInt(6)).thenReturn(0, 5);
+        when(mockRandom.nextInt(6)).thenReturn(0, 5); // 1 + 6
 
-        DiceRoll attackDice = new AttackDice(weapon, mockRandom);
+        DiceRoll attackDice = new RollAttackDice(weapon, mockRandom);
         int result = attackDice.roll();
 
-        assertEquals(6, result);
-        verify(mockRandom, timeout(2)).nextInt(6);
+        assertEquals(7, result);
+        verify(mockRandom, times(2)).nextInt(6);
 
     }
 }
