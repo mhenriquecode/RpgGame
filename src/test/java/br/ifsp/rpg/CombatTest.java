@@ -78,7 +78,7 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Player one starts when speed is equal to player two's speed")
     void playerOneStartsWhenSpeedIsEqualToThePlayerTwo(){
-        when(mockRandom.nextInt(2)).thenReturn(0); // retorna player1
+        when(mockRandom.nextInt(2)).thenReturn(0);
 
         RpgCharacter player1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, human, axe);
@@ -94,17 +94,14 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Player two starts when speed is equal to player one's speed")
     void playerTwoStartsWhenSpeedIsEqualToThePlayerOne(){
+        when(mockRandom.nextInt(2)).thenReturn(1);
+
         RpgCharacter player1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, human, axe);
 
-        Combat combat = new Combat(player1, player2) {
-            @Override
-            public int rollD2() {
-                return 2;
-            }
-        };
-
+        Combat combat = new Combat(player1, player2, mockRandom);
         RpgCharacter first = combat.getFirstToPlay();
+
         assertThat(first).isEqualTo(player2);
     }
 
