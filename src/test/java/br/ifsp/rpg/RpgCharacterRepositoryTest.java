@@ -63,20 +63,21 @@ public class RpgCharacterRepositoryTest {
 
     @Test
     @Tag("Unit Test")
+    @Tag("TDD")
     @DisplayName("Update character test")
     void updateCharacterTest(){
         when(repository.findById(character.getId())).thenReturn(Optional.of(character));
 
         Race newRace = new Race("Orc", 0, 5, 0, 0);
         Weapon newWeapon = new Weapon("Sword", 3, 4);
-        service.update(id, "New Name", ClassType.PALADIN, newRace, newWeapon);
+        service.update(character.getId(), "New Name", ClassType.PALADIN, newRace, newWeapon);
 
         assertThat(character.getName()).isEqualTo("New Name");
         assertThat(character.getClassType()).isEqualTo(ClassType.PALADIN);
         assertThat(character.getRace()).isEqualTo(newRace);
         assertThat(character.getWeapon()).isEqualTo(newWeapon);
 
-        verify(repository).save(character);
+        verify(repository).update(character);
     }
 
 
