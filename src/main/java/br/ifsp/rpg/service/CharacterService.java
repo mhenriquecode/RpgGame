@@ -41,7 +41,7 @@ public class CharacterService {
 
 
     public void update(UUID id, String newName, ClassType newClassType, Race newRace, Weapon newWeapon) {
-        if(repository.findById(id).isEmpty()) throw new NullPointerException("Character not found");
+        if(repository.findById(id).isEmpty()) throw new IllegalArgumentException("Character not found");
 
         RpgCharacter character = repository.findById(id).get();
         if(newName != null && !newName.isEmpty()) character.setName(newName);

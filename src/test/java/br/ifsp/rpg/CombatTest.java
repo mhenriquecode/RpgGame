@@ -113,7 +113,7 @@ public class CombatTest {
         RpgCharacter rpgCharacter1 = new RpgCharacter("Candidor", ClassType.PALADIN, human, sword);
         RpgCharacter rpgCharacter2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
         Turn turn = new Turn(rpgCharacter1, rpgCharacter2);
-        
+
         assertThat(turn).isNotNull();
     }
 

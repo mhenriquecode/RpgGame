@@ -84,11 +84,11 @@ public class RpgCharacterRepositoryTest {
     @Tag("Unit Test")
     @DisplayName("Trying to update non existing character")
     void tryingToUpdateNonExistingCharacterTest(){
-//        UUID id = UUID.randomUUID();
-//        when(repository.findById(id)).thenReturn(Optional.empty());
-//
-//        service.update(id, "New Name", );
-//        assertThatExceptionOfType(NullPointerException.class)
+        Race newRace = new Race("Orc", 0, 5, 0, 0);
+        Weapon newWeapon = new Weapon("Hammer", 1, 12);
+
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> service.update(UUID.randomUUID(), "New Name", ClassType.WARRIOR, newRace, newWeapon));
     }
 
 
