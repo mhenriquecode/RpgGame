@@ -14,6 +14,16 @@ public class Combat {
         this.player2 = player2;
     }
 
+    public void start(){
+        RpgCharacter faster = getFirstToPlay();
+        RpgCharacter slower = faster == player1 ? player2 : player1;
+
+        while(player1.getMaxHealth() > 0 && player2.getMaxHealth() > 0){
+
+        }
+    }
+
+
     public RpgCharacter getFirstToPlay() {
         if (player1.getSpeed() > player2.getSpeed()) {
             return player1;
