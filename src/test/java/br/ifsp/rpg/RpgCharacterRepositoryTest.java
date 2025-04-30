@@ -18,9 +18,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RpgCharacterRepositoryTest {
@@ -48,5 +49,33 @@ public class RpgCharacterRepositoryTest {
 
         assertThat(character.getId()).isNotNull();
         assertThat(service.getCharacter(character.getId())).isEqualTo(Optional.of(character));
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @DisplayName("Trying to save invalid character test")
+    void tryingToSaveInvalidCharacterTest(){
+        Race human = new Race("Human", 5, 2, 2, 2);
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> service.save(new RpgCharacter(
+                        "New Character", ClassType.BERSERK, human,null)));
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Delete existing character test")
+    void deleteExistingCharacterTest(){
+        when(repository.findById(Mockito.any())).thenReturn(Optional.of(character));
+        service.delete(character.getId());
+        verify(repository).delete(character.getId());
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @DisplayName("Delete non existing character test")
+    void deleteNonExistingCharacterTest(){
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> service.delete(UUID.randomUUID()));
     }
 }
