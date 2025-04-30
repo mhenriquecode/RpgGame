@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Random;
 import java.util.UUID;
 
 @Getter
@@ -25,6 +26,9 @@ public class RpgCharacter {
     private int speed;
     private int armor;
 
+    private RollAttackDice attackDie;
+    private Random random = new Random();
+
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon) {
         this.id = UUID.randomUUID();
         this.name = name;
@@ -37,5 +41,11 @@ public class RpgCharacter {
         this.defense = 5 + race.bonusDefense() + classType.getBonusDefense();
         this.speed = 5 + race.bonusSpeed() + classType.getBonusSpeed();
         this.armor = 10;
+
+        this.attackDie = new RollAttackDice(this.weapon);
+    }
+
+    public int attack() {
+        return strength + attackDie.roll();
     }
 }

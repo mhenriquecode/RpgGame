@@ -118,6 +118,6 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Calculate character attack test")
     void calculateCharacterAttackTest(){
-        assertThat(player.attack()).isGratherThan(10);
+        assertThat(player1.attack()).isGreaterThan(10);
     }
 }

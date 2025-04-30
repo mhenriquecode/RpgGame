@@ -65,6 +65,5 @@ public class DiceTest {
 
         assertEquals(7, result);
         verify(mockRandom, times(2)).nextInt(6);
-
     }
 }
