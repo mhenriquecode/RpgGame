@@ -1,5 +1,6 @@
 package br.ifsp.rpg;
 
+import br.ifsp.rpg.interfaces.DiceRoll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ public class DiceTest {
     @Test
     @DisplayName("hit dice should return minimum value")
     void hitDiceShouldReturnMinimumValue(){
-        DiceRoll mockDice = mock(DiceRoll);
+        DiceRoll mockDice = mock(DiceRoll.class);
 
         when(mockDice.roll()).thenReturn(1);
 
