@@ -40,10 +40,19 @@ public class RpgCharacterRepositoryTest {
 
     @Test
     @Tag("Unit Test")
-    @DisplayName("Find character by id")
+    @Tag("TDD")
+    @DisplayName("Find character by id test")
     void findCharacterByIdTest(){
         when(repository.findById(character.getId())).thenReturn(Optional.of(character));
         assertThat(service.getCharacter(character.getId())).isEqualTo(Optional.of(character));
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @DisplayName("Trying to find character that does not exists")
+    void findCharacterThatDoesNotExistTest(){
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> service.getCharacter(UUID.randomUUID()));
     }
 
     @Test
