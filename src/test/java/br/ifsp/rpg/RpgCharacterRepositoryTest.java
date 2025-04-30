@@ -80,6 +80,17 @@ public class RpgCharacterRepositoryTest {
         verify(repository).update(character);
     }
 
+    @Test
+    @Tag("Unit Test")
+    @DisplayName("Trying to update non existing character")
+    void tryingToUpdateNonExistingCharacterTest(){
+//        UUID id = UUID.randomUUID();
+//        when(repository.findById(id)).thenReturn(Optional.empty());
+//
+//        service.update(id, "New Name", );
+//        assertThatExceptionOfType(NullPointerException.class)
+    }
+
 
     @Test
     @Tag("Unit Test")
