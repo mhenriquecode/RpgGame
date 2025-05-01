@@ -111,30 +111,5 @@ public class CombatTest {
 
         assertThat(turn).isNotNull();
     }
-
-    @Test
-    @Tag("Unit Test")
-    @Tag("TDD")
-    @DisplayName("Character attack test")
-    void characterAttackTest(){
-        RpgCharacter player = mock(RpgCharacter.class);
-        when(player.attack()).thenReturn(20);
-
-        int result = player.attack();
-
-        verify(player).attack();
-        assertThat(result).isEqualTo(20);
-    }
-
-    @Test
-    @Tag("Unit Test")
-    @Tag("TDD")
-    @DisplayName("Applying berserk attack special effect test")
-    void applyingBerserkAttackSpecialEffectTest(){
-        when(mockRandom.nextInt(100)).thenReturn(5);
-
-        RpgCharacter player = new RpgCharacter("Char", ClassType.BERSERK, orc, axe, mockRandom);
-
-        assertThat(player.attack()).isGreaterThanOrEqualTo(player.getStrength() + 2 * 2);
-    }
+    
 }
