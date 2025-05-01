@@ -97,8 +97,9 @@ public class RpgTest {
 
         RpgCharacter player = new RpgCharacter("Character", ClassType.WARRIOR, human, sword, mockRandom);
         int oldDefense = player.getDefense();
+        int damage = player.attack();
 
-        assertThat(player.getDefense()).isEqualTo(oldDefense + player.attack());
+        assertThat(player.getDefense()).isEqualTo(oldDefense + damage);
         assertThat(player.getClassType()).isEqualTo(ClassType.WARRIOR);
     }
 }
