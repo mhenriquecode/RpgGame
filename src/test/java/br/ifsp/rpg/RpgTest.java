@@ -116,4 +116,17 @@ public class RpgTest {
         assertThat(player.getClassType()).isEqualTo(ClassType.PALADIN);
         assertThat(player.getHealth()).isGreaterThanOrEqualTo(118);
     }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Applying duelist special attack effect test")
+    void applyingDuelistSpecialAttackEffectTest() {
+        when(mockRandom.nextInt(100)).thenReturn(5);
+
+        RpgCharacter player = new RpgCharacter("Character", ClassType.DUELIST, human, sword, mockRandom);
+
+        assertThat(player.getClassType()).isEqualTo(ClassType.DUELIST);
+        assertThat(player.attack()).isGreaterThanOrEqualTo(player.getStrength() + 13);
+    }
 }
