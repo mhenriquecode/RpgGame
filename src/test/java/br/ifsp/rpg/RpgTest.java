@@ -88,5 +88,17 @@ public class RpgTest {
         assertThat(player.getClassType()).isEqualTo(ClassType.BERSERK);
     }
 
-    
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Applying warrior special attack effect test")
+    void applyingWarriorSpecialAttackEffectTest(){
+        when(mockRandom.nextInt(100)).thenReturn(5);
+
+        RpgCharacter player = new RpgCharacter("Character", ClassType.WARRIOR, human, sword, mockRandom);
+        int oldDefense = player.getDefense();
+
+        assertThat(player.getDefense()).isEqualTo(oldDefense + player.attack());
+        assertThat(player.getClassType()).isEqualTo(ClassType.WARRIOR);
+    }
 }
