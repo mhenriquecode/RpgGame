@@ -36,14 +36,16 @@ public class RpgCharacter {
         this.classType = classType;
         this.race = race;
         this.weapon = weapon;
+        initializeAttributes();
+        this.attackDie = new RollAttackDice(this.weapon);
+    }
 
+    public void initializeAttributes() {
         this.maxHealth = 100 + race.bonusHealth() + classType.getBonusHealth();
         this.strength = 10 + race.bonusStrength() + classType.getBonusStrength();
         this.defense = 5 + race.bonusDefense() + classType.getBonusDefense();
         this.speed = 5 + race.bonusSpeed() + classType.getBonusSpeed();
         this.armor = 10;
-
-        this.attackDie = new RollAttackDice(this.weapon);
     }
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon, Random random) {
