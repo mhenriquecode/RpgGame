@@ -61,7 +61,7 @@ public class RpgCharacter {
             if(this.classType == ClassType.BERSERK) attackDamage *= 2;
             if(this.classType == ClassType.WARRIOR) this.defense += attackDamage;
             if(this.classType == ClassType.PALADIN) this.health += attackDamage;
-
+            if(this.classType == ClassType.DUELIST) attackDamage += attackDie.roll();
         }
 
         return attackDamage;
