@@ -15,6 +15,8 @@ public class Turn {
             attack();
         } else if (actionChoice == 2){
             defend();
+        } else if (actionChoice == 3){
+            dodge();
         }
     }
 
@@ -22,6 +24,9 @@ public class Turn {
     }
 
     public void defend(){
+    }
+    public void dodge(){
+
     }
 
 }
