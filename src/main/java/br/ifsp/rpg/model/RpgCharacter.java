@@ -58,6 +58,7 @@ public class RpgCharacter {
 
         if(random.nextInt(100) + 1 <= 10) {
             if(this.classType == ClassType.BERSERK) attackDamage *= 2;
+            if(this.classType == ClassType.WARRIOR) this.defense += attackDamage;
         }
 
         return attackDamage;
