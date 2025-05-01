@@ -127,6 +127,6 @@ public class RpgTest {
         RpgCharacter player = new RpgCharacter("Character", ClassType.DUELIST, human, sword, mockRandom);
 
         assertThat(player.getClassType()).isEqualTo(ClassType.DUELIST);
-        assertThat(player.attack()).isGreaterThanOrEqualTo(player.getStrength() + 13);
+        assertThat(player.attack()).isStrictlyBetween(23, 41);
     }
 }
