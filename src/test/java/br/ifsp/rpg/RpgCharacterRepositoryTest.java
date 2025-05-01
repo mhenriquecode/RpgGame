@@ -77,6 +77,13 @@ public class RpgCharacterRepositoryTest {
 
     @Test
     @Tag("Unit Test")
+    @DisplayName("Return empty list when repository is empty")
+    void getAllCharactersEmptyTest(){
+        assertThat(service.getAllCharacters()).isEmpty();
+    }
+
+    @Test
+    @Tag("Unit Test")
     @Tag("TDD")
     @DisplayName("Save character test")
     void saveCharacterTest(){
