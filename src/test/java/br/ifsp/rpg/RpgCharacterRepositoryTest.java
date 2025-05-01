@@ -29,12 +29,14 @@ public class RpgCharacterRepositoryTest {
     @Mock CharacterRepository repository;
     @InjectMocks CharacterService service;
 
+    Race human;
+    Weapon dagger;
     RpgCharacter character;
 
     @BeforeEach
     void setUp() {
-        Race human = new Race("Human", 5, 2, 2, 2);
-        Weapon dagger = new Weapon("Dagger", 4, 3);
+        human = new Race("Human", 5, 2, 2, 2);
+        dagger = new Weapon("Dagger", 4, 3);
         character = new RpgCharacter("Character", ClassType.DUELIST, human, dagger);
     }
 
@@ -61,7 +63,7 @@ public class RpgCharacterRepositoryTest {
     @DisplayName("Save character test")
     void saveCharacterTest(){
         when(repository.findById(Mockito.any())).thenReturn(Optional.empty());
-        
+
         service.save(character);
         assertThat(character.getId()).isNotNull();
 
@@ -71,12 +73,29 @@ public class RpgCharacterRepositoryTest {
 
     @Test
     @Tag("Unit Test")
-    @DisplayName("Trying to save invalid character test")
-    void tryingToSaveInvalidCharacterTest(){
-        Race human = new Race("Human", 5, 2, 2, 2);
+    @DisplayName("Trying to save invalid weapon character test")
+    void tryingToSaveInvalidWeaponCharacterTest(){
         assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> service.save(new RpgCharacter(
                         "New Character", ClassType.BERSERK, human,null)));
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @DisplayName("Trying to save invalid race character test")
+    void tryingToSaveInvalidRaceCharacterTest(){
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> service.save(new RpgCharacter(
+                        "New Character", ClassType.BERSERK, null,dagger)));
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @DisplayName("Trying to save invalid name character test")
+    void tryingToSaveInvalidNameCharacterTest(){
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> service.save(new RpgCharacter(
+                        null, ClassType.BERSERK, human,dagger)));
     }
 
     @Test
