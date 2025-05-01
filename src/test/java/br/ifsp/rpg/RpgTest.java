@@ -84,8 +84,8 @@ public class RpgTest {
 
         RpgCharacter player = new RpgCharacter("Character", ClassType.BERSERK, orc, axe, mockRandom);
 
-        assertThat(player.attack()).isGreaterThanOrEqualTo(player.getStrength() + 2 * 2);
         assertThat(player.getClassType()).isEqualTo(ClassType.BERSERK);
+        assertThat(player.attack()).isGreaterThanOrEqualTo(player.getStrength() + 2 * 2);
     }
 
     @Test
@@ -99,7 +99,21 @@ public class RpgTest {
         int oldDefense = player.getDefense();
         int damage = player.attack();
 
-        assertThat(player.getDefense()).isEqualTo(oldDefense + damage);
         assertThat(player.getClassType()).isEqualTo(ClassType.WARRIOR);
+        assertThat(player.getDefense()).isEqualTo(oldDefense + damage);
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Applying paladin special attack effect test")
+    void applyingPaladinSpecialAttackEffectTest() {
+        when(mockRandom.nextInt(100)).thenReturn(5);
+
+        RpgCharacter player = new RpgCharacter("Character", ClassType.PALADIN, human, sword, mockRandom);
+        player.attack();
+
+        assertThat(player.getClassType()).isEqualTo(ClassType.PALADIN);
+        assertThat(player.getHealth()).isGreaterThanOrEqualTo(118);
     }
 }
