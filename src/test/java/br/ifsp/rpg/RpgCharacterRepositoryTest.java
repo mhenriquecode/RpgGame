@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,10 +52,30 @@ public class RpgCharacterRepositoryTest {
 
     @Test
     @Tag("Unit Test")
-    @DisplayName("Trying to find character that does not exists")
+    @DisplayName("Trying to find character that does not exists test")
     void findCharacterThatDoesNotExistTest(){
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> service.getCharacter(UUID.randomUUID()));
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Get all characters test")
+    void getAllCharactersTest(){
+        Race dwarf = new Race("Dwarf", 10, 0, 5, 0);
+        Race elf = new Race("Elf", 0, 0, 0, 5);
+        Weapon hammer = new Weapon("Hammer", 1, 12);
+
+        RpgCharacter character2 = new RpgCharacter("Character2", ClassType.WARRIOR, dwarf, hammer);
+        RpgCharacter character3 = new RpgCharacter("Character3", ClassType.PALADIN, elf, dagger);
+
+        service.save(character);
+        service.save(character2);
+        service.save(character3);
+
+        assertThat(service.getAllCharacters()).hasSize(3)
+               .containsExactlyInAnyOrder(character, character2, character3);
     }
 
     @Test

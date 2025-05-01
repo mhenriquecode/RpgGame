@@ -23,7 +23,7 @@ public class MemoryCharacterRepository implements CharacterRepository {
 
     @Override
     public void update(RpgCharacter character) {
-
+        characters.put(character.getId(), character);
     }
 
 

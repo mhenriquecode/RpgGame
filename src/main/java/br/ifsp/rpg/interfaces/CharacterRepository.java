@@ -2,6 +2,7 @@ package br.ifsp.rpg.interfaces;
 
 import br.ifsp.rpg.model.RpgCharacter;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
