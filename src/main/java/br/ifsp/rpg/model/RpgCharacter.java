@@ -26,6 +26,7 @@ public class RpgCharacter {
     private int speed;
     private int armor;
 
+
     private RollAttackDice attackDie;
     private Random random = new Random();
 
@@ -53,4 +54,8 @@ public class RpgCharacter {
         armor += speed;
     }
 
+    public void defends(int damageReceived){
+        int finalDamage = Math.max(0, damageReceived - defense);
+        maxHealth -= finalDamage;
+    }
 }
