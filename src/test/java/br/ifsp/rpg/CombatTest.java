@@ -115,14 +115,32 @@ public class CombatTest {
     @Test
     @Tag("Unit Test")
     @Tag("TDD")
-    @DisplayName("Calculate character attack test")
-    void calculateCharacterAttackTest(){
+    @DisplayName("Character attack test")
+    void characterAttackTest(){
         RpgCharacter player = mock(RpgCharacter.class);
         when(player.attack()).thenReturn(20);
 
-        int resultado = player.attack();
+        int result = player.attack();
 
         verify(player).attack();
-        assertThat(resultado).isEqualTo(20);
+        assertThat(result).isEqualTo(20);
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Applying attack special effect test")
+    void applyingAttackSpecialEffectTest(){
+        RpgCharacter player = new RpgCharacter("Character", ClassType.BERSERK, orc, axe);
+
+        boolean effectTriggered = false;
+        for (int i = 0; i < 100; i++) {
+            if (player.attack() == -1) {
+                effectTriggered = true;
+                break;
+            }
+        }
+
+        assertThat(effectTriggered).isTrue();
     }
 }
