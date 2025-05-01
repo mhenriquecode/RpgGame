@@ -3,13 +3,26 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import br.ifsp.rpg.model.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
+import org.mockito.Mock;
+import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.*;
 import java.util.Random;
 
 public class RpgTest {
+    private Race orc;
+    private Weapon axe;
+
+    @Mock private Random mockRandom = mock(Random.class);
+
+    @BeforeEach
+    public void setUp() {
+        orc = new Race("Orc", 0, 5, 0, 0);
+        axe = new Weapon("Axe", 2, 6);
+    }
 
     @Test
     @Tag("Unit Test")
@@ -42,6 +55,32 @@ public class RpgTest {
         assertThat(character.getStrength()).isEqualTo(10);
         assertThat(character.getDefense()).isEqualTo(15);
         assertThat(character.getSpeed()).isEqualTo(5);
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Character attack test")
+    void characterAttackTest(){
+        RpgCharacter player = mock(RpgCharacter.class);
+        when(player.attack()).thenReturn(20);
+
+        int result = player.attack();
+
+        verify(player).attack();
+        assertThat(result).isEqualTo(20);
+    }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("Applying berserk attack special effect test")
+    void applyingBerserkAttackSpecialEffectTest(){
+        when(mockRandom.nextInt(100)).thenReturn(5);
+
+        RpgCharacter player = new RpgCharacter("Char", ClassType.BERSERK, orc, axe, mockRandom);
+
+        assertThat(player.attack()).isGreaterThanOrEqualTo(player.getStrength() + 2 * 2);
     }
 
 }
