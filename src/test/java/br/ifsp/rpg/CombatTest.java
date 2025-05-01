@@ -136,4 +136,17 @@ public class CombatTest {
 
         assertThat(resultSpeed).isEqualTo(7);
     }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("should increase defense when character defends")
+    void shouldIncreaseDefenseWhenCharacterDefends(){
+        player1.defends();
+        int resultDefense = player1.getDefense();
+
+        assertThat(resultDefense).isEqualTo(12);
+    }
+
+
 }
