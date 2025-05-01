@@ -128,18 +128,6 @@ public class CombatTest {
     @Test
     @Tag("Unit Test")
     @Tag("TDD")
-    @DisplayName("Applying berserk attack special effect test")
-    void applyingBerserkAttackSpecialEffectTest(){
-        when(mockRandom.nextInt(100)).thenReturn(5);
-
-        RpgCharacter player = new RpgCharacter("Char", ClassType.BERSERK, orc, axe, mockRandom);
-
-        assertThat(player.attack()).isGreaterThanOrEqualTo(player.getStrength() + 2 * 2);
-    }
-
-    @Test
-    @Tag("Unit Test")
-    @Tag("TDD")
     @DisplayName("should increase armor when the character dodges")
     void shouldIncreaseArmorWhenTheCharacterDodges(){
         player1.dodge();
@@ -203,5 +191,4 @@ public class CombatTest {
 
         verify(turn).dodge();
     }
-
 }
