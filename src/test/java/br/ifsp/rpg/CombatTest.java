@@ -189,4 +189,19 @@ public class CombatTest {
         verify(turn).defend();
     }
 
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("choosing to dodge when executing the turn")
+    void choosingToDodgeWhenExecutingTheTurn(){
+        RpgCharacter current = mock(RpgCharacter.class);
+        RpgCharacter opponent = mock(RpgCharacter.class);
+
+        Turn turn = spy(new Turn(current, opponent));
+
+        turn.execute(3);
+
+        verify(turn).dodge();
+    }
+
 }
