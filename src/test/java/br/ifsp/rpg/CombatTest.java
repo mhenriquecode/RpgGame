@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.util.Random;
 
@@ -165,10 +164,14 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("choosing to attack when executing the turn")
     void choosingToAttackWhenExecutingTheTurn(){
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
-        Turn turnTest = new Turn(player1, player2);
-        turnTest.execute();
-        verify(turnTest.attack(), times(1));
+        RpgCharacter current = mock(RpgCharacter.class);
+        RpgCharacter opponent = mock(RpgCharacter.class);
+
+        Turn turn = spy(new Turn(current, opponent));
+
+        turn.execute(1);
+
+        verify(turn).attack();
     }
 
 }
