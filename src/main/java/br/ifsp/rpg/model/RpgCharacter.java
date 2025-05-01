@@ -48,4 +48,5 @@ public class RpgCharacter {
     public int attack() {
         return strength + attackDie.roll();
     }
+
 }

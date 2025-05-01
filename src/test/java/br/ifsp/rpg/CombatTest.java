@@ -131,8 +131,9 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("should increase armor when the character dodges")
     void shouldIncreaseArmorWhenTheCharacterDodges(){
-        int dodge = player1.dodge();
+        player1.dodge();
+        int resultSpeed = player1.getSpeed();
 
-        assertThat(dodge).isEqualTo(7);
+        assertThat(resultSpeed).isEqualTo(7);
     }
 }
