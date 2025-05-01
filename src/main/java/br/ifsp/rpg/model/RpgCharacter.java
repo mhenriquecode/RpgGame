@@ -46,6 +46,9 @@ public class RpgCharacter {
     }
 
     public int attack() {
+        if (Math.random() < 0.1) {
+            return -1;
+        }
 
         return strength + attackDie.roll();
     }
