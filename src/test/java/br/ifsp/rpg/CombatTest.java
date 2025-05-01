@@ -160,5 +160,15 @@ public class CombatTest {
         assertThat(player1.getMaxHealth()).isEqualTo(114);
     }
 
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("choosing to attack when executing the turn")
+    void choosingToAttackWhenExecutingTheTurn(){
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
+        Turn turnTest = new Turn(player1, player2);
+        turnTest.execute();
+        verify(turnTest.attack(), times(1));
+    }
 
 }
