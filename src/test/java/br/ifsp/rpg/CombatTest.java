@@ -129,18 +129,12 @@ public class CombatTest {
     @Test
     @Tag("Unit Test")
     @Tag("TDD")
-    @DisplayName("Applying attack special effect test")
-    void applyingAttackSpecialEffectTest(){
-        RpgCharacter player = new RpgCharacter("Character", ClassType.BERSERK, orc, axe);
+    @DisplayName("Applying berserk attack special effect test")
+    void applyingBerserkAttackSpecialEffectTest(){
+        when(mockRandom.nextInt(100)).thenReturn(5);
 
-        boolean effectTriggered = false;
-        for (int i = 0; i < 100; i++) {
-            if (player.attack() == -1) {
-                effectTriggered = true;
-                break;
-            }
-        }
+        RpgCharacter player = new RpgCharacter("Char", ClassType.BERSERK, orc, axe, mockRandom);
 
-        assertThat(effectTriggered).isTrue();
+        assertThat(player.attack()).isGreaterThanOrEqualTo(player.getStrength() + 2 * 2);
     }
 }

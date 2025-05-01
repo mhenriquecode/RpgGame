@@ -27,7 +27,7 @@ public class RpgCharacter {
     private int armor;
 
     private RollAttackDice attackDie;
-    private Random random = new Random();
+    private Random random;
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon) {
         this.id = UUID.randomUUID();
@@ -45,11 +45,18 @@ public class RpgCharacter {
         this.attackDie = new RollAttackDice(this.weapon);
     }
 
+    public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon, Random random) {
+        this(name, classType, race, weapon);
+        this.random = random;
+    }
+
     public int attack() {
-        if (Math.random() < 0.1) {
-            return -1;
+        int attackDamage = strength + attackDie.roll();
+
+        if(random.nextInt(100) + 1 <= 10) {
+            if(this.classType == ClassType.BERSERK) attackDamage *= 2;
         }
 
-        return strength + attackDie.roll();
+        return attackDamage;
     }
 }
