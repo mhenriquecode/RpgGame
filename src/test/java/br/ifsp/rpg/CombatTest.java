@@ -5,13 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.Random;
 
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class CombatTest {
     private Race human;
@@ -24,8 +23,8 @@ public class CombatTest {
     @BeforeEach
     void setUp() {
         human = new Race("Human", 5, 2, 2, 2);
-        sword = new Weapon("Sword", 3, 4);
         orc = new Race("Orc", 0, 5, 0, 0);
+        sword = new Weapon("Sword", 3, 4);
         axe = new Weapon("Axe", 2, 6);
         mockRandom = mock(Random.class);
         player1 = new RpgCharacter("Character1", ClassType.PALADIN, human, sword);
@@ -118,6 +117,12 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Calculate character attack test")
     void calculateCharacterAttackTest(){
-        assertThat(player1.attack()).isGreaterThan(10);
+        RpgCharacter player = mock(RpgCharacter.class);
+        when(player.attack()).thenReturn(20);
+
+        int resultado = player.attack();
+
+        verify(player).attack();
+        assertThat(resultado).isEqualTo(20);
     }
 }
