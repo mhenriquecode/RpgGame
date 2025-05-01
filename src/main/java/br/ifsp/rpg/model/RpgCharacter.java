@@ -30,7 +30,7 @@ public class RpgCharacter {
 
     private RollAttackDice attackDie;
     private RollHitDice hitDice;
-    private final Random random = new Random();
+    private Random random;
     private SpecialEffect specialEffect;
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon) {
@@ -44,12 +44,19 @@ public class RpgCharacter {
         this.hitDice = new RollHitDice();
         this.specialEffect = chooseSpecialEffect(classType);
     }
+
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon, RollHitDice hitDice, RollAttackDice attackDice) {
         this(name, classType, race, weapon);
         this.hitDice = hitDice;
         this.attackDie = attackDice;
         initializeAttributes();
         this.specialEffect = chooseSpecialEffect(classType);
+    }
+
+    public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon, Random random) {
+        this(name, classType, race, weapon);
+        initializeAttributes();
+        this.random = new Random();
     }
 
     public void initializeAttributes() {
