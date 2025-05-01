@@ -7,7 +7,6 @@ import br.ifsp.rpg.model.RpgCharacter;
 import br.ifsp.rpg.model.Weapon;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,6 +18,10 @@ public class CharacterService {
     public CharacterService(CharacterRepository repository) {
         this.repository = repository;
     }
+
+//    public RpgCharacter create(RpgCharacter request) {
+//
+//    }
 
     public void save(RpgCharacter character) {
         if(character.getId() == null) throw new NullPointerException("Character id is null");

@@ -60,11 +60,11 @@ public class RpgCharacter {
     }
 
     public void initializeAttributes() {
-        this.maxHealth = 100 + race.bonusHealth() + classType.getBonusHealth();
+        this.maxHealth = 100 + race.getBonusHealth() + classType.getBonusHealth();
         this.health = maxHealth;
-        this.strength = 10 + race.bonusStrength() + classType.getBonusStrength();
-        this.defense = 5 + race.bonusDefense() + classType.getBonusDefense();
-        this.speed = 5 + race.bonusSpeed() + classType.getBonusSpeed();
+        this.strength = 10 + race.getBonusStrength() + classType.getBonusStrength();
+        this.defense = 5 + race.getBonusDefense() + classType.getBonusDefense();
+        this.speed = 5 + race.getBonusSpeed() + classType.getBonusSpeed();
         this.armor = 10;
     }
 

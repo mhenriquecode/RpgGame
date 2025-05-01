@@ -12,8 +12,6 @@ import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
 
 public class CombatTest {
-    private Race human;
-    private Race orc;
     private Weapon sword;
     private Weapon axe;
     private RpgCharacter player1;
@@ -21,12 +19,10 @@ public class CombatTest {
 
     @BeforeEach
     void setUp() {
-        human = new Race("Human", 5, 2, 2, 2);
-        orc = new Race("Orc", 0, 5, 0, 0);
         sword = new Weapon("Sword", 3, 4);
         axe = new Weapon("Axe", 2, 6);
         mockRandom = mock(Random.class);
-        player1 = new RpgCharacter("Character1", ClassType.PALADIN, human, sword);
+        player1 = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, sword);
     }
 
     @Test
@@ -34,7 +30,7 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Must create valid combat between two character")
     void mustCreateValidCombatBetweenTwoCharacters(){
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, axe);
         Combat combat = new Combat(player1, player2);
 
         assertThat(combat).isNotNull();
@@ -45,7 +41,7 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Player one starts the combat when his speed is grater than player two's speed")
     void playerOneWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerTwoTest(){
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, axe);
         Combat combat = new Combat(player1, player2);
 
         assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
@@ -60,7 +56,7 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Player two starts the combat when his speed is grater than player one's speed")
     void playerTwoWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerOneTest(){
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, axe);
         Combat combat = new Combat(player1, player2);
 
         assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
@@ -77,7 +73,7 @@ public class CombatTest {
     void playerOneStartsWhenSpeedIsEqualToThePlayerTwo(){
         when(mockRandom.nextInt(2)).thenReturn(0);
 
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, human, axe);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, Race.HUMAN, axe);
 
         Combat combat = new Combat(player1, player2, mockRandom);
         RpgCharacter first = combat.getFirstToPlay();
@@ -92,7 +88,7 @@ public class CombatTest {
     void playerTwoStartsWhenSpeedIsEqualToThePlayerOne(){
         when(mockRandom.nextInt(2)).thenReturn(1);
 
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, human, axe);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, Race.HUMAN, axe);
 
         Combat combat = new Combat(player1, player2, mockRandom);
         RpgCharacter first = combat.getFirstToPlay();
@@ -105,7 +101,7 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("Must create valid turn between one combat with two characters")
     void mustCreateValidTurnBetweenOneCombatWithTwoCharacters(){
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, orc, axe);
+        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, axe);
         Turn turn = new Turn(player1, player2);
 
         assertThat(turn).isNotNull();
