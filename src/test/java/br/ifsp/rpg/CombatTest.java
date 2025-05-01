@@ -125,4 +125,14 @@ public class CombatTest {
         verify(player).attack();
         assertThat(resultado).isEqualTo(20);
     }
+
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("should increase armor when the character dodges")
+    void shouldIncreaseArmorWhenTheCharacterDodges(){
+        int dodge = player1.dodge();
+
+        assertThat(dodge).isEqualTo(7);
+    }
 }
