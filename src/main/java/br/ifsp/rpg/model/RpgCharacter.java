@@ -1,5 +1,6 @@
 package br.ifsp.rpg.model;
 
+import br.ifsp.rpg.interfaces.SpecialEffect;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -29,6 +30,7 @@ public class RpgCharacter {
 
     private RollAttackDice attackDie;
     private Random random;
+    private SpecialEffect specialEffect;
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon) {
         this.id = UUID.randomUUID();
@@ -38,6 +40,11 @@ public class RpgCharacter {
         this.weapon = weapon;
         initializeAttributes();
         this.attackDie = new RollAttackDice(this.weapon);
+        this.specialEffect = chooseSpecialEffect(classType);
+    }
+    public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon, Random random) {
+        this(name, classType, race, weapon);
+        this.random = random;
     }
 
     public void initializeAttributes() {
@@ -49,23 +56,32 @@ public class RpgCharacter {
         this.armor = 10;
     }
 
-    public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon, Random random) {
-        this(name, classType, race, weapon);
-        this.random = random;
+    private SpecialEffect chooseSpecialEffect(ClassType classType){
+        return switch (classType){
+            case BERSERK -> new SpecialEffectBerserk();
+            case DUELIST -> new SpecialEffectDuelist();
+            case PALADIN -> new SpecialEffectPaladin();
+            case WARRIOR -> new SpecialEffectWarrior();
+        };
     }
 
     public int attack() {
         int attackDamage = strength + attackDie.roll();
 
-        if(random.nextInt(100) + 1 <= 10) {
-            if(this.classType == ClassType.BERSERK) attackDamage *= 2;
-            if(this.classType == ClassType.WARRIOR) this.defense += attackDamage;
-            if(this.classType == ClassType.PALADIN) this.health += attackDamage;
-            if(this.classType == ClassType.DUELIST) attackDamage += attackDie.roll();
+        if(checkChanceOfSpecialEffect()) {
+            attackDamage = specialEffect.applyEffect(this, attackDamage);
         }
 
         return attackDamage;
     }
+
+
+
+    public boolean checkChanceOfSpecialEffect(){
+        int chance = random.nextInt(100) + 1;
+        return chance <= 10;
+    }
+
 
     public void dodge(){
         armor += speed;
