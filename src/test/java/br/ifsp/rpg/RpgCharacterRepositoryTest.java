@@ -64,18 +64,15 @@ public class RpgCharacterRepositoryTest {
     @DisplayName("Get all characters test")
     void getAllCharactersTest(){
         Race dwarf = new Race("Dwarf", 10, 0, 5, 0);
-        Race elf = new Race("Elf", 0, 0, 0, 5);
         Weapon hammer = new Weapon("Hammer", 1, 12);
 
         RpgCharacter character2 = new RpgCharacter("Character2", ClassType.WARRIOR, dwarf, hammer);
-        RpgCharacter character3 = new RpgCharacter("Character3", ClassType.PALADIN, elf, dagger);
+        List<RpgCharacter> mockList = List.of(character, character2);
 
-        service.save(character);
-        service.save(character2);
-        service.save(character3);
+        when(repository.findAll()).thenReturn(mockList);
 
-        assertThat(service.getAllCharacters()).hasSize(3)
-               .containsExactlyInAnyOrder(character, character2, character3);
+        List<RpgCharacter> result = service.getAllCharacters();
+        assertThat(result).hasSize(2).containsExactlyInAnyOrder(character, character2);
     }
 
     @Test

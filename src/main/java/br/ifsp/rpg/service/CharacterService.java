@@ -7,6 +7,8 @@ import br.ifsp.rpg.model.RpgCharacter;
 import br.ifsp.rpg.model.Weapon;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,6 +39,10 @@ public class CharacterService {
     public Optional<RpgCharacter> getCharacter(UUID id) {
         if(repository.findById(id).isEmpty()) throw new IllegalArgumentException("Character not found");
         return repository.findById(id);
+    }
+
+    public List<RpgCharacter> getAllCharacters() {
+        return repository.findAll();
     }
 
     public void update(UUID id, String newName, ClassType newClassType, Race newRace, Weapon newWeapon) {
