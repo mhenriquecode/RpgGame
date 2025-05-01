@@ -11,12 +11,10 @@ public class Turn {
     }
 
     public void execute(int actionChoice) {
-        if (actionChoice == 1) {
-            attack();
-        } else if (actionChoice == 2){
-            defend();
-        } else if (actionChoice == 3){
-            dodge();
+        switch (actionChoice){
+            case 1 -> attack();
+            case 2 -> defend();
+            case 3 -> dodge();
         }
     }
 
