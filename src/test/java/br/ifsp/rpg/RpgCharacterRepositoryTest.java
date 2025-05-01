@@ -60,11 +60,12 @@ public class RpgCharacterRepositoryTest {
     @Tag("TDD")
     @DisplayName("Save character test")
     void saveCharacterTest(){
-        when(repository.findById(Mockito.any())).thenReturn(Optional.of(character));
-
+        when(repository.findById(Mockito.any())).thenReturn(Optional.empty());
+        
         service.save(character);
-
         assertThat(character.getId()).isNotNull();
+
+        when(repository.findById(character.getId())).thenReturn(Optional.of(character));
         assertThat(service.getCharacter(character.getId())).isEqualTo(Optional.of(character));
     }
 
