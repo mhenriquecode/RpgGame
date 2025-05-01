@@ -49,4 +49,7 @@ public class RpgCharacter {
         return strength + attackDie.roll();
     }
 
+    public void dodge(){
+        armor += speed;
+    }
 }
