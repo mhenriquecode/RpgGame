@@ -13,10 +13,15 @@ public class Turn {
     public void execute(int actionChoice) {
         if (actionChoice == 1) {
             attack();
+        } else if (actionChoice == 2){
+            defend();
         }
     }
 
     public void attack() {
+    }
+
+    public void defend(){
     }
 
 }
