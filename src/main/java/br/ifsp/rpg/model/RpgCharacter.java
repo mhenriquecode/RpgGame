@@ -52,4 +52,5 @@ public class RpgCharacter {
     public void dodge(){
         armor += speed;
     }
+
 }
