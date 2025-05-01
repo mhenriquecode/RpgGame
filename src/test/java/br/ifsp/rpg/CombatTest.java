@@ -174,4 +174,19 @@ public class CombatTest {
         verify(turn).attack();
     }
 
+    @Test
+    @Tag("Unit Test")
+    @Tag("TDD")
+    @DisplayName("choosing to defend when executing the turn")
+    void choosingToDefendWhenExecutingTheTurn(){
+        RpgCharacter current = mock(RpgCharacter.class);
+        RpgCharacter opponent = mock(RpgCharacter.class);
+
+        Turn turn = spy(new Turn(current, opponent));
+
+        turn.execute(2);
+
+        verify(turn).defend();
+    }
+
 }
