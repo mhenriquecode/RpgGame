@@ -14,14 +14,18 @@ import java.util.Random;
 
 public class RpgTest {
     private Race orc;
+    private Race human;
     private Weapon axe;
+    private Weapon sword;
 
     @Mock private Random mockRandom = mock(Random.class);
 
     @BeforeEach
     public void setUp() {
         orc = new Race("Orc", 0, 5, 0, 0);
-        axe = new Weapon("Axe", 2, 6);
+        human = new Race("Human",5,2,2,2);
+        axe = new Weapon("Axe",2,6);
+        sword = new Weapon("Sword",3,4);
     }
 
     @Test
@@ -74,13 +78,15 @@ public class RpgTest {
     @Test
     @Tag("Unit Test")
     @Tag("TDD")
-    @DisplayName("Applying berserk attack special effect test")
-    void applyingBerserkAttackSpecialEffectTest(){
+    @DisplayName("Applying berserk special attack effect test")
+    void applyingBerserkSpecialAttackEffectTest(){
         when(mockRandom.nextInt(100)).thenReturn(5);
 
-        RpgCharacter player = new RpgCharacter("Char", ClassType.BERSERK, orc, axe, mockRandom);
+        RpgCharacter player = new RpgCharacter("Character", ClassType.BERSERK, orc, axe, mockRandom);
 
         assertThat(player.attack()).isGreaterThanOrEqualTo(player.getStrength() + 2 * 2);
+        assertThat(player.getClassType()).isEqualTo(ClassType.BERSERK);
     }
 
+    
 }
