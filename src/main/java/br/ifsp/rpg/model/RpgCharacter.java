@@ -28,7 +28,7 @@ public class RpgCharacter {
     private int speed;
     private int armor;
 
-    private RollAttackDice attackDie;
+    private RollAttackDice attackDice;
     private RollHitDice hitDice;
     private Random random;
     private SpecialEffect specialEffect;
@@ -40,7 +40,7 @@ public class RpgCharacter {
         this.race = race;
         this.weapon = weapon;
         initializeAttributes();
-        this.attackDie = new RollAttackDice(this.weapon);
+        this.attackDice = new RollAttackDice(this.weapon);
         this.hitDice = new RollHitDice();
         this.specialEffect = chooseSpecialEffect(classType);
     }
@@ -48,7 +48,7 @@ public class RpgCharacter {
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon, RollHitDice hitDice, RollAttackDice attackDice) {
         this(name, classType, race, weapon);
         this.hitDice = hitDice;
-        this.attackDie = attackDice;
+        this.attackDice = attackDice;
         initializeAttributes();
         this.specialEffect = chooseSpecialEffect(classType);
     }
@@ -56,7 +56,7 @@ public class RpgCharacter {
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon, Random random) {
         this(name, classType, race, weapon);
         initializeAttributes();
-        this.random = new Random();
+        this.random = random;
     }
 
     public void initializeAttributes() {
@@ -78,22 +78,18 @@ public class RpgCharacter {
     }
 
     public int attack() {
-        int attackDamage = strength + attackDie.roll();
+        int attackDamage = strength + attackDice.roll();
 
-        if(checkChanceOfSpecialEffect()) {
+        if(random.nextInt(100) + 1 <= 10) {
             attackDamage = specialEffect.applyEffect(this, attackDamage);
         }
 
         return attackDamage;
     }
 
-
-
-    public boolean checkChanceOfSpecialEffect(){
-        int chance = random.nextInt(100) + 1;
-        return chance <= 10;
+    public int rollAttackDice() {
+        return attackDice.roll();
     }
-
 
     public void dodge(){
         armor += speed;
