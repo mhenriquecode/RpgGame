@@ -33,13 +33,8 @@ public class CharacterController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CharacterDTO> getCharacter(@PathVariable UUID id) {
-        Optional<RpgCharacter> characterOptional = characterService.getCharacter(id);
-
-        if(characterOptional.isPresent()){
-            CharacterDTO characterDTO = CharacterDTO.from(characterOptional.get());
-            return new ResponseEntity<>(characterDTO, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return characterService.getCharacter(id)
+                .map(character -> ResponseEntity.ok(CharacterDTO.from(character)))
+                .orElse(ResponseEntity.notFound().build());
     }
 }
