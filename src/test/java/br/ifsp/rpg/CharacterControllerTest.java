@@ -18,6 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -47,7 +49,7 @@ public class CharacterControllerTest {
 
     @Test
     @Tag("Unit-test")
-    @Tag("tdd")
+    @Tag("TDD")
     @DisplayName("Should create a character successfully test")
     void shouldCreateCharacterTest() throws Exception {
         CharacterDTO characterDTO = new CharacterDTO("Character", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
@@ -70,28 +72,26 @@ public class CharacterControllerTest {
                 .andExpect(jsonPath("$.name").value("Character"));
     }
 
-//    @Test
-//    @Tag("Unit Test")
-//    @Tag("TDD")
-//    @DisplayName("Should return character by ID")
-//    void shouldReturnCharacterById() throws Exception {
-//        UUID id = UUID.randomUUID();
-//
-//        RpgCharacter character = new RpgCharacter(
-//                "Character",
-//                ClassType.WARRIOR,
-//                Race.HUMAN,
-//                Weapon.SWORD
-//        );
-//
-//        when(characterService.getCharacter(id)).thenReturn(Optional.of(character));
-//
-//        mockMvc.perform(get("/characters/{id}", id)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.name").value("CharacterName"))
-//                .andExpect(jsonPath("$.classType").value("WARRIOR"))
-//                .andExpect(jsonPath("$.race").value("HUMAN"))
-//                .andExpect(jsonPath("$.weapon").value("SWORD"));
-//    }
+    @Test
+    @Tag("Unit-test")
+    @Tag("TDD")
+    @DisplayName("Should return character by ID test")
+    void shouldReturnCharacterById() throws Exception {
+        RpgCharacter character = new RpgCharacter(
+                "Character",
+                ClassType.WARRIOR,
+                Race.HUMAN,
+                Weapon.SWORD
+        );
+
+        when(service.getCharacter(character.getId())).thenReturn(Optional.of(character));
+
+        mockMvc.perform(get("/characters/{id}", character.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("CharacterName"))
+                .andExpect(jsonPath("$.classType").value("WARRIOR"))
+                .andExpect(jsonPath("$.race").value("HUMAN"))
+                .andExpect(jsonPath("$.weapon").value("SWORD"));
+    }
 }
