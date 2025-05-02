@@ -19,8 +19,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,6 +37,9 @@ public class CharacterControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper mapper;
 
+    private RpgCharacter createdCharacter;
+    private CharacterDTO characterDTO;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -45,6 +50,9 @@ public class CharacterControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .defaultRequest(get("/").accept(MediaType.APPLICATION_JSON))
                 .build();
+
+        createdCharacter = new RpgCharacter("Character", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
+        characterDTO = new CharacterDTO("Character", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
     }
 
     @Test
@@ -52,15 +60,6 @@ public class CharacterControllerTest {
     @Tag("TDD")
     @DisplayName("Should create a character successfully test")
     void shouldCreateCharacterTest() throws Exception {
-        CharacterDTO characterDTO = new CharacterDTO("Character", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
-
-        RpgCharacter createdCharacter = new RpgCharacter(
-                "Character",
-                ClassType.WARRIOR,
-                Race.ORC,
-                Weapon.AXE
-        );
-
         when(service.create(any())).thenReturn(createdCharacter);
 
         String json = mapper.writeValueAsString(characterDTO);
@@ -77,21 +76,46 @@ public class CharacterControllerTest {
     @Tag("TDD")
     @DisplayName("Should return character by ID test")
     void shouldReturnCharacterById() throws Exception {
-        RpgCharacter character = new RpgCharacter(
-                "Character",
-                ClassType.WARRIOR,
-                Race.HUMAN,
-                Weapon.SWORD
-        );
+        when(service.getCharacter(createdCharacter.getId())).thenReturn(Optional.of(createdCharacter));
 
-        when(service.getCharacter(character.getId())).thenReturn(Optional.of(character));
-
-        mockMvc.perform(get("/api/characters/{id}", character.getId())
+        mockMvc.perform(get("/api/characters/{id}", createdCharacter.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Character"))
                 .andExpect(jsonPath("$.classType").value("WARRIOR"))
-                .andExpect(jsonPath("$.race").value("HUMAN"))
-                .andExpect(jsonPath("$.weapon").value("SWORD"));
+                .andExpect(jsonPath("$.race").value("ORC"))
+                .andExpect(jsonPath("$.weapon").value("AXE"));
+    }
+
+    @Test
+    @Tag("Unit-test")
+    @Tag("TDD")
+    @DisplayName("Should update character successfully test")
+    void shouldUpdateCharacterTest() throws Exception {
+        UUID characterId = UUID.randomUUID();
+
+        CharacterDTO updatedDTO = new CharacterDTO(
+                "UpdatedName",
+                ClassType.PALADIN,
+                Race.ELF,
+                Weapon.DAGGER);
+
+        RpgCharacter updatedCharacter = new RpgCharacter(
+                "UpdatedName",
+                ClassType.PALADIN,
+                Race.ELF,
+                Weapon.DAGGER);
+
+        when(service.update(eq(characterId), any(CharacterDTO.class)))
+                .thenReturn(Optional.of(updatedCharacter));
+
+        mockMvc.perform(put("/characters/{id}", characterId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(updatedDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("UpdatedName"))
+                .andExpect(jsonPath("$.classType").value("PALADIN"))
+                .andExpect(jsonPath("$.race").value("ELF"))
+                .andExpect(jsonPath("$.weapon").value("BOW"));
     }
 }
