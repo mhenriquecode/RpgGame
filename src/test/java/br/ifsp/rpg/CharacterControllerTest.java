@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -137,13 +138,32 @@ public class CharacterControllerTest {
 
     @Test
     @Tag("Unit-Test")
-    @DisplayName("Should return 404 if character not found for deletion")
-    void shouldReturn404WhenCharacterNotFound() throws Exception {
+    @DisplayName("Should return 404 if character not found test")
+    void shouldReturn404WhenCharacterNotFoundTest() throws Exception {
         UUID nonExistentId = UUID.randomUUID();
-
         doThrow(new CharacterNotFoundException(nonExistentId)).when(service).delete(nonExistentId);
 
         mockMvc.perform(delete("/api/characters/{id}", nonExistentId))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Tag("Unit-test")
+    @Tag("TDD")
+    @DisplayName("Should return all characters test")
+    void shouldReturnAllCharacters() throws Exception {
+        List<RpgCharacter> characters = List.of(
+                new RpgCharacter("Character1", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD),
+                new RpgCharacter("Character2", ClassType.PALADIN, Race.ELF, Weapon.DAGGER)
+        );
+
+        when(service.getAllCharacters()).thenReturn(characters);
+
+        mockMvc.perform(get("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].name").value("Character1"))
+                .andExpect(jsonPath("$[1].name").value("Character2"));
     }
 }
