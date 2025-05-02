@@ -23,10 +23,10 @@ public class CharacterController {
     }
 
     @PostMapping
-    public ResponseEntity<RpgCharacter> createCharacter(@Valid @RequestBody CharacterDTO characterDTO) {
+    public ResponseEntity<CharacterDTO> createCharacter(@Valid @RequestBody CharacterDTO characterDTO) {
         if(characterDTO.name() == null || characterDTO.name().isEmpty())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(characterService.create(characterDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(CharacterDTO.from(characterService.create(characterDTO)));
     }
 }
