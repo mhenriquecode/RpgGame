@@ -86,10 +86,10 @@ public class CharacterControllerTest {
 
         when(service.getCharacter(character.getId())).thenReturn(Optional.of(character));
 
-        mockMvc.perform(get("/characters/{id}", character.getId())
+        mockMvc.perform(get("/api/characters/{id}", character.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("CharacterName"))
+                .andExpect(jsonPath("$.name").value("Character"))
                 .andExpect(jsonPath("$.classType").value("WARRIOR"))
                 .andExpect(jsonPath("$.race").value("HUMAN"))
                 .andExpect(jsonPath("$.weapon").value("SWORD"));
