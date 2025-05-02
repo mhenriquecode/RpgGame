@@ -10,6 +10,7 @@ import br.ifsp.rpg.model.specialEffects.SpecialEffectBerserk;
 import br.ifsp.rpg.model.specialEffects.SpecialEffectDuelist;
 import br.ifsp.rpg.model.specialEffects.SpecialEffectPaladin;
 import br.ifsp.rpg.model.specialEffects.SpecialEffectWarrior;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,10 +50,10 @@ public class RpgCharacter {
     private int speed;
     private int armor;
 
-    @Transient private RollAttackDice attackDice;
-    @Transient private RollHitDice hitDice;
-    @Transient private Random random;
-    @Transient private SpecialEffect specialEffect;
+    @Transient @JsonIgnore private RollAttackDice attackDice;
+    @Transient @JsonIgnore private RollHitDice hitDice;
+    @Transient @JsonIgnore private Random random;
+    @Transient @JsonIgnore private SpecialEffect specialEffect;
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon) {
         this.id = UUID.randomUUID();
