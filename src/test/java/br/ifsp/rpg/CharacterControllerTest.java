@@ -125,7 +125,7 @@ public class CharacterControllerTest {
     @DisplayName("Should delete character successfully test")
     void shouldDeleteCharacterTest() throws Exception {
         UUID characterId = UUID.randomUUID();
-        
+
         doNothing().when(service).delete(characterId);
 
         mockMvc.perform(delete("/api/characters/{id}", characterId))

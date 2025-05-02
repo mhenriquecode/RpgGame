@@ -45,4 +45,10 @@ public class CharacterController {
 
         return ResponseEntity.ok(CharacterDTO.from(characterService.update(id, characterDTO)));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCharacter(@PathVariable UUID id) {
+        characterService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
