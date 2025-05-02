@@ -133,4 +133,16 @@ public class CharacterControllerTest {
 
         verify(service, times(1)).delete(characterId);
     }
+
+    @Test
+    @Tag("Unit-Test")
+    @DisplayName("Should return 404 if character not found for deletion")
+    void shouldReturn404WhenCharacterNotFound() throws Exception {
+        UUID nonExistentId = UUID.randomUUID();
+
+        doThrow(IllegalArgumentException.class).when(service).delete(nonExistentId);
+
+        mockMvc.perform(delete("/api/characters/{id}", nonExistentId))
+                .andExpect(status().isNotFound());
+    }
 }
