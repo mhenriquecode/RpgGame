@@ -6,25 +6,20 @@ import br.ifsp.rpg.service.CharacterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-@Tag(name = "Characters", description = "RPG Character Manager")
 @RestController
-@RequestMapping("/api/characters")
+@RequestMapping(path = "/api/characters")
+@AllArgsConstructor
+@Tag(name = "Characters", description = "RPG Character Manager")
 public class CharacterController {
     private final CharacterService characterService;
-
-    @Autowired
-    public CharacterController(CharacterService characterService) {
-        this.characterService = characterService;
-    }
 
     @Operation(summary = "Create new character")
     @PostMapping
@@ -41,6 +36,15 @@ public class CharacterController {
         return characterService.getCharacter(id)
                 .map(character -> ResponseEntity.ok(CharacterDTO.from(character)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @Operation(summary = "Get all characters")
+    @GetMapping
+    public ResponseEntity<List<CharacterDTO>> getAllCharacters() {
+        List<CharacterDTO> dtoList = characterService.getAllCharacters().stream()
+                .map(CharacterDTO::from).toList();
+
+        return ResponseEntity.ok(dtoList);
     }
 
     @Operation(summary = "Update character")
