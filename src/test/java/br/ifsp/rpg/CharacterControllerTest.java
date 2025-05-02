@@ -26,6 +26,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,11 +63,9 @@ public class CharacterControllerTest {
     void shouldCreateCharacterTest() throws Exception {
         when(service.create(any())).thenReturn(createdCharacter);
 
-        String json = mapper.writeValueAsString(characterDTO);
-
         mockMvc.perform(post("/api/characters")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+                        .content(mapper.writeValueAsString(characterDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Character"));
     }
@@ -106,16 +105,16 @@ public class CharacterControllerTest {
                 Race.ELF,
                 Weapon.DAGGER);
 
-        when(service.update(eq(characterId), any(CharacterDTO.class)))
-                .thenReturn(Optional.of(updatedCharacter));
+        when(service.getCharacter(characterId)).thenReturn(Optional.of(updatedCharacter));
+        when(service.update(eq(characterId), any(CharacterDTO.class))).thenReturn(updatedCharacter);
 
-        mockMvc.perform(put("/characters/{id}", characterId)
+        mockMvc.perform(put("/api/characters/{id}", characterId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(updatedDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("UpdatedName"))
                 .andExpect(jsonPath("$.classType").value("PALADIN"))
                 .andExpect(jsonPath("$.race").value("ELF"))
-                .andExpect(jsonPath("$.weapon").value("BOW"));
+                .andExpect(jsonPath("$.weapon").value("DAGGER"));
     }
 }

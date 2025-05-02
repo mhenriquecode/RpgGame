@@ -37,4 +37,12 @@ public class CharacterController {
                 .map(character -> ResponseEntity.ok(CharacterDTO.from(character)))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CharacterDTO> updateCharacter(@PathVariable UUID id, @RequestBody @Valid CharacterDTO characterDTO) {
+        if(characterService.getCharacter(id).isEmpty())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        return ResponseEntity.ok(CharacterDTO.from(characterService.update(id, characterDTO)));
+    }
 }

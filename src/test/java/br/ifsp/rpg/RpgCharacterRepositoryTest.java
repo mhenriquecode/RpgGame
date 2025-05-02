@@ -1,5 +1,6 @@
 package br.ifsp.rpg;
 
+import br.ifsp.rpg.dto.CharacterDTO;
 import br.ifsp.rpg.interfaces.CharacterRepository;
 import br.ifsp.rpg.model.enums.ClassType;
 import br.ifsp.rpg.model.enums.Race;
@@ -122,7 +123,7 @@ public class RpgCharacterRepositoryTest {
     void updateCharacterTest(){
         when(repository.findById(character.getId())).thenReturn(Optional.of(character));
 
-        service.update(character.getId(), "New Name", ClassType.PALADIN, Race.ORC, Weapon.SWORD);
+        service.update(character.getId(), new CharacterDTO("New Name", ClassType.PALADIN, Race.ORC, Weapon.SWORD));
 
         assertThat(character.getName()).isEqualTo("New Name");
         assertThat(character.getClassType()).isEqualTo(ClassType.PALADIN);
@@ -137,7 +138,9 @@ public class RpgCharacterRepositoryTest {
     @DisplayName("Trying to update non existing character")
     void tryingToUpdateNonExistingCharacterTest(){
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> service.update(UUID.randomUUID(), "New Name", ClassType.WARRIOR, Race.ORC, Weapon.HAMMER));
+                .isThrownBy(() -> service.update(
+                        UUID.randomUUID(),
+                        new CharacterDTO("New Name", ClassType.WARRIOR, Race.ORC, Weapon.HAMMER)));
     }
 
     @Test
