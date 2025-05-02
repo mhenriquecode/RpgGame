@@ -1,10 +1,11 @@
 package br.ifsp.rpg.service;
 
+import br.ifsp.rpg.dto.CharacterDTO;
 import br.ifsp.rpg.interfaces.CharacterRepository;
-import br.ifsp.rpg.model.ClassType;
-import br.ifsp.rpg.model.Race;
+import br.ifsp.rpg.model.enums.ClassType;
+import br.ifsp.rpg.model.enums.Race;
 import br.ifsp.rpg.model.RpgCharacter;
-import br.ifsp.rpg.model.Weapon;
+import br.ifsp.rpg.model.enums.Weapon;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,12 +20,16 @@ public class CharacterService {
         this.repository = repository;
     }
 
-//    public RpgCharacter create(RpgCharacter request) {
-//
-//    }
+    public RpgCharacter create(CharacterDTO characterDTO) {
+        RpgCharacter character = new RpgCharacter(characterDTO.name(), characterDTO.classType(), characterDTO.race(), characterDTO.weapon());
+        repository.save(character);
+
+        return character;
+    }
 
     public void save(RpgCharacter character) {
-        if(character.getId() == null) throw new NullPointerException("Character id is null");
+        if(character.getId() == null)
+            throw new NullPointerException("Character id is null");
         if(character.getName() == null || character.getName().isEmpty())
             throw new NullPointerException("Character name is null or empty");
         if(character.getClassType() == null)
@@ -40,7 +45,9 @@ public class CharacterService {
     }
 
     public Optional<RpgCharacter> getCharacter(UUID id) {
-        if(repository.findById(id).isEmpty()) throw new IllegalArgumentException("Character not found");
+        if(repository.findById(id).isEmpty())
+            throw new IllegalArgumentException("Character not found");
+
         return repository.findById(id);
     }
 
@@ -49,7 +56,8 @@ public class CharacterService {
     }
 
     public void update(UUID id, String newName, ClassType newClassType, Race newRace, Weapon newWeapon) {
-        if(repository.findById(id).isEmpty()) throw new IllegalArgumentException("Character not found");
+        if(repository.findById(id).isEmpty())
+            throw new IllegalArgumentException("Character not found");
 
         RpgCharacter character = repository.findById(id).get();
         if(newName != null && !newName.isEmpty()) character.setName(newName);
@@ -63,6 +71,7 @@ public class CharacterService {
     public void delete(UUID id) {
         if(repository.findById(id).isEmpty())
             throw new NullPointerException("Character not found");
+
         repository.delete(id);
     }
 }

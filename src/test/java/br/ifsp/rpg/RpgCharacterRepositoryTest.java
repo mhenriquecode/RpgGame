@@ -1,11 +1,10 @@
 package br.ifsp.rpg;
 
 import br.ifsp.rpg.interfaces.CharacterRepository;
-import br.ifsp.rpg.model.ClassType;
-import br.ifsp.rpg.model.Race;
+import br.ifsp.rpg.model.enums.ClassType;
+import br.ifsp.rpg.model.enums.Race;
 import br.ifsp.rpg.model.RpgCharacter;
-import br.ifsp.rpg.model.Weapon;
-import br.ifsp.rpg.repository.MemoryCharacterRepository;
+import br.ifsp.rpg.model.enums.Weapon;
 import br.ifsp.rpg.service.CharacterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +37,7 @@ public class RpgCharacterRepositoryTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Find character by id test")
     void findCharacterByIdTest(){
@@ -47,7 +46,7 @@ public class RpgCharacterRepositoryTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @DisplayName("Trying to find character that does not exists test")
     void findCharacterThatDoesNotExistTest(){
         assertThatExceptionOfType(IllegalArgumentException.class)
@@ -55,7 +54,7 @@ public class RpgCharacterRepositoryTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Get all characters test")
     void getAllCharactersTest(){
@@ -69,14 +68,14 @@ public class RpgCharacterRepositoryTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @DisplayName("Return empty list when repository is empty")
     void getAllCharactersEmptyTest(){
         assertThat(service.getAllCharacters()).isEmpty();
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Save character test")
     void saveCharacterTest(){
@@ -90,7 +89,7 @@ public class RpgCharacterRepositoryTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @DisplayName("Trying to save invalid weapon character test")
     void tryingToSaveInvalidWeaponCharacterTest(){
         assertThatExceptionOfType(NullPointerException.class)
@@ -99,7 +98,7 @@ public class RpgCharacterRepositoryTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @DisplayName("Trying to save invalid race character test")
     void tryingToSaveInvalidRaceCharacterTest(){
         assertThatExceptionOfType(NullPointerException.class)
@@ -108,7 +107,7 @@ public class RpgCharacterRepositoryTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @DisplayName("Trying to save invalid name character test")
     void tryingToSaveInvalidNameCharacterTest(){
         assertThatExceptionOfType(NullPointerException.class)
@@ -117,7 +116,7 @@ public class RpgCharacterRepositoryTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Update character test")
     void updateCharacterTest(){
@@ -134,7 +133,7 @@ public class RpgCharacterRepositoryTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @DisplayName("Trying to update non existing character")
     void tryingToUpdateNonExistingCharacterTest(){
         assertThatExceptionOfType(IllegalArgumentException.class)
@@ -142,7 +141,7 @@ public class RpgCharacterRepositoryTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Delete existing character test")
     void deleteExistingCharacterTest(){
@@ -152,7 +151,7 @@ public class RpgCharacterRepositoryTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @DisplayName("Delete non existing character test")
     void deleteNonExistingCharacterTest(){
         assertThatExceptionOfType(NullPointerException.class)

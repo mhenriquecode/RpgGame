@@ -1,12 +1,13 @@
-package br.ifsp.rpg.model;
+package br.ifsp.rpg.model.dice;
 
 import br.ifsp.rpg.interfaces.DiceRoll;
+import br.ifsp.rpg.model.enums.Weapon;
 
 import java.util.Random;
 
 public class RollAttackDice implements DiceRoll {
     private final Random random;
-    private final Weapon weapon;
+    protected final Weapon weapon;
 
     public RollAttackDice(Weapon weapon) {
         this.random = new Random();
@@ -22,8 +23,8 @@ public class RollAttackDice implements DiceRoll {
     public int roll() {
         int totalDamage = 0;
 
-        for (int i = 0; i < this.weapon.dice; i++){
-            int result = random.nextInt(this.weapon.sides) + 1;
+        for (int i = 0; i < this.weapon.getDice(); i++){
+            int result = random.nextInt(this.weapon.getSides()) + 1;
             totalDamage += result;
         }
         return totalDamage;

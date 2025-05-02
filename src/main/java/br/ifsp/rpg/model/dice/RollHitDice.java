@@ -1,4 +1,4 @@
-package br.ifsp.rpg.model;
+package br.ifsp.rpg.model.dice;
 
 import br.ifsp.rpg.interfaces.DiceRoll;
 

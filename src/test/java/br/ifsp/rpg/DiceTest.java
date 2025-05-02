@@ -1,15 +1,13 @@
 package br.ifsp.rpg;
 
 import br.ifsp.rpg.interfaces.DiceRoll;
-import br.ifsp.rpg.model.RollAttackDice;
-import br.ifsp.rpg.model.RollHitDice;
-import br.ifsp.rpg.model.Weapon;
+import br.ifsp.rpg.model.dice.RollAttackDice;
+import br.ifsp.rpg.model.dice.RollHitDice;
+import br.ifsp.rpg.model.enums.Weapon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Random;
 
@@ -25,7 +23,7 @@ public class DiceTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("hit dice should return minimum value")
     void hitDiceShouldReturnMinimumValue(){
@@ -39,7 +37,7 @@ public class DiceTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @DisplayName("hit dice should return max value")
     void hitDiceShouldReturnMaxValue(){
         when(mockRandom.nextInt(20)).thenReturn(19);
@@ -52,7 +50,7 @@ public class DiceTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("should return sum of simulated values for weapon")
     void shouldReturnSumofSimulatedValuesForWeapon(){

@@ -1,10 +1,16 @@
 package br.ifsp.rpg.model;
 
 import br.ifsp.rpg.interfaces.SpecialEffect;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import br.ifsp.rpg.model.dice.RollAttackDice;
+import br.ifsp.rpg.model.dice.RollHitDice;
+import br.ifsp.rpg.model.enums.ClassType;
+import br.ifsp.rpg.model.enums.Race;
+import br.ifsp.rpg.model.enums.Weapon;
+import br.ifsp.rpg.model.specialEffects.SpecialEffectBerserk;
+import br.ifsp.rpg.model.specialEffects.SpecialEffectDuelist;
+import br.ifsp.rpg.model.specialEffects.SpecialEffectPaladin;
+import br.ifsp.rpg.model.specialEffects.SpecialEffectWarrior;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,11 +20,26 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Entity
+@NoArgsConstructor(force = true)
 public class RpgCharacter {
-    @Id private final UUID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private final UUID id;
+
+    @Column(nullable = false, length = 50)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ClassType classType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Race race;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Weapon weapon;
 
     private int maxHealth;
@@ -28,10 +49,10 @@ public class RpgCharacter {
     private int speed;
     private int armor;
 
-    private RollAttackDice attackDice;
-    private RollHitDice hitDice;
-    private Random random;
-    private SpecialEffect specialEffect;
+    @Transient private RollAttackDice attackDice;
+    @Transient private RollHitDice hitDice;
+    @Transient private Random random;
+    @Transient private SpecialEffect specialEffect;
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon) {
         this.id = UUID.randomUUID();

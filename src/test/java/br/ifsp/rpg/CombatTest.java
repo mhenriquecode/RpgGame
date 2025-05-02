@@ -1,6 +1,9 @@
 package br.ifsp.rpg;
 
 import br.ifsp.rpg.model.*;
+import br.ifsp.rpg.model.enums.ClassType;
+import br.ifsp.rpg.model.enums.Race;
+import br.ifsp.rpg.model.enums.Weapon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -23,7 +26,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Must create valid combat between two character")
     void mustCreateValidCombatBetweenTwoCharacters(){
@@ -34,7 +37,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Player one starts the combat when his speed is grater than player two's speed")
     void playerOneWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerTwoTest(){
@@ -49,7 +52,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Player two starts the combat when his speed is grater than player one's speed")
     void playerTwoWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerOneTest(){
@@ -64,7 +67,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Player one starts when speed is equal to player two's speed")
     void playerOneStartsWhenSpeedIsEqualToThePlayerTwo(){
@@ -79,7 +82,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Player two starts when speed is equal to player one's speed")
     void playerTwoStartsWhenSpeedIsEqualToThePlayerOne(){
@@ -94,7 +97,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Must create valid turn between one combat with two characters")
     void mustCreateValidTurnBetweenOneCombatWithTwoCharacters(){
@@ -105,7 +108,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Character attack test")
     void characterAttackTest(){
@@ -119,7 +122,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("should increase armor when the character dodges")
     void shouldIncreaseArmorWhenTheCharacterDodges(){
@@ -130,7 +133,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("should decrease damage taken when character defends")
     void shouldDecreaseDamageTakenWhenCharacterDefends(){
@@ -141,7 +144,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("choosing to attack when executing the turn")
     void choosingToAttackWhenExecutingTheTurn(){
@@ -156,7 +159,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("choosing to defend when executing the turn")
     void choosingToDefendWhenExecutingTheTurn(){
@@ -171,7 +174,7 @@ public class CombatTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("choosing to dodge when executing the turn")
     void choosingToDodgeWhenExecutingTheTurn(){

@@ -1,5 +1,7 @@
 package br.ifsp.rpg.model;
 
+import br.ifsp.rpg.model.dice.RollHitDice;
+
 public class Turn {
     private final RpgCharacter current;
     private final RpgCharacter opponent;

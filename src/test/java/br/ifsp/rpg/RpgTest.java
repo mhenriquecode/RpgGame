@@ -3,13 +3,15 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import br.ifsp.rpg.model.*;
+import br.ifsp.rpg.model.enums.ClassType;
+import br.ifsp.rpg.model.enums.Race;
+import br.ifsp.rpg.model.enums.Weapon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.*;
+
 import java.util.Random;
 
 public class RpgTest {
@@ -21,7 +23,7 @@ public class RpgTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Creating valid character test")
     void creatingValidCharacterTest() {
@@ -35,7 +37,7 @@ public class RpgTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Calculate character attributes test")
     void calculateCharacterAttributesTest(){
@@ -48,7 +50,7 @@ public class RpgTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Character attack test")
     void characterAttackTest(){
@@ -62,7 +64,7 @@ public class RpgTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Applying berserk special attack effect test")
     void applyingBerserkSpecialAttackEffectTest(){
@@ -75,7 +77,7 @@ public class RpgTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Applying warrior special attack effect test")
     void applyingWarriorSpecialAttackEffectTest(){
@@ -90,7 +92,7 @@ public class RpgTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Applying paladin special attack effect test")
     void applyingPaladinSpecialAttackEffectTest() {
@@ -104,7 +106,7 @@ public class RpgTest {
     }
 
     @Test
-    @Tag("Unit Test")
+    @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Applying duelist special attack effect test")
     void applyingDuelistSpecialAttackEffectTest() {
