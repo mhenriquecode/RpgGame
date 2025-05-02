@@ -23,10 +23,11 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -116,5 +117,20 @@ public class CharacterControllerTest {
                 .andExpect(jsonPath("$.classType").value("PALADIN"))
                 .andExpect(jsonPath("$.race").value("ELF"))
                 .andExpect(jsonPath("$.weapon").value("DAGGER"));
+    }
+
+    @Test
+    @Tag("Unit-test")
+    @Tag("TDD")
+    @DisplayName("Should delete character successfully test")
+    void shouldDeleteCharacterTest() throws Exception {
+        UUID characterId = UUID.randomUUID();
+        
+        doNothing().when(service).delete(characterId);
+
+        mockMvc.perform(delete("/api/characters/{id}", characterId))
+                .andExpect(status().isNoContent());
+
+        verify(service, times(1)).delete(characterId);
     }
 }
