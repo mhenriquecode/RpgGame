@@ -49,6 +49,6 @@ public class CharacterController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCharacter(@PathVariable UUID id) {
         characterService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

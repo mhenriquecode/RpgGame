@@ -2,6 +2,7 @@ package br.ifsp.rpg;
 
 import br.ifsp.rpg.controller.CharacterController;
 import br.ifsp.rpg.dto.CharacterDTO;
+import br.ifsp.rpg.exceptions.CharacterNotFoundException;
 import br.ifsp.rpg.model.enums.ClassType;
 import br.ifsp.rpg.model.enums.Race;
 import br.ifsp.rpg.model.RpgCharacter;
@@ -140,7 +141,7 @@ public class CharacterControllerTest {
     void shouldReturn404WhenCharacterNotFound() throws Exception {
         UUID nonExistentId = UUID.randomUUID();
 
-        doThrow(IllegalArgumentException.class).when(service).delete(nonExistentId);
+        doThrow(new CharacterNotFoundException(nonExistentId)).when(service).delete(nonExistentId);
 
         mockMvc.perform(delete("/api/characters/{id}", nonExistentId))
                 .andExpect(status().isNotFound());

@@ -1,6 +1,7 @@
 package br.ifsp.rpg.service;
 
 import br.ifsp.rpg.dto.CharacterDTO;
+import br.ifsp.rpg.exceptions.CharacterNotFoundException;
 import br.ifsp.rpg.interfaces.CharacterRepository;
 import br.ifsp.rpg.model.enums.ClassType;
 import br.ifsp.rpg.model.enums.Race;
@@ -68,9 +69,9 @@ public class CharacterService {
     }
 
     public void delete(UUID id) {
-        if(repository.findById(id).isEmpty())
-            throw new NullPointerException("Character not found");
+        RpgCharacter character = repository.findById(id)
+                .orElseThrow(() -> new CharacterNotFoundException(id));
 
-        repository.delete(id);
+        repository.delete(character.getId());
     }
 }
