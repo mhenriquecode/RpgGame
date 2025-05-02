@@ -13,15 +13,11 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.Random;
 
 public class RpgTest {
-    private Weapon axe;
-    private Weapon sword;
 
     @Mock private Random mockRandom = mock(Random.class);
 
     @BeforeEach
     public void setUp() {
-        axe = new Weapon("Axe",2,6);
-        sword = new Weapon("Sword",3,4);
     }
 
     @Test
@@ -29,15 +25,13 @@ public class RpgTest {
     @Tag("TDD")
     @DisplayName("Creating valid character test")
     void creatingValidCharacterTest() {
-        Weapon axe = new Weapon("Axe", 2, 6);
-        ClassType warrior = ClassType.WARRIOR;
-        RpgCharacter character = new RpgCharacter("Character", warrior, Race.ORC, axe);
+        RpgCharacter character = new RpgCharacter("Character", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
 
         assertThat(character.getId()).isNotNull();
         assertThat(character.getName()).isEqualTo("Character");
         assertThat(character.getRace().name()).isEqualTo(Race.ORC.name());
-        assertThat(character.getWeapon().name()).isEqualTo(axe.name());
-        assertThat(character.getClassType()).isEqualTo(warrior);
+        assertThat(character.getWeapon().name()).isEqualTo(Weapon.AXE.name());
+        assertThat(character.getClassType()).isEqualTo(ClassType.WARRIOR);
     }
 
     @Test
@@ -45,9 +39,7 @@ public class RpgTest {
     @Tag("TDD")
     @DisplayName("Calculate character attributes test")
     void calculateCharacterAttributesTest(){
-        Weapon sword = new Weapon("Sword", 3, 4);
-        ClassType paladin = ClassType.PALADIN;
-        RpgCharacter character = new RpgCharacter("Character", paladin, Race.DWARF, sword);
+        RpgCharacter character = new RpgCharacter("Character", ClassType.PALADIN, Race.DWARF, Weapon.SWORD);
 
         assertThat(character.getMaxHealth()).isEqualTo(130);
         assertThat(character.getStrength()).isEqualTo(10);
@@ -76,7 +68,7 @@ public class RpgTest {
     void applyingBerserkSpecialAttackEffectTest(){
         when(mockRandom.nextInt(100)).thenReturn(5);
 
-        RpgCharacter player = new RpgCharacter("Character", ClassType.BERSERK, Race.ORC, axe, mockRandom);
+        RpgCharacter player = new RpgCharacter("Character", ClassType.BERSERK, Race.ORC, Weapon.AXE, mockRandom);
 
         assertThat(player.getClassType()).isEqualTo(ClassType.BERSERK);
         assertThat(player.attack()).isGreaterThanOrEqualTo(player.getStrength() + 2 * 2);
@@ -89,7 +81,7 @@ public class RpgTest {
     void applyingWarriorSpecialAttackEffectTest(){
         when(mockRandom.nextInt(100)).thenReturn(5);
 
-        RpgCharacter player = new RpgCharacter("Character", ClassType.WARRIOR, Race.HUMAN, sword, mockRandom);
+        RpgCharacter player = new RpgCharacter("Character", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD, mockRandom);
         int oldDefense = player.getDefense();
         int damage = player.attack();
 
@@ -104,7 +96,7 @@ public class RpgTest {
     void applyingPaladinSpecialAttackEffectTest() {
         when(mockRandom.nextInt(100)).thenReturn(5);
 
-        RpgCharacter player = new RpgCharacter("Character", ClassType.PALADIN, Race.HUMAN, sword, mockRandom);
+        RpgCharacter player = new RpgCharacter("Character", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD, mockRandom);
         player.attack();
 
         assertThat(player.getClassType()).isEqualTo(ClassType.PALADIN);
@@ -118,7 +110,7 @@ public class RpgTest {
     void applyingDuelistSpecialAttackEffectTest() {
         when(mockRandom.nextInt(100)).thenReturn(5);
 
-        RpgCharacter player = new RpgCharacter("Character", ClassType.DUELIST, Race.HUMAN, sword, mockRandom);
+        RpgCharacter player = new RpgCharacter("Character", ClassType.DUELIST, Race.HUMAN, Weapon.SWORD, mockRandom);
 
         assertThat(player.getClassType()).isEqualTo(ClassType.DUELIST);
         assertThat(player.attack()).isStrictlyBetween(23, 41);

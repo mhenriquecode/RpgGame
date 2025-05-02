@@ -22,8 +22,8 @@ public class RollAttackDice implements DiceRoll {
     public int roll() {
         int totalDamage = 0;
 
-        for (int i = 0; i < weapon.dice(); i++){
-            int result = random.nextInt(weapon.sides()) + 1;
+        for (int i = 0; i < this.weapon.dice; i++){
+            int result = random.nextInt(this.weapon.sides) + 1;
             totalDamage += result;
         }
         return totalDamage;

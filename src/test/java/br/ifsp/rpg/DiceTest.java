@@ -56,11 +56,9 @@ public class DiceTest {
     @Tag("TDD")
     @DisplayName("should return sum of simulated values for weapon")
     void shouldReturnSumofSimulatedValuesForWeapon(){
-        Weapon weapon = new Weapon("testeWeapon", 2, 6);
-
         when(mockRandom.nextInt(6)).thenReturn(0, 5);
 
-        DiceRoll attackDice = new RollAttackDice(weapon, mockRandom);
+        DiceRoll attackDice = new RollAttackDice(Weapon.AXE, mockRandom);
         int result = attackDice.roll();
 
         assertEquals(7, result);

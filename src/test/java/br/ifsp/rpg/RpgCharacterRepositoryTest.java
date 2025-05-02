@@ -30,13 +30,11 @@ public class RpgCharacterRepositoryTest {
     @Mock CharacterRepository repository;
     @InjectMocks CharacterService service;
 
-    Weapon dagger;
     RpgCharacter character;
 
     @BeforeEach
     void setUp() {
-        dagger = new Weapon("Dagger", 4, 3);
-        character = new RpgCharacter("Character", ClassType.DUELIST, Race.HUMAN, dagger);
+        character = new RpgCharacter("Character", ClassType.DUELIST, Race.HUMAN, Weapon.DAGGER);
     }
 
     @Test
@@ -61,9 +59,7 @@ public class RpgCharacterRepositoryTest {
     @Tag("TDD")
     @DisplayName("Get all characters test")
     void getAllCharactersTest(){
-        Weapon hammer = new Weapon("Hammer", 1, 12);
-
-        RpgCharacter character2 = new RpgCharacter("Character2", ClassType.WARRIOR, Race.DWARF, hammer);
+        RpgCharacter character2 = new RpgCharacter("Character2", ClassType.WARRIOR, Race.DWARF, Weapon.HAMMER);
         List<RpgCharacter> mockList = List.of(character, character2);
 
         when(repository.findAll()).thenReturn(mockList);
@@ -108,7 +104,7 @@ public class RpgCharacterRepositoryTest {
     void tryingToSaveInvalidRaceCharacterTest(){
         assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> service.save(new RpgCharacter(
-                        "New Character", ClassType.BERSERK, null,dagger)));
+                        "New Character", ClassType.BERSERK, null,Weapon.DAGGER)));
     }
 
     @Test
@@ -117,7 +113,7 @@ public class RpgCharacterRepositoryTest {
     void tryingToSaveInvalidNameCharacterTest(){
         assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> service.save(new RpgCharacter(
-                        null, ClassType.BERSERK, Race.HUMAN,dagger)));
+                        null, ClassType.BERSERK, Race.HUMAN,Weapon.DAGGER)));
     }
 
     @Test
@@ -127,13 +123,12 @@ public class RpgCharacterRepositoryTest {
     void updateCharacterTest(){
         when(repository.findById(character.getId())).thenReturn(Optional.of(character));
 
-        Weapon newWeapon = new Weapon("Sword", 3, 4);
-        service.update(character.getId(), "New Name", ClassType.PALADIN, Race.ORC, newWeapon);
+        service.update(character.getId(), "New Name", ClassType.PALADIN, Race.ORC, Weapon.SWORD);
 
         assertThat(character.getName()).isEqualTo("New Name");
         assertThat(character.getClassType()).isEqualTo(ClassType.PALADIN);
         assertThat(character.getRace()).isEqualTo(Race.ORC);
-        assertThat(character.getWeapon()).isEqualTo(newWeapon);
+        assertThat(character.getWeapon()).isEqualTo(Weapon.SWORD);
 
         verify(repository).update(character);
     }
@@ -142,10 +137,8 @@ public class RpgCharacterRepositoryTest {
     @Tag("Unit Test")
     @DisplayName("Trying to update non existing character")
     void tryingToUpdateNonExistingCharacterTest(){
-        Weapon newWeapon = new Weapon("Hammer", 1, 12);
-
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> service.update(UUID.randomUUID(), "New Name", ClassType.WARRIOR, Race.ORC, newWeapon));
+                .isThrownBy(() -> service.update(UUID.randomUUID(), "New Name", ClassType.WARRIOR, Race.ORC, Weapon.HAMMER));
     }
 
     @Test
