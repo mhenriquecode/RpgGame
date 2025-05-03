@@ -1,7 +1,7 @@
 package br.ifsp.web.service;
 
 import br.ifsp.web.dto.CharacterDTO;
-import br.ifsp.web.exceptions.CharacterNotFoundException;
+import br.ifsp.web.exception.CharacterNotFoundException;
 import br.ifsp.web.repository.CharacterRepository;
 import br.ifsp.web.model.RpgCharacter;
 import lombok.AllArgsConstructor;
