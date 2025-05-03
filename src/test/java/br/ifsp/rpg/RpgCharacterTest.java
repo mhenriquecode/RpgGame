@@ -177,5 +177,18 @@ public class RpgCharacterTest {
         assertEquals(expectedSpeed, character.getSpeed());
     }
 
+    @Test
+    @Tag("Unit-test")
+    @DisplayName("User Chooses Paladin Then Character Receives Bonus To Health And Defense")
+    void userChoosesPaladinThenCharacterReceivesBonusToHealthAndDefense() {
+        RpgCharacter character = new RpgCharacter("Arthur", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
+
+        int expectedMaxHealth = 100 + Race.HUMAN.getBonusHealth() + ClassType.PALADIN.getBonusHealth(); // 100 + 5 + 10
+        int expectedDefense = 5 + Race.HUMAN.getBonusDefense() + ClassType.PALADIN.getBonusDefense(); // 5 + 2 + 5
+
+        assertEquals(expectedMaxHealth, character.getMaxHealth());
+        assertEquals(expectedDefense, character.getDefense());
+    }
+
 
 }
