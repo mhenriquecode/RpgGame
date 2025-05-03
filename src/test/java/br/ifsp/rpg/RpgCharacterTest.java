@@ -160,8 +160,22 @@ public class RpgCharacterTest {
         int expectedStrength = 10 + Race.HUMAN.getBonusStrength() + ClassType.WARRIOR.getBonusStrength(); // 10 + 2 + 5
         int expectedDefense = 5 + Race.HUMAN.getBonusDefense() + ClassType.WARRIOR.getBonusDefense(); // 5 + 2 + 5
 
-        assertEquals(expectedStrength, character.getStrength(), "Warrior should receive a bonus to strength.");
-        assertEquals(expectedDefense, character.getDefense(), "Warrior should receive a bonus to defense.");
+        assertEquals(expectedStrength, character.getStrength());
+        assertEquals(expectedDefense, character.getDefense());
     }
+
+    @Test
+    @Tag("Unit-test")
+    @DisplayName("User Chooses Duelist Then Character Receives Bonus To Strength And Speed")
+    void userChoosesDuelistThenCharacterReceivesBonusToStrengthAndSpeed() {
+        RpgCharacter character = new RpgCharacter("Zoro", ClassType.DUELIST, Race.HUMAN, Weapon.SWORD);
+
+        int expectedStrength = 10 + Race.HUMAN.getBonusStrength() + ClassType.DUELIST.getBonusStrength(); // 10 + 2 + 5
+        int expectedSpeed = 4 + Race.HUMAN.getBonusSpeed() + ClassType.DUELIST.getBonusSpeed(); // 4 + 2 + 2
+
+        assertEquals(expectedStrength, character.getStrength());
+        assertEquals(expectedSpeed, character.getSpeed());
+    }
+
 
 }
