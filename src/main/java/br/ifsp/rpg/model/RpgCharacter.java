@@ -65,6 +65,7 @@ public class RpgCharacter {
         this.attackDice = new RollAttackDice(this.weapon);
         this.hitDice = new RollHitDice();
         this.specialEffect = chooseSpecialEffect(classType);
+        this.random = new Random();
     }
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon, RollHitDice hitDice, RollAttackDice attackDice) {
@@ -112,6 +113,9 @@ public class RpgCharacter {
     public int rollAttackDice() {
         return attackDice.roll();
     }
+    public int rollHitDice(){
+        return hitDice.roll();
+    }
 
     public void dodge(){
         armor += speed;
@@ -119,6 +123,6 @@ public class RpgCharacter {
 
     public void defends(int damageReceived){
         int finalDamage = Math.max(0, damageReceived - defense);
-        maxHealth -= finalDamage;
+        health -= finalDamage;
     }
 }

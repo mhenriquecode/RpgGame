@@ -95,18 +95,7 @@ public class CombatTest {
 
         assertThat(first).isEqualTo(player2);
     }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Must create valid turn between one combat with two characters")
-    void mustCreateValidTurnBetweenOneCombatWithTwoCharacters(){
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-        Turn turn = new Turn(player1, player2);
-
-        assertThat(turn).isNotNull();
-    }
-
+    
     @Test
     @Tag("Unit-test")
     @Tag("TDD")
@@ -141,50 +130,5 @@ public class CombatTest {
         player1.defends(damageReceived);
 
         assertThat(player1.getMaxHealth()).isEqualTo(114);
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("choosing to attack when executing the turn")
-    void choosingToAttackWhenExecutingTheTurn(){
-        RpgCharacter current = mock(RpgCharacter.class);
-        RpgCharacter opponent = mock(RpgCharacter.class);
-
-        Turn turn = spy(new Turn(current, opponent));
-
-        turn.execute(1);
-
-        verify(turn).attack();
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("choosing to defend when executing the turn")
-    void choosingToDefendWhenExecutingTheTurn(){
-        RpgCharacter current = mock(RpgCharacter.class);
-        RpgCharacter opponent = mock(RpgCharacter.class);
-
-        Turn turn = spy(new Turn(current, opponent));
-
-        turn.execute(2);
-
-        verify(turn).defend();
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("choosing to dodge when executing the turn")
-    void choosingToDodgeWhenExecutingTheTurn(){
-        RpgCharacter current = mock(RpgCharacter.class);
-        RpgCharacter opponent = mock(RpgCharacter.class);
-
-        Turn turn = spy(new Turn(current, opponent));
-
-        turn.execute(3);
-
-        verify(turn).dodge();
     }
 }

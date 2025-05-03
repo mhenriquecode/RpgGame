@@ -1,32 +1,22 @@
 package br.ifsp.rpg.model;
 
-import br.ifsp.rpg.model.dice.RollHitDice;
+import br.ifsp.rpg.interfaces.ChooseAction;
+import br.ifsp.rpg.interfaces.PlayerAction;
 
 public class Turn {
     private final RpgCharacter current;
     private final RpgCharacter opponent;
-    private RollHitDice hitDice;
+    private final ChooseAction chooseAction;
 
-    public Turn(RpgCharacter current, RpgCharacter opponent) {
+
+    public Turn(RpgCharacter current, RpgCharacter opponent, ChooseAction chooseAction) {
         this.current = current;
         this.opponent = opponent;
+        this.chooseAction = chooseAction;
     }
 
-    public void execute(int actionChoice) {
-        switch (actionChoice){
-            case 1 -> attack();
-            case 2 -> defend();
-            case 3 -> dodge();
-        }
+    public void execute() {
+        PlayerAction action = chooseAction.choose(current, opponent);
+        action.execute(current, opponent);
     }
-
-    public void attack() {
-    }
-
-    public void defend(){
-    }
-    public void dodge(){
-
-    }
-
 }

@@ -1,7 +1,9 @@
 package br.ifsp.rpg;
 
+import br.ifsp.rpg.interfaces.ChooseAction;
 import br.ifsp.rpg.model.RpgCharacter;
 import br.ifsp.rpg.model.Turn;
+import br.ifsp.rpg.model.actions.ChooseUserAction;
 import br.ifsp.rpg.model.dice.RollAttackDice;
 import br.ifsp.rpg.model.dice.RollHitDice;
 import br.ifsp.rpg.model.enums.ClassType;
@@ -12,7 +14,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
