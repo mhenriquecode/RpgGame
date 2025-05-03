@@ -122,10 +122,19 @@ public class RpgCharacterTest {
         int expectedDefense = 5 + Race.HUMAN.getBonusDefense() + ClassType.BERSERK.getBonusDefense(); // 5 + 2 + 0
         int expectedSpeed = 4 + Race.HUMAN.getBonusSpeed() + ClassType.BERSERK.getBonusSpeed(); // 4 + 2 + 0
 
-        // Assert
         assertEquals(expectedHealth, character.getMaxHealth());
         assertEquals(expectedStrength, character.getStrength());
         assertEquals(expectedDefense, character.getDefense());
         assertEquals(expectedSpeed, character.getSpeed());
+    }
+
+    @Test
+    @Tag("Unit-test")
+    @DisplayName("User Chooses Orc Then Character Receives Bonus To Strength")
+    void userChoosesOrcThenCharacterReceivesBonusToStrength() {
+        RpgCharacter character = new RpgCharacter("Gor", ClassType.DUELIST, Race.ORC, Weapon.AXE);
+        int expectedStrength = 10 + Race.ORC.getBonusStrength() + ClassType.DUELIST.getBonusStrength(); // 10 + 5 + 5
+
+        assertEquals(expectedStrength, character.getStrength());
     }
 }
