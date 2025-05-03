@@ -1,13 +1,13 @@
 package br.ifsp.rpg;
 
-import br.ifsp.rpg.interfaces.ChooseAction;
-import br.ifsp.rpg.model.RpgCharacter;
-import br.ifsp.rpg.model.Turn;
-import br.ifsp.rpg.model.dice.RollAttackDice;
-import br.ifsp.rpg.model.dice.RollHitDice;
-import br.ifsp.rpg.model.enums.ClassType;
-import br.ifsp.rpg.model.enums.Race;
-import br.ifsp.rpg.model.enums.Weapon;
+import br.ifsp.web.interfaces.ChooseAction;
+import br.ifsp.web.model.RpgCharacter;
+import br.ifsp.web.model.Turn;
+import br.ifsp.web.model.dice.RollAttackDice;
+import br.ifsp.web.model.dice.RollHitDice;
+import br.ifsp.web.model.enums.ClassType;
+import br.ifsp.web.model.enums.Race;
+import br.ifsp.web.model.enums.Weapon;
 import br.ifsp.rpg.stubs.DodgeStub;
 import br.ifsp.rpg.stubs.attackStub;
 import br.ifsp.rpg.stubs.defendingStub;

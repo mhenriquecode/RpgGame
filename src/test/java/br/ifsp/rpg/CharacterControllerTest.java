@@ -1,13 +1,13 @@
 package br.ifsp.rpg;
 
-import br.ifsp.rpg.controller.CharacterController;
-import br.ifsp.rpg.dto.CharacterDTO;
-import br.ifsp.rpg.exceptions.CharacterNotFoundException;
-import br.ifsp.rpg.model.enums.ClassType;
-import br.ifsp.rpg.model.enums.Race;
-import br.ifsp.rpg.model.RpgCharacter;
-import br.ifsp.rpg.model.enums.Weapon;
-import br.ifsp.rpg.service.CharacterService;
+import br.ifsp.web.controller.CharacterController;
+import br.ifsp.web.dto.CharacterDTO;
+import br.ifsp.web.exceptions.CharacterNotFoundException;
+import br.ifsp.web.model.enums.ClassType;
+import br.ifsp.web.model.enums.Race;
+import br.ifsp.web.model.RpgCharacter;
+import br.ifsp.web.model.enums.Weapon;
+import br.ifsp.web.service.CharacterService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

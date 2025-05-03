@@ -1,10 +1,9 @@
 package br.ifsp.rpg.stubs;
 
-import br.ifsp.rpg.interfaces.ChooseAction;
-import br.ifsp.rpg.interfaces.PlayerAction;
-import br.ifsp.rpg.model.RpgCharacter;
-import br.ifsp.rpg.model.actions.DefendingAction;
-import br.ifsp.rpg.model.actions.DodgeAction;
+import br.ifsp.web.interfaces.ChooseAction;
+import br.ifsp.web.interfaces.PlayerAction;
+import br.ifsp.web.model.RpgCharacter;
+import br.ifsp.web.model.actions.DodgeAction;
 
 public class DodgeStub implements ChooseAction {
     @Override

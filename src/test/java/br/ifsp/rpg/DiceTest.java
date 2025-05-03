@@ -1,9 +1,9 @@
 package br.ifsp.rpg;
 
-import br.ifsp.rpg.interfaces.DiceRoll;
-import br.ifsp.rpg.model.dice.RollAttackDice;
-import br.ifsp.rpg.model.dice.RollHitDice;
-import br.ifsp.rpg.model.enums.Weapon;
+import br.ifsp.web.interfaces.DiceRoll;
+import br.ifsp.web.model.dice.RollAttackDice;
+import br.ifsp.web.model.dice.RollHitDice;
+import br.ifsp.web.model.enums.Weapon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
