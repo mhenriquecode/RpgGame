@@ -17,6 +17,15 @@ public class CharacterService {
     private final CharacterRepository repository;
 
     public RpgCharacter create(CharacterDTO characterDTO) {
+        if(characterDTO.name() == null || characterDTO.name().isEmpty())
+            throw new IllegalArgumentException("Name cannot be empty or null");
+        if(characterDTO.classType() == null)
+            throw new IllegalArgumentException("ClassType cannot be null");
+        if(characterDTO.race() == null)
+            throw new IllegalArgumentException("Race cannot be null");
+        if(characterDTO.weapon() == null)
+            throw new IllegalArgumentException("Weapon cannot be null");
+
         RpgCharacter character = new RpgCharacter(characterDTO.name(), characterDTO.classType(), characterDTO.race(), characterDTO.weapon());
         repository.save(character);
 

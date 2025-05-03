@@ -76,6 +76,24 @@ public class CharacterControllerTest {
     @Test
     @Tag("Unit-test")
     @Tag("TDD")
+    @DisplayName("Should not create invalid character test")
+    void shouldNotCreateInvalidCharacterTest() throws Exception {
+        CharacterDTO invalidCharacter = new CharacterDTO("InvalidChar", null, Race.DWARF, Weapon.AXE);
+
+        doThrow(new IllegalArgumentException("ClassType cannot be null"))
+                .when(service).create(any());
+
+        mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(invalidCharacter)))
+                .andExpect(status().isBadRequest());
+
+        verify(service).create(any());
+    }
+
+    @Test
+    @Tag("Unit-test")
+    @Tag("TDD")
     @DisplayName("Should return character by ID test")
     void shouldReturnCharacterById() throws Exception {
         when(service.getCharacter(createdCharacter.getId())).thenReturn(Optional.of(createdCharacter));
