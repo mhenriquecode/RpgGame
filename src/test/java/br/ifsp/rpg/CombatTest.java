@@ -126,9 +126,15 @@ public class CombatTest {
     @Tag("TDD")
     @DisplayName("should decrease damage taken when character defends")
     void shouldDecreaseDamageTakenWhenCharacterDefends(){
-        int damageReceived = 13;
-        player1.defends(damageReceived);
+        player1.setDefending(true);
 
-        assertThat(player1.getMaxHealth()).isEqualTo(114);
+        int initialHealth = player1.getHealth();
+        int damageReceived = 17;
+
+        player1.defends(damageReceived);
+        int expectedDamage = damageReceived - 12;
+        int expectedHealth = initialHealth - expectedDamage;
+
+        assertThat(player1.getHealth()).isEqualTo(expectedHealth);
     }
 }
