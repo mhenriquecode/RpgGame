@@ -16,6 +16,7 @@ public class ChooseUserAction implements ChooseAction {
         return switch (chosenAction) {
             case 1 -> new AttackAction();
             case 2 -> new DefendingAction();
+            case 3 -> new DodgeAction();
             default -> throw new IllegalArgumentException("Invalid action: " + chosenAction);
         };
     }

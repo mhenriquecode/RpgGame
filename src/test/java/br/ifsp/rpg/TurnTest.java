@@ -3,12 +3,12 @@ package br.ifsp.rpg;
 import br.ifsp.rpg.interfaces.ChooseAction;
 import br.ifsp.rpg.model.RpgCharacter;
 import br.ifsp.rpg.model.Turn;
-import br.ifsp.rpg.model.actions.ChooseUserAction;
 import br.ifsp.rpg.model.dice.RollAttackDice;
 import br.ifsp.rpg.model.dice.RollHitDice;
 import br.ifsp.rpg.model.enums.ClassType;
 import br.ifsp.rpg.model.enums.Race;
 import br.ifsp.rpg.model.enums.Weapon;
+import br.ifsp.rpg.stubs.DodgeStub;
 import br.ifsp.rpg.stubs.attackStub;
 import br.ifsp.rpg.stubs.defendingStub;
 import org.junit.jupiter.api.DisplayName;
@@ -83,7 +83,6 @@ public class TurnTest {
     @Tag("TDD")
     @DisplayName("dodge should increase armor in the turn")
     void dodgeShouldIncreaseArmorInTheTurn() {
-        // Arrange
         RpgCharacter character = new RpgCharacter("Jogador", ClassType.DUELIST, Race.ELF, Weapon.SWORD);
 
         int armorBefore = character.getArmor(); // Valor padrão é 10
@@ -93,11 +92,9 @@ public class TurnTest {
 
         RpgCharacter opponent = new RpgCharacter("Inimigo", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
 
-        // Act
         Turn dodgeTurn = new Turn(character, opponent, dodgeChoose);
         dodgeTurn.execute();
 
-        // Assert
         int expectedArmor = armorBefore + speedBonus;
         assertEquals(expectedArmor, character.getArmor());
     }
