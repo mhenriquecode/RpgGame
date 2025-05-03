@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class RpgCharacterTest {
@@ -86,5 +87,15 @@ public class RpgCharacterTest {
         int expectedHealth = initialHealth - expectedDamage;
 
         assertThat(player1.getHealth()).isEqualTo(expectedHealth);
+    }
+
+    @Test
+    @Tag("Unit-test")
+    @DisplayName("User Chooses Elf Then Character Gets Speed Bonus")
+    void userChoosesElfThenCharacterGetsSpeedBonus() {
+        RpgCharacter character = new RpgCharacter("Legolas", ClassType.WARRIOR, Race.ELF, Weapon.SWORD);
+        int totalSpeed = 4 + Race.ELF.getBonusSpeed() + ClassType.WARRIOR.getBonusSpeed(); // 4 + 2 + 0
+
+        assertEquals(totalSpeed, character.getSpeed());
     }
 }
