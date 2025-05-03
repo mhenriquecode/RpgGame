@@ -152,6 +152,34 @@ public class TurnTest {
     }
 
     @Test
+    @Tag("Unit-Test")
+    @DisplayName("dodge Should Increase Armor And Still Take Damage If Hit Dice Exceeds It")
+    void dodgeShouldIncreaseArmorAndStillTakeDamageIfHitDiceExceedsIt() {
+        RollHitDice hitDiceMock = mock(RollHitDice.class);
+        RollAttackDice attackDiceMock = mock(RollAttackDice.class);
+
+        when(hitDiceMock.roll()).thenReturn(17);
+        when(attackDiceMock.roll()).thenReturn(5);
+
+        RpgCharacter attacker = new RpgCharacter("Atacante", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER,
+                hitDiceMock, attackDiceMock);
+
+        RpgCharacter defender = new RpgCharacter("Defensor", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER,
+                hitDiceMock, attackDiceMock);
+
+        int initialHealth = defender.getHealth();
+
+        Turn dodgeTurn = new Turn(defender, attacker, new DodgeStub());
+        dodgeTurn.execute();
+
+        Turn attackTurn = new Turn(attacker, defender, new attackStub());
+        attackTurn.execute();
+
+        int damageTaken = initialHealth - defender.getHealth();
+        assertEquals(17, damageTaken);
+    }
+
+    @Test
     @Tag("TDD")
     @Tag("Unit-Test")
     @DisplayName("dodge Bonus Should Expire After Opponents Turn")
