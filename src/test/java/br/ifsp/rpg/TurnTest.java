@@ -74,8 +74,8 @@ public class TurnTest {
 
     @Test
     @Tag("TDD")
-    @DisplayName("defend should reduce damage when choosing to defend")
-    void defendShouldReduceDamageWhenChoosingToDefend() {
+    @DisplayName("defend should reduce damage using defense points")
+    void defendShouldReduceDamageUsingDefensePoints() {
         RollHitDice hitDiceMock = mock(RollHitDice.class);
         RollAttackDice attackDiceMock = mock(RollAttackDice.class);
 
