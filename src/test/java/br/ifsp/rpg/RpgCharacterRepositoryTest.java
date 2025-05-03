@@ -1,7 +1,8 @@
 package br.ifsp.rpg;
 
 import br.ifsp.rpg.dto.CharacterDTO;
-import br.ifsp.rpg.interfaces.CharacterRepository;
+import br.ifsp.rpg.exceptions.CharacterNotFoundException;
+import br.ifsp.rpg.repository.CharacterRepository;
 import br.ifsp.rpg.model.enums.ClassType;
 import br.ifsp.rpg.model.enums.Race;
 import br.ifsp.rpg.model.RpgCharacter;
@@ -130,7 +131,7 @@ public class RpgCharacterRepositoryTest {
         assertThat(character.getRace()).isEqualTo(Race.ORC);
         assertThat(character.getWeapon()).isEqualTo(Weapon.SWORD);
 
-        verify(repository).update(character);
+        verify(repository).save(character);
     }
 
     @Test
@@ -150,14 +151,14 @@ public class RpgCharacterRepositoryTest {
     void deleteExistingCharacterTest(){
         when(repository.findById(Mockito.any())).thenReturn(Optional.of(character));
         service.delete(character.getId());
-        verify(repository).delete(character.getId());
+        verify(repository).delete(character);
     }
 
     @Test
     @Tag("Unit-test")
     @DisplayName("Delete non existing character test")
     void deleteNonExistingCharacterTest(){
-        assertThatExceptionOfType(NullPointerException.class)
+        assertThatExceptionOfType(CharacterNotFoundException.class)
                 .isThrownBy(() -> service.delete(UUID.randomUUID()));
     }
 }

@@ -2,11 +2,9 @@ package br.ifsp.rpg.service;
 
 import br.ifsp.rpg.dto.CharacterDTO;
 import br.ifsp.rpg.exceptions.CharacterNotFoundException;
-import br.ifsp.rpg.interfaces.CharacterRepository;
-import br.ifsp.rpg.model.enums.ClassType;
-import br.ifsp.rpg.model.enums.Race;
+import br.ifsp.rpg.repository.CharacterRepository;
 import br.ifsp.rpg.model.RpgCharacter;
-import br.ifsp.rpg.model.enums.Weapon;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,12 +12,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class CharacterService {
     private final CharacterRepository repository;
-
-    public CharacterService(CharacterRepository repository) {
-        this.repository = repository;
-    }
 
     public RpgCharacter create(CharacterDTO characterDTO) {
         RpgCharacter character = new RpgCharacter(characterDTO.name(), characterDTO.classType(), characterDTO.race(), characterDTO.weapon());
@@ -72,6 +67,6 @@ public class CharacterService {
         RpgCharacter character = repository.findById(id)
                 .orElseThrow(() -> new CharacterNotFoundException(id));
 
-        repository.delete(character.getId());
+        repository.delete(character);
     }
 }
