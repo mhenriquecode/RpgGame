@@ -98,4 +98,17 @@ public class RpgCharacterTest {
 
         assertEquals(totalSpeed, character.getSpeed());
     }
+
+    @Test
+    @Tag("Unit-test")
+    @DisplayName("User Chooses Dwarf Then Character Receives Life And Defense Bonus")
+    void userChoosesDwarfThenCharacterReceivesLifeAndDefenseBonus() {
+        RpgCharacter character = new RpgCharacter("Gimli", ClassType.PALADIN, Race.DWARF, Weapon.AXE);
+
+        int totalLife = 100 + Race.DWARF.getBonusHealth() + ClassType.PALADIN.getBonusHealth(); // 100 + 20 + 10
+        int totalDefense = 5 + Race.DWARF.getBonusDefense() + ClassType.PALADIN.getBonusDefense(); // 5 + 5 + 5
+
+        assertEquals(totalLife, character.getMaxHealth());
+        assertEquals(totalDefense, character.getDefense());
+    }
 }
