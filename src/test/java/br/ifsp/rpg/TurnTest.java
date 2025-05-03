@@ -82,26 +82,22 @@ public class TurnTest {
         when(hitDiceMock.roll()).thenReturn(20);
         when(attackDiceMock.roll()).thenReturn(10);
 
-        RpgCharacter atacker = new RpgCharacter("Atacante", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER,
+        RpgCharacter attacker = new RpgCharacter("Atacante", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER,
                 hitDiceMock, attackDiceMock);
 
         RpgCharacter defender = new RpgCharacter("Defensor", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER,
                 hitDiceMock, attackDiceMock);
 
-        int lifeBeforeAttack = defender.getHealth();
+        int initialHealth = defender.getHealth();
 
-        ChooseAction defendingChoose = new defendingStub();
-        ChooseAction attackChoose = new attackStub();
-
-        Turn defendingTurn = new Turn(defender, atacker, defendingChoose); // defensor escolhe se defender
-        defendingTurn.execute();
-
-        Turn attackTurn = new Turn(atacker, defender, attackChoose); // atacante ataca o defensor
+        Turn defendTurn = new Turn(defender, attacker, new defendingStub());
+        defendTurn.execute();
+        Turn attackTurn = new Turn(attacker, defender, new attackStub());
         attackTurn.execute();
 
-        int damage = lifeBeforeAttack - defender.getHealth();
+        int damageTaken = initialHealth - defender.getHealth();
 
-        assertEquals(10, damage);
+        assertEquals(10, damageTaken);
     }
 
     @Test
