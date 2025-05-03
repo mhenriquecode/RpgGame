@@ -137,4 +137,16 @@ public class RpgCharacterTest {
 
         assertEquals(expectedStrength, character.getStrength());
     }
+
+    @Test@Tag("Unit-test")
+    @DisplayName("User Chooses Berserk Then Character Receives Bonus To Health And Strength")
+    void userChoosesBerserkThenCharacterReceivesBonusToHealthAndStrength() {
+        RpgCharacter character = new RpgCharacter("Thorg", ClassType.BERSERK, Race.HUMAN, Weapon.HAMMER);
+
+        int expectedMaxHealth = 100 + Race.HUMAN.getBonusHealth() + ClassType.BERSERK.getBonusHealth(); // 100 + 5 + 20
+        int expectedStrength = 10 + Race.HUMAN.getBonusStrength() + ClassType.BERSERK.getBonusStrength(); // 10 + 2 + 5
+
+        assertEquals(expectedMaxHealth, character.getMaxHealth());
+        assertEquals(expectedStrength, character.getStrength());
+    }
 }
