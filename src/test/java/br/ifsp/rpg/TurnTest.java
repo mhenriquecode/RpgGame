@@ -98,4 +98,44 @@ public class TurnTest {
         int expectedArmor = armorBefore + speedBonus;
         assertEquals(expectedArmor, character.getArmor());
     }
+
+    @Test
+    @Tag("TDD")
+    @DisplayName("dodge Bonus Should Expire After Opponents Turn")
+    void dodgeBonusShouldExpireAfterOpponentsTurn() {
+        RollHitDice hitDiceMock = mock(RollHitDice.class);
+        RollAttackDice attackDiceMock = mock(RollAttackDice.class);
+
+        when(hitDiceMock.roll()).thenReturn(20);
+        when(attackDiceMock.roll()).thenReturn(10);
+
+        RpgCharacter dodgingPlayer = new RpgCharacter("Jogador", ClassType.DUELIST, Race.ELF, Weapon.SWORD);
+
+        RpgCharacter attacker = new RpgCharacter("Inimigo", ClassType.WARRIOR, Race.ORC, Weapon.AXE,
+                hitDiceMock, attackDiceMock);
+
+        int baseArmor = dodgingPlayer.getArmor();
+        int dodgeBonus = dodgingPlayer.getSpeed();
+        int expectedArmorWithDodge = baseArmor + dodgeBonus;
+
+        ChooseAction dodgeChoose = new DodgeStub();
+        Turn dodgeTurn = new Turn(dodgingPlayer, attacker, dodgeChoose);
+        dodgeTurn.execute();
+
+        assertEquals(expectedArmorWithDodge, dodgingPlayer.getArmor());
+
+        int healthBefore = dodgingPlayer.getHealth();
+        ChooseAction attackChoose = new attackStub();
+        Turn attackTurn = new Turn(attacker, dodgingPlayer, attackChoose);
+        attackTurn.execute();
+
+        assertEquals(healthBefore, dodgingPlayer.getHealth());
+
+        ChooseAction neutralChoose = new attackStub();
+        Turn nextTurn = new Turn(dodgingPlayer, attacker, neutralChoose);
+        nextTurn.execute();
+
+        assertEquals(baseArmor, dodgingPlayer.getArmor());
+    }
+
 }
