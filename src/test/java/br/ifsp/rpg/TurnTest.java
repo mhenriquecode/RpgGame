@@ -9,6 +9,7 @@ import br.ifsp.rpg.model.dice.RollHitDice;
 import br.ifsp.rpg.model.enums.ClassType;
 import br.ifsp.rpg.model.enums.Race;
 import br.ifsp.rpg.model.enums.Weapon;
+import br.ifsp.rpg.stubs.attackStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ public class TurnTest {
         RpgCharacter defender = new RpgCharacter("Defensor", ClassType.BERSERK, Race.HUMAN, Weapon.AXE,
                 hitDiceMock, attackDiceMock);
 
-        ChooseAction choosingAttack =  new ChooseUserAction(1);
+        ChooseAction choosingAttack =  new attackStub();
         int lifeBeforeAttack = defender.getHealth();
 
         Turn turnTest = new Turn(atacker, defender, choosingAttack);
@@ -44,5 +45,6 @@ public class TurnTest {
         int damage = lifeBeforeAttack - defender.getHealth();
         assertEquals(14, damage);
     }
+
 
 }
