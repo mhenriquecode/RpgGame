@@ -75,4 +75,17 @@ public class DiceTest {
         assertEquals(7, result);
         verify(mockRandom, times(2)).nextInt(6);
     }
+
+    @Test
+    @Tag("Unit-test")
+    @DisplayName("should return simulated value for sword weapon")
+    void shouldReturnSimulatedValueForSwordWeapon() {
+        when(mockRandom.nextInt(4)).thenReturn(3);
+
+        DiceRoll attackDice = new RollAttackDice(Weapon.SWORD, mockRandom);
+        int result = attackDice.roll();
+
+        assertEquals(12, result);
+        verify(mockRandom, times(3)).nextInt(4);
+    }
 }
