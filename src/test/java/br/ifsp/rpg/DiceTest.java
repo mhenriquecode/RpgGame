@@ -51,9 +51,22 @@ public class DiceTest {
 
     @Test
     @Tag("Unit-test")
+    @DisplayName("should return simulated value for hammer weapon")
+    void shouldReturnSimulatedValueForHammerWeapon() {
+        when(mockRandom.nextInt(12)).thenReturn(6);
+
+        DiceRoll attackDice = new RollAttackDice(Weapon.HAMMER, mockRandom);
+        int result = attackDice.roll();
+
+        assertEquals(7, result);
+        verify(mockRandom, times(1)).nextInt(12);
+    }
+
+    @Test
+    @Tag("Unit-test")
     @Tag("TDD")
-    @DisplayName("should return sum of simulated values for weapon")
-    void shouldReturnSumofSimulatedValuesForWeapon(){
+    @DisplayName("should return sum of simulated values for axe weapon")
+    void shouldReturnSumofSimulatedValuesForAxeWeapon(){
         when(mockRandom.nextInt(6)).thenReturn(0, 5);
 
         DiceRoll attackDice = new RollAttackDice(Weapon.AXE, mockRandom);
