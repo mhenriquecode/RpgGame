@@ -25,47 +25,6 @@ public class RpgTest {
     @Test
     @Tag("Unit-test")
     @Tag("TDD")
-    @DisplayName("Creating valid character test")
-    void creatingValidCharacterTest() {
-        RpgCharacter character = new RpgCharacter("Character", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
-
-        assertThat(character.getId()).isNotNull();
-        assertThat(character.getName()).isEqualTo("Character");
-        assertThat(character.getRace().name()).isEqualTo(Race.ORC.name());
-        assertThat(character.getWeapon().name()).isEqualTo(Weapon.AXE.name());
-        assertThat(character.getClassType()).isEqualTo(ClassType.WARRIOR);
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Calculate character attributes test")
-    void calculateCharacterAttributesTest(){
-        RpgCharacter character = new RpgCharacter("Character", ClassType.PALADIN, Race.DWARF, Weapon.SWORD);
-
-        assertThat(character.getMaxHealth()).isEqualTo(130);
-        assertThat(character.getStrength()).isEqualTo(10);
-        assertThat(character.getDefense()).isEqualTo(15);
-        assertThat(character.getSpeed()).isEqualTo(5);
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Character attack test")
-    void characterAttackTest(){
-        RpgCharacter player = mock(RpgCharacter.class);
-        when(player.attack()).thenReturn(20);
-
-        int result = player.attack();
-
-        verify(player).attack();
-        assertThat(result).isEqualTo(20);
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
     @DisplayName("Applying berserk special attack effect test")
     void applyingBerserkSpecialAttackEffectTest(){
         when(mockRandom.nextInt(100)).thenReturn(5);

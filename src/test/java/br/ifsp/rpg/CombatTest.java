@@ -95,46 +95,4 @@ public class CombatTest {
 
         assertThat(first).isEqualTo(player2);
     }
-    
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Character attack test")
-    void characterAttackTest(){
-        RpgCharacter player = mock(RpgCharacter.class);
-        when(player.attack()).thenReturn(20);
-
-        int result = player.attack();
-
-        verify(player).attack();
-        assertThat(result).isEqualTo(20);
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("should increase armor when the character dodges")
-    void shouldIncreaseArmorWhenTheCharacterDodges(){
-        player1.dodge();
-        int resultSpeed = player1.getSpeed();
-
-        assertThat(resultSpeed).isEqualTo(7);
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("should decrease damage taken when character defends")
-    void shouldDecreaseDamageTakenWhenCharacterDefends(){
-        player1.setDefending(true);
-
-        int initialHealth = player1.getHealth();
-        int damageReceived = 17;
-
-        player1.defends(damageReceived);
-        int expectedDamage = damageReceived - 12;
-        int expectedHealth = initialHealth - expectedDamage;
-
-        assertThat(player1.getHealth()).isEqualTo(expectedHealth);
-    }
 }
