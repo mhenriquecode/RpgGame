@@ -43,7 +43,7 @@ public class RpgCharacterTest {
         assertThat(character.getMaxHealth()).isEqualTo(130);
         assertThat(character.getStrength()).isEqualTo(10);
         assertThat(character.getDefense()).isEqualTo(15);
-        assertThat(character.getSpeed()).isEqualTo(5);
+        assertThat(character.getSpeed()).isEqualTo(4);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class RpgCharacterTest {
         player1.dodge();
         int resultSpeed = player1.getSpeed();
 
-        assertThat(resultSpeed).isEqualTo(7);
+        assertThat(resultSpeed).isEqualTo(6);
     }
 
     @Test
