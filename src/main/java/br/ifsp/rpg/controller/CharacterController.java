@@ -4,6 +4,7 @@ import br.ifsp.rpg.dto.CharacterDTO;
 import br.ifsp.rpg.model.RpgCharacter;
 import br.ifsp.rpg.service.CharacterService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping(path = "/api/characters")
 @AllArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Characters", description = "RPG Character Manager")
 public class CharacterController {
     private final CharacterService characterService;
