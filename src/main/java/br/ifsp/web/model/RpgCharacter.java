@@ -132,7 +132,6 @@ public class RpgCharacter {
         }
     }
 
-
     public void defends(int damageReceived){
         int finalDamage = defending ? Math.max(0, damageReceived - defense) : damageReceived;
         health -= finalDamage;

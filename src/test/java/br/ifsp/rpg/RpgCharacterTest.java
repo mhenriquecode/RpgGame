@@ -189,6 +189,4 @@ public class RpgCharacterTest {
         assertEquals(expectedMaxHealth, character.getMaxHealth());
         assertEquals(expectedDefense, character.getDefense());
     }
-
-
 }

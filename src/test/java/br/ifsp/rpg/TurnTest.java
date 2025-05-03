@@ -233,6 +233,4 @@ public class TurnTest {
 
         assertEquals(18, character.getArmor());
     }
-
-
 }

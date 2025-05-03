@@ -59,161 +59,178 @@ public class CharacterControllerTest {
         characterDTO = new CharacterDTO("Character", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
     }
 
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Should create a character successfully test")
-    void shouldCreateCharacterTest() throws Exception {
-        when(service.create(any())).thenReturn(createdCharacter);
+    @Nested
+    @DisplayName("Valid tests")
+    class ValidTests {
+        @Nested
+        @DisplayName("Should be able to")
+        class ShouldBeAbleTo {
+            @Test
+            @Tag("Unit-test")
+            @Tag("TDD")
+            @DisplayName("create a character successfully test")
+            void shouldCreateCharacterTest() throws Exception {
+                when(service.create(any())).thenReturn(createdCharacter);
 
-        mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(characterDTO)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Character"));
+                mockMvc.perform(post("/api/characters")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(characterDTO)))
+                        .andExpect(status().isCreated())
+                        .andExpect(jsonPath("$.name").value("Character"));
+            }
+
+            @Test
+            @Tag("Unit-test")
+            @Tag("TDD")
+            @DisplayName("return character by ID test")
+            void shouldReturnCharacterById() throws Exception {
+                when(service.getCharacter(createdCharacter.getId())).thenReturn(Optional.of(createdCharacter));
+
+                mockMvc.perform(get("/api/characters/{id}", createdCharacter.getId())
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.name").value("Character"))
+                        .andExpect(jsonPath("$.classType").value("WARRIOR"))
+                        .andExpect(jsonPath("$.race").value("ORC"))
+                        .andExpect(jsonPath("$.weapon").value("AXE"));
+            }
+
+            @Test
+            @Tag("Unit-test")
+            @Tag("TDD")
+            @DisplayName("update character successfully test")
+            void shouldUpdateCharacterTest() throws Exception {
+                UUID characterId = UUID.randomUUID();
+
+                CharacterDTO updatedDTO = new CharacterDTO(
+                        "UpdatedName",
+                        ClassType.PALADIN,
+                        Race.ELF,
+                        Weapon.DAGGER);
+
+                RpgCharacter updatedCharacter = new RpgCharacter(
+                        "UpdatedName",
+                        ClassType.PALADIN,
+                        Race.ELF,
+                        Weapon.DAGGER);
+
+                when(service.getCharacter(characterId)).thenReturn(Optional.of(updatedCharacter));
+                when(service.update(eq(characterId), any(CharacterDTO.class))).thenReturn(updatedCharacter);
+
+                mockMvc.perform(put("/api/characters/{id}", characterId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(updatedDTO)))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.name").value("UpdatedName"))
+                        .andExpect(jsonPath("$.classType").value("PALADIN"))
+                        .andExpect(jsonPath("$.race").value("ELF"))
+                        .andExpect(jsonPath("$.weapon").value("DAGGER"));
+            }
+
+            @Test
+            @Tag("Unit-test")
+            @Tag("TDD")
+            @DisplayName("delete character successfully test")
+            void shouldDeleteCharacterTest() throws Exception {
+                UUID characterId = UUID.randomUUID();
+
+                doNothing().when(service).delete(characterId);
+
+                mockMvc.perform(delete("/api/characters/{id}", characterId))
+                        .andExpect(status().isNoContent());
+
+                verify(service, times(1)).delete(characterId);
+            }
+
+            @Test
+            @Tag("Unit-test")
+            @Tag("TDD")
+            @DisplayName("Should return all characters test")
+            void shouldReturnAllCharacters() throws Exception {
+                List<RpgCharacter> characters = List.of(
+                        new RpgCharacter("Character1", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD),
+                        new RpgCharacter("Character2", ClassType.PALADIN, Race.ELF, Weapon.DAGGER)
+                );
+
+                when(service.getAllCharacters()).thenReturn(characters);
+
+                mockMvc.perform(get("/api/characters")
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.size()").value(2))
+                        .andExpect(jsonPath("$[0].name").value("Character1"))
+                        .andExpect(jsonPath("$[1].name").value("Character2"));
+            }
+
+            @Test
+            @Tag("Unit-test")
+            @Tag("TDD")
+            @DisplayName("return empty list when no characters are registered")
+            void shouldReturnEmptyListWhenNoCharactersExist() throws Exception {
+                when(service.getAllCharacters()).thenReturn(Collections.emptyList());
+
+                mockMvc.perform(get("/api/characters"))
+                        .andExpect(status().isOk())
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(jsonPath("$.length()").value(0));
+            }
+        }
     }
 
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Should not create invalid character test")
-    void shouldNotCreateInvalidCharacterTest() throws Exception {
-        CharacterDTO invalidCharacter = new CharacterDTO("InvalidChar", null, Race.DWARF, Weapon.AXE);
+    @Nested
+    @DisplayName("Invalid Tests")
+    class InvalidTests {
+        @Nested
+        @DisplayName("Should not be able to")
+        class ShouldNotBeAbleTo {
+            @Test
+            @Tag("Unit-test")
+            @Tag("TDD")
+            @DisplayName("create invalid character test")
+            void shouldNotCreateInvalidCharacterTest() throws Exception {
+                CharacterDTO invalidCharacter = new CharacterDTO("InvalidChar", null, Race.DWARF, Weapon.AXE);
 
-        doThrow(new IllegalArgumentException("ClassType cannot be null"))
-                .when(service).create(any());
+                doThrow(new IllegalArgumentException("ClassType cannot be null"))
+                        .when(service).create(any());
 
-        mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(invalidCharacter)))
-                .andExpect(status().isBadRequest());
+                mockMvc.perform(post("/api/characters")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(invalidCharacter)))
+                        .andExpect(status().isBadRequest());
 
-        verify(service).create(any());
-    }
+                verify(service).create(any());
+            }
 
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Should return character by ID test")
-    void shouldReturnCharacterById() throws Exception {
-        when(service.getCharacter(createdCharacter.getId())).thenReturn(Optional.of(createdCharacter));
+            @Test
+            @Tag("Unit-Test")
+            @DisplayName("return a character when ID not found test")
+            void shouldNotReturnACharacterWhenIDNotFoundTest() throws Exception {
+                UUID nonExistentId = UUID.randomUUID();
+                doThrow(new CharacterNotFoundException(nonExistentId)).when(service).delete(nonExistentId);
 
-        mockMvc.perform(get("/api/characters/{id}", createdCharacter.getId())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Character"))
-                .andExpect(jsonPath("$.classType").value("WARRIOR"))
-                .andExpect(jsonPath("$.race").value("ORC"))
-                .andExpect(jsonPath("$.weapon").value("AXE"));
-    }
+                mockMvc.perform(get("/api/characters/{id}", nonExistentId))
+                        .andExpect(status().isNotFound());
+            }
 
-    @Test
-    @Tag("Unit-Test")
-    @DisplayName("Should return 404 if character not found test")
-    void shouldReturn404WhenCharacterNotFoundTest() throws Exception {
-        UUID nonExistentId = UUID.randomUUID();
-        doThrow(new CharacterNotFoundException(nonExistentId)).when(service).delete(nonExistentId);
+            @Test
+            @Tag("Unit-test")
+            @Tag("TDD")
+            @DisplayName("Should not update character with invalid data test")
+            void shouldNotUpdateCharacterWithInvalidDataTest() throws Exception {
+                UUID characterId = UUID.randomUUID();
+                CharacterDTO invalidCharacter = new CharacterDTO("InvalidChar", null, Race.DWARF, Weapon.AXE);
 
-        mockMvc.perform(get("/api/characters/{id}", nonExistentId))
-                .andExpect(status().isNotFound());
-    }
+                doThrow(new IllegalArgumentException("ClassType cannot be null"))
+                        .when(service).update(eq(characterId), any());
 
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Should update character successfully test")
-    void shouldUpdateCharacterTest() throws Exception {
-        UUID characterId = UUID.randomUUID();
+                mockMvc.perform(put("/api/characters/{id}", characterId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(invalidCharacter)))
+                        .andExpect(status().isBadRequest());
 
-        CharacterDTO updatedDTO = new CharacterDTO(
-                "UpdatedName",
-                ClassType.PALADIN,
-                Race.ELF,
-                Weapon.DAGGER);
+                verify(service).update(eq(characterId), any());
+            }
 
-        RpgCharacter updatedCharacter = new RpgCharacter(
-                "UpdatedName",
-                ClassType.PALADIN,
-                Race.ELF,
-                Weapon.DAGGER);
-
-        when(service.getCharacter(characterId)).thenReturn(Optional.of(updatedCharacter));
-        when(service.update(eq(characterId), any(CharacterDTO.class))).thenReturn(updatedCharacter);
-
-        mockMvc.perform(put("/api/characters/{id}", characterId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(updatedDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("UpdatedName"))
-                .andExpect(jsonPath("$.classType").value("PALADIN"))
-                .andExpect(jsonPath("$.race").value("ELF"))
-                .andExpect(jsonPath("$.weapon").value("DAGGER"));
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Should not update character with invalid data test")
-    void shouldNotUpdateCharacterWithInvalidDataTest() throws Exception {
-        UUID characterId = UUID.randomUUID();
-        CharacterDTO invalidCharacter = new CharacterDTO("InvalidChar", null, Race.DWARF, Weapon.AXE);
-
-        doThrow(new IllegalArgumentException("ClassType cannot be null"))
-                .when(service).update(eq(characterId), any());
-
-        mockMvc.perform(put("/api/characters/{id}", characterId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(invalidCharacter)))
-                .andExpect(status().isBadRequest());
-
-        verify(service).update(eq(characterId), any());
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Should delete character successfully test")
-    void shouldDeleteCharacterTest() throws Exception {
-        UUID characterId = UUID.randomUUID();
-
-        doNothing().when(service).delete(characterId);
-
-        mockMvc.perform(delete("/api/characters/{id}", characterId))
-                .andExpect(status().isNoContent());
-
-        verify(service, times(1)).delete(characterId);
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Should return all characters test")
-    void shouldReturnAllCharacters() throws Exception {
-        List<RpgCharacter> characters = List.of(
-                new RpgCharacter("Character1", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD),
-                new RpgCharacter("Character2", ClassType.PALADIN, Race.ELF, Weapon.DAGGER)
-        );
-
-        when(service.getAllCharacters()).thenReturn(characters);
-
-        mockMvc.perform(get("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].name").value("Character1"))
-                .andExpect(jsonPath("$[1].name").value("Character2"));
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Should return empty list when no characters are registered")
-    void shouldReturnEmptyListWhenNoCharactersExist() throws Exception {
-        when(service.getAllCharacters()).thenReturn(Collections.emptyList());
-
-        mockMvc.perform(get("/api/characters"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(0));
+        }
     }
 }
