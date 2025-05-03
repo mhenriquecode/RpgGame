@@ -49,6 +49,7 @@ public class RpgCharacter {
     private int defense;
     private int speed;
     private int armor;
+    private boolean defending = false;
 
     @Transient @JsonIgnore private RollAttackDice attackDice;
     @Transient @JsonIgnore private RollHitDice hitDice;
@@ -122,7 +123,8 @@ public class RpgCharacter {
     }
 
     public void defends(int damageReceived){
-        int finalDamage = Math.max(0, damageReceived - defense);
+        int finalDamage = defending ? Math.max(0, damageReceived - defense) : damageReceived;
         health -= finalDamage;
+        defending = false;
     }
 }

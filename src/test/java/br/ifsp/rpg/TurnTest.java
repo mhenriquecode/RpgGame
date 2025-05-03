@@ -10,6 +10,7 @@ import br.ifsp.rpg.model.enums.ClassType;
 import br.ifsp.rpg.model.enums.Race;
 import br.ifsp.rpg.model.enums.Weapon;
 import br.ifsp.rpg.stubs.attackStub;
+import br.ifsp.rpg.stubs.defendingStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ public class TurnTest {
         turnTest.execute();
 
         int damage = lifeBeforeAttack - defender.getHealth();
-        assertEquals(14, damage);
+        assertEquals(21, damage);
     }
 
     @Test
@@ -61,22 +62,21 @@ public class TurnTest {
 
         RpgCharacter defender = new RpgCharacter("Defensor", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER,
                 hitDiceMock, attackDiceMock);
-        defender.setDefense(10);
 
         int lifeBeforeAttack = defender.getHealth();
 
         ChooseAction defendingChoose = new defendingStub();
-        Turn defendingTurn = new Turn(atacker, defender, defendingChoose);
-        defendingTurn.execute();
-
         ChooseAction attackChoose = new attackStub();
 
-        Turn attackTurn = new Turn(atacker, defender, attackChoose);
+        Turn defendingTurn = new Turn(defender, atacker, defendingChoose); // defensor escolhe se defender
+        defendingTurn.execute();
+
+        Turn attackTurn = new Turn(atacker, defender, attackChoose); // atacante ataca o defensor
         attackTurn.execute();
 
         int damage = lifeBeforeAttack - defender.getHealth();
 
-        assertEquals(17, damage);
+        assertEquals(10, damage);
     }
 
 }

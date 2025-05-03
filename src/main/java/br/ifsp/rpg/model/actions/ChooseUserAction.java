@@ -15,6 +15,7 @@ public class ChooseUserAction implements ChooseAction {
     public PlayerAction choose(RpgCharacter current, RpgCharacter opponent) {
         return switch (chosenAction) {
             case 1 -> new AttackAction();
+            case 2 -> new DefendingAction();
             default -> throw new IllegalArgumentException("Invalid action: " + chosenAction);
         };
     }
