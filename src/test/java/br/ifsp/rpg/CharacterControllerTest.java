@@ -2,7 +2,7 @@ package br.ifsp.rpg;
 
 import br.ifsp.web.controller.CharacterController;
 import br.ifsp.web.dto.CharacterDTO;
-import br.ifsp.web.exceptions.CharacterNotFoundException;
+import br.ifsp.web.exception.CharacterNotFoundException;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.RpgCharacter;
@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,8 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 public class CharacterControllerTest {
@@ -76,6 +76,24 @@ public class CharacterControllerTest {
     @Test
     @Tag("Unit-test")
     @Tag("TDD")
+    @DisplayName("Should not create invalid character test")
+    void shouldNotCreateInvalidCharacterTest() throws Exception {
+        CharacterDTO invalidCharacter = new CharacterDTO("InvalidChar", null, Race.DWARF, Weapon.AXE);
+
+        doThrow(new IllegalArgumentException("ClassType cannot be null"))
+                .when(service).create(any());
+
+        mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(invalidCharacter)))
+                .andExpect(status().isBadRequest());
+
+        verify(service).create(any());
+    }
+
+    @Test
+    @Tag("Unit-test")
+    @Tag("TDD")
     @DisplayName("Should return character by ID test")
     void shouldReturnCharacterById() throws Exception {
         when(service.getCharacter(createdCharacter.getId())).thenReturn(Optional.of(createdCharacter));
@@ -87,6 +105,17 @@ public class CharacterControllerTest {
                 .andExpect(jsonPath("$.classType").value("WARRIOR"))
                 .andExpect(jsonPath("$.race").value("ORC"))
                 .andExpect(jsonPath("$.weapon").value("AXE"));
+    }
+
+    @Test
+    @Tag("Unit-Test")
+    @DisplayName("Should return 404 if character not found test")
+    void shouldReturn404WhenCharacterNotFoundTest() throws Exception {
+        UUID nonExistentId = UUID.randomUUID();
+        doThrow(new CharacterNotFoundException(nonExistentId)).when(service).delete(nonExistentId);
+
+        mockMvc.perform(get("/api/characters/{id}", nonExistentId))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -124,6 +153,25 @@ public class CharacterControllerTest {
     @Test
     @Tag("Unit-test")
     @Tag("TDD")
+    @DisplayName("Should not update character with invalid data test")
+    void shouldNotUpdateCharacterWithInvalidDataTest() throws Exception {
+        UUID characterId = UUID.randomUUID();
+        CharacterDTO invalidCharacter = new CharacterDTO("InvalidChar", null, Race.DWARF, Weapon.AXE);
+
+        doThrow(new IllegalArgumentException("ClassType cannot be null"))
+                .when(service).update(eq(characterId), any());
+
+        mockMvc.perform(put("/api/characters/{id}", characterId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(invalidCharacter)))
+                .andExpect(status().isBadRequest());
+
+        verify(service).update(eq(characterId), any());
+    }
+
+    @Test
+    @Tag("Unit-test")
+    @Tag("TDD")
     @DisplayName("Should delete character successfully test")
     void shouldDeleteCharacterTest() throws Exception {
         UUID characterId = UUID.randomUUID();
@@ -134,17 +182,6 @@ public class CharacterControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(service, times(1)).delete(characterId);
-    }
-
-    @Test
-    @Tag("Unit-Test")
-    @DisplayName("Should return 404 if character not found test")
-    void shouldReturn404WhenCharacterNotFoundTest() throws Exception {
-        UUID nonExistentId = UUID.randomUUID();
-        doThrow(new CharacterNotFoundException(nonExistentId)).when(service).delete(nonExistentId);
-
-        mockMvc.perform(delete("/api/characters/{id}", nonExistentId))
-                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -165,5 +202,18 @@ public class CharacterControllerTest {
                 .andExpect(jsonPath("$.size()").value(2))
                 .andExpect(jsonPath("$[0].name").value("Character1"))
                 .andExpect(jsonPath("$[1].name").value("Character2"));
+    }
+
+    @Test
+    @Tag("Unit-test")
+    @Tag("TDD")
+    @DisplayName("Should return empty list when no characters are registered")
+    void shouldReturnEmptyListWhenNoCharactersExist() throws Exception {
+        when(service.getAllCharacters()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/api/characters"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(0));
     }
 }

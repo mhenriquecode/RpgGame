@@ -1,6 +1,7 @@
 package br.ifsp.web.controller;
 
 import br.ifsp.web.dto.CharacterDTO;
+import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.service.CharacterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,10 +26,12 @@ public class CharacterController {
     @Operation(summary = "Create new character")
     @PostMapping
     public ResponseEntity<CharacterDTO> createCharacter(@Valid @RequestBody CharacterDTO characterDTO) {
-        if(characterDTO.name() == null || characterDTO.name().isEmpty())
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(CharacterDTO.from(characterService.create(characterDTO)));
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(CharacterDTO.from(characterService.create(characterDTO)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Operation(summary = "Find character by ID")
@@ -51,10 +54,11 @@ public class CharacterController {
     @Operation(summary = "Update character")
     @PutMapping("/{id}")
     public ResponseEntity<CharacterDTO> updateCharacter(@PathVariable UUID id, @RequestBody @Valid CharacterDTO characterDTO) {
-        if(characterService.getCharacter(id).isEmpty())
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        return ResponseEntity.ok(CharacterDTO.from(characterService.update(id, characterDTO)));
+        try {
+            return ResponseEntity.ok(CharacterDTO.from(characterService.update(id, characterDTO)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Operation(summary = "Delete character by ID")
