@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 public class TurnTest {
     @Test
     @Tag("TDD")
+    @Tag("Unit-Test")
     @DisplayName("Damage caused by attacker must be the same as defender receives")
     void damageCausedByAttackerMustBeTheSameAsDefenderReceives() {
         RollHitDice hitDiceMock = mock(RollHitDice.class);
@@ -74,6 +75,7 @@ public class TurnTest {
 
     @Test
     @Tag("TDD")
+    @Tag("Unit-Test")
     @DisplayName("defend should reduce damage using defense points")
     void defendShouldReduceDamageUsingDefensePoints() {
         RollHitDice hitDiceMock = mock(RollHitDice.class);
@@ -101,13 +103,42 @@ public class TurnTest {
     }
 
     @Test
+    @Tag("Unit-Test")
+    @DisplayName("defend should prevent damage when armor exceeds attack")
+    void defendShouldPreventDamageWhenArmorExceedsAttack() {
+        RollHitDice hitDiceMock = mock(RollHitDice.class);
+        RollAttackDice attackDiceMock = mock(RollAttackDice.class);
+
+        when(hitDiceMock.roll()).thenReturn(20);
+        when(attackDiceMock.roll()).thenReturn(0);
+
+        RpgCharacter attacker = new RpgCharacter("Atacante", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER,
+                hitDiceMock, attackDiceMock);
+
+        RpgCharacter defender = new RpgCharacter("Defensor", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER,
+                hitDiceMock, attackDiceMock);
+
+        int initialHealth = defender.getHealth();
+
+        Turn defendTurn = new Turn(defender, attacker, new defendingStub());
+        defendTurn.execute();
+        Turn attackTurn = new Turn(attacker, defender, new attackStub());
+        attackTurn.execute();
+
+        int damageTaken = initialHealth - defender.getHealth();
+
+        assertEquals(0, damageTaken);
+    }
+
+    @Test
     @Tag("TDD")
+    @Tag("Unit-Test")
     @DisplayName("dodge should increase armor in the turn")
     void dodgeShouldIncreaseArmorInTheTurn() {
         RpgCharacter character = new RpgCharacter("Jogador", ClassType.DUELIST, Race.ELF, Weapon.SWORD);
 
-        int armorBefore = character.getArmor(); // Valor padrão é 10
-        int speedBonus = character.getSpeed();  // speed = 5 (base) + 5 (DUELIST) + 5 (ELF) = 15
+        int armorBefore = character.getArmor();
+        int speedBonus = character.getSpeed();
 
         ChooseAction dodgeChoose = new DodgeStub();
 
@@ -122,6 +153,7 @@ public class TurnTest {
 
     @Test
     @Tag("TDD")
+    @Tag("Unit-Test")
     @DisplayName("dodge Bonus Should Expire After Opponents Turn")
     void dodgeBonusShouldExpireAfterOpponentsTurn() {
         RollHitDice hitDiceMock = mock(RollHitDice.class);
@@ -161,6 +193,7 @@ public class TurnTest {
 
     @Test
     @Tag("TDD")
+    @Tag("Unit-Test")
     @DisplayName("Dodge should not increase armor above 18")
     void dodgeShouldNotIncreaseArmorAbove18() {
         RpgCharacter character = new RpgCharacter("Jogador", ClassType.DUELIST, Race.ELF, Weapon.SWORD);
