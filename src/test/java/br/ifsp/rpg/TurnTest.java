@@ -106,7 +106,7 @@ public class TurnTest {
         RollHitDice hitDiceMock = mock(RollHitDice.class);
         RollAttackDice attackDiceMock = mock(RollAttackDice.class);
 
-        when(hitDiceMock.roll()).thenReturn(20);
+        when(hitDiceMock.roll()).thenReturn(17);
         when(attackDiceMock.roll()).thenReturn(10);
 
         RpgCharacter dodgingPlayer = new RpgCharacter("Jogador", ClassType.DUELIST, Race.ELF, Weapon.SWORD);

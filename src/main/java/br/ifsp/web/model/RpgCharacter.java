@@ -90,7 +90,7 @@ public class RpgCharacter {
         this.health = maxHealth;
         this.strength = 10 + race.getBonusStrength() + classType.getBonusStrength();
         this.defense = 5 + race.getBonusDefense() + classType.getBonusDefense();
-        this.speed = 5 + race.getBonusSpeed() + classType.getBonusSpeed();
+        this.speed = 4 + race.getBonusSpeed() + classType.getBonusSpeed();
         this.armor = 10;
     }
 
@@ -121,7 +121,7 @@ public class RpgCharacter {
     }
 
     public void dodge(){
-        armor += speed;
+        armor = Math.min(armor + speed, 18);
         hasDodgeBonus = true;
     }
 
