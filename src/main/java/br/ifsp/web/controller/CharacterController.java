@@ -27,9 +27,8 @@ public class CharacterController {
     @PostMapping
     public ResponseEntity<CharacterDTO> createCharacter(@Valid @RequestBody CharacterDTO characterDTO) {
         try {
-            RpgCharacter created = characterService.create(characterDTO);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(CharacterDTO.from(created));
+                    .body(CharacterDTO.from(characterService.create(characterDTO)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -55,10 +54,11 @@ public class CharacterController {
     @Operation(summary = "Update character")
     @PutMapping("/{id}")
     public ResponseEntity<CharacterDTO> updateCharacter(@PathVariable UUID id, @RequestBody @Valid CharacterDTO characterDTO) {
-        if(characterService.getCharacter(id).isEmpty())
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        return ResponseEntity.ok(CharacterDTO.from(characterService.update(id, characterDTO)));
+        try {
+            return ResponseEntity.ok(CharacterDTO.from(characterService.update(id, characterDTO)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Operation(summary = "Delete character by ID")

@@ -142,6 +142,25 @@ public class CharacterControllerTest {
     @Test
     @Tag("Unit-test")
     @Tag("TDD")
+    @DisplayName("Should not update character with invalid data test")
+    void shouldNotUpdateCharacterWithInvalidDataTest() throws Exception {
+        UUID characterId = UUID.randomUUID();
+        CharacterDTO invalidCharacter = new CharacterDTO("InvalidChar", null, Race.DWARF, Weapon.AXE);
+
+        doThrow(new IllegalArgumentException("ClassType cannot be null"))
+                .when(service).update(eq(characterId), any());
+
+        mockMvc.perform(put("/api/characters/{id}", characterId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(invalidCharacter)))
+                .andExpect(status().isBadRequest());
+
+        verify(service).update(eq(characterId), any());
+    }
+
+    @Test
+    @Tag("Unit-test")
+    @Tag("TDD")
     @DisplayName("Should delete character successfully test")
     void shouldDeleteCharacterTest() throws Exception {
         UUID characterId = UUID.randomUUID();
