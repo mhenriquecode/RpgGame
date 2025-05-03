@@ -46,5 +46,37 @@ public class TurnTest {
         assertEquals(14, damage);
     }
 
+    @Test
+    @Tag("TDD")
+    @DisplayName("defend should reduce damage when choosing to defend")
+    void defendShouldReduceDamageWhenChoosingToDefend() {
+        RollHitDice hitDiceMock = mock(RollHitDice.class);
+        RollAttackDice attackDiceMock = mock(RollAttackDice.class);
+
+        when(hitDiceMock.roll()).thenReturn(20);
+        when(attackDiceMock.roll()).thenReturn(10);
+
+        RpgCharacter atacker = new RpgCharacter("Atacante", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER,
+                hitDiceMock, attackDiceMock);
+
+        RpgCharacter defender = new RpgCharacter("Defensor", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER,
+                hitDiceMock, attackDiceMock);
+        defender.setDefense(10);
+
+        int lifeBeforeAttack = defender.getHealth();
+
+        ChooseAction defendingChoose = new defendingStub();
+        Turn defendingTurn = new Turn(atacker, defender, defendingChoose);
+        defendingTurn.execute();
+
+        ChooseAction attackChoose = new attackStub();
+
+        Turn attackTurn = new Turn(atacker, defender, attackChoose);
+        attackTurn.execute();
+
+        int damage = lifeBeforeAttack - defender.getHealth();
+
+        assertEquals(17, damage);
+    }
 
 }
