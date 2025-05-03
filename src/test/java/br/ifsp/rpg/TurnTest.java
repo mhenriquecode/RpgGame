@@ -79,4 +79,26 @@ public class TurnTest {
         assertEquals(10, damage);
     }
 
+    @Test
+    @Tag("TDD")
+    @DisplayName("dodge should increase armor in the turn")
+    void dodgeShouldIncreaseArmorInTheTurn() {
+        // Arrange
+        RpgCharacter character = new RpgCharacter("Jogador", ClassType.DUELIST, Race.ELF, Weapon.SWORD);
+
+        int armorBefore = character.getArmor(); // Valor padrão é 10
+        int speedBonus = character.getSpeed();  // speed = 5 (base) + 5 (DUELIST) + 5 (ELF) = 15
+
+        ChooseAction dodgeChoose = new DodgeStub();
+
+        RpgCharacter opponent = new RpgCharacter("Inimigo", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
+
+        // Act
+        Turn dodgeTurn = new Turn(character, opponent, dodgeChoose);
+        dodgeTurn.execute();
+
+        // Assert
+        int expectedArmor = armorBefore + speedBonus;
+        assertEquals(expectedArmor, character.getArmor());
+    }
 }
