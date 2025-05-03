@@ -16,6 +16,7 @@ public class Turn {
     }
 
     public void execute() {
+        current.onNewTurnStart();
         PlayerAction action = chooseAction.choose(current, opponent);
         action.execute(current, opponent);
     }

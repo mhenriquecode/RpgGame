@@ -50,6 +50,8 @@ public class RpgCharacter {
     private int speed;
     private int armor;
     private boolean defending = false;
+    private boolean hasDodgeBonus = false;
+
 
     @Transient @JsonIgnore private RollAttackDice attackDice;
     @Transient @JsonIgnore private RollHitDice hitDice;
@@ -120,7 +122,16 @@ public class RpgCharacter {
 
     public void dodge(){
         armor += speed;
+        hasDodgeBonus = true;
     }
+
+    public void onNewTurnStart() {
+        if (hasDodgeBonus) {
+            armor -= speed;
+            hasDodgeBonus = false;
+        }
+    }
+
 
     public void defends(int damageReceived){
         int finalDamage = defending ? Math.max(0, damageReceived - defense) : damageReceived;
