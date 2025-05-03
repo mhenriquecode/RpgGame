@@ -111,4 +111,21 @@ public class RpgCharacterTest {
         assertEquals(totalLife, character.getMaxHealth());
         assertEquals(totalDefense, character.getDefense());
     }
+
+    @Test
+    @Tag("Unit-test")
+    @DisplayName("User Chooses Human Then Character Receives Moderate Bonus To All Attributes")
+    void userChoosesHumanThenCharacterReceivesModerateBonusToAllAttributes() {
+        RpgCharacter character = new RpgCharacter("Aragorn", ClassType.BERSERK, Race.HUMAN, Weapon.SWORD);
+        int expectedHealth = 100 + Race.HUMAN.getBonusHealth() + ClassType.BERSERK.getBonusHealth(); // 100 + 5 + 20
+        int expectedStrength = 10 + Race.HUMAN.getBonusStrength() + ClassType.BERSERK.getBonusStrength(); // 10 + 2 + 5
+        int expectedDefense = 5 + Race.HUMAN.getBonusDefense() + ClassType.BERSERK.getBonusDefense(); // 5 + 2 + 0
+        int expectedSpeed = 4 + Race.HUMAN.getBonusSpeed() + ClassType.BERSERK.getBonusSpeed(); // 4 + 2 + 0
+
+        // Assert
+        assertEquals(expectedHealth, character.getMaxHealth());
+        assertEquals(expectedStrength, character.getStrength());
+        assertEquals(expectedDefense, character.getDefense());
+        assertEquals(expectedSpeed, character.getSpeed());
+    }
 }
