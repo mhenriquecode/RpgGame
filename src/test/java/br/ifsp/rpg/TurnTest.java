@@ -48,6 +48,31 @@ public class TurnTest {
     }
 
     @Test
+    @Tag("Unit-Test")
+    @DisplayName("attack should not deal damage if hit dice is less than opponent's armor")
+    void attackShouldNotDealDamageIfHitFails() {
+        RollHitDice hitDiceMock = mock(RollHitDice.class);
+        RollAttackDice attackDiceMock = mock(RollAttackDice.class);
+
+        when(hitDiceMock.roll()).thenReturn(5);
+        when(attackDiceMock.roll()).thenReturn(15);
+
+        RpgCharacter attacker = new RpgCharacter("Atacante", ClassType.WARRIOR, Race.HUMAN, Weapon.AXE,
+                hitDiceMock, attackDiceMock);
+
+        RpgCharacter defender = new RpgCharacter("Defensor", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD,
+                hitDiceMock, attackDiceMock);
+
+        int healthBefore = defender.getHealth();
+
+        ChooseAction attackChoose = new attackStub();
+        Turn attackTurn = new Turn(attacker, defender, attackChoose);
+        attackTurn.execute();
+
+        assertEquals(healthBefore, defender.getHealth());
+    }
+
+    @Test
     @Tag("TDD")
     @DisplayName("defend should reduce damage when choosing to defend")
     void defendShouldReduceDamageWhenChoosingToDefend() {
