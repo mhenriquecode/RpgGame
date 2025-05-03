@@ -1,9 +1,9 @@
 package br.ifsp.rpg;
 
-import br.ifsp.rpg.model.RpgCharacter;
-import br.ifsp.rpg.model.enums.ClassType;
-import br.ifsp.rpg.model.enums.Race;
-import br.ifsp.rpg.model.enums.Weapon;
+import br.ifsp.web.model.RpgCharacter;
+import br.ifsp.web.model.enums.ClassType;
+import br.ifsp.web.model.enums.Race;
+import br.ifsp.web.model.enums.Weapon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
