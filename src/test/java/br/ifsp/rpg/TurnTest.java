@@ -138,4 +138,18 @@ public class TurnTest {
         assertEquals(baseArmor, dodgingPlayer.getArmor());
     }
 
+    @Test
+    @Tag("TDD")
+    @DisplayName("Dodge should not increase armor above 18")
+    void dodgeShouldNotIncreaseArmorAbove18() {
+        RpgCharacter character = new RpgCharacter("Jogador", ClassType.DUELIST, Race.ELF, Weapon.SWORD);
+
+        RpgCharacter opponent = new RpgCharacter("Inimigo", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
+
+        ChooseAction dodgeChoose = new DodgeStub();
+        new Turn(character, opponent, dodgeChoose).execute();
+
+        assertEquals(18, character.getArmor());
+    }
+
 }
