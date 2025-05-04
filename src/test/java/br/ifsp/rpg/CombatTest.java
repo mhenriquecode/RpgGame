@@ -1,5 +1,7 @@
 package br.ifsp.rpg;
 
+import br.ifsp.rpg.stubs.attackStub;
+import br.ifsp.web.interfaces.ChooseAction;
 import br.ifsp.web.model.Combat;
 import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.enums.ClassType;
@@ -14,6 +16,7 @@ import org.mockito.Mock;
 
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -108,5 +111,20 @@ public class CombatTest {
         RpgCharacter first = combat.getFirstToPlay();
 
         assertThat(first).isEqualTo(player2);
+    }
+
+    @Test
+    @Tag("Unit-test")
+    @Tag("TDD")
+    @DisplayName("combat winner could not be null")
+    void combatDeterminesWinnerCorrectly() {
+        RpgCharacter player1 = new RpgCharacter("Jogador1", ClassType.BERSERK, Race.ORC, Weapon.AXE);
+
+        RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
+
+        Combat combat = new Combat(player1, player2);
+        combat.start();
+
+        assertNotNull(combat.getWinner());
     }
 }
