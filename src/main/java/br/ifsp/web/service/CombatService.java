@@ -12,7 +12,7 @@ import java.util.Random;
 
 @Service
 public class CombatService {
-
+    private Random random;
 
     public Combat startCombat(RpgCharacter player1, ChooseAction strategy1, RpgCharacter player2, ChooseAction strategy2) {
         Combat combat = new Combat(player1, strategy1, player2, strategy2);
@@ -40,16 +40,27 @@ public class CombatService {
             opponent = temp;
         }
 
-        return null;
+        return player1.getHealth() > 0 ? player1 : player2;
     }
 
-    private RpgCharacter getFirstToPlay(RpgCharacter player1, RpgCharacter player2) {
+    public RpgCharacter getFirstToPlay(RpgCharacter player1, RpgCharacter player2) {
         if (player1.getSpeed() > player2.getSpeed()) {
             return player1;
         } else if (player2.getSpeed() > player1.getSpeed()) {
             return player2;
         } else {
             return new Random().nextInt(2) == 0 ? player1 : player2;
+        }
+    }
+
+
+    public RpgCharacter getFirstToPlay(RpgCharacter player1, RpgCharacter player2, Random random) {
+        if (player1.getSpeed() > player2.getSpeed()) {
+            return player1;
+        } else if (player2.getSpeed() > player1.getSpeed()) {
+            return player2;
+        } else {
+            return random.nextInt(2) == 0 ? player1 : player2;
         }
     }
 }
