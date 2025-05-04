@@ -202,7 +202,7 @@ public class CharacterControllerTest {
             }
 
             @Test
-            @Tag("Unit-Test")
+            @Tag("Unit-test")
             @DisplayName("return a character when ID not found test")
             void shouldNotReturnACharacterWhenIDNotFoundTest() throws Exception {
                 UUID nonExistentId = UUID.randomUUID();
