@@ -9,8 +9,8 @@ import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
 import br.ifsp.rpg.stubs.DodgeStub;
-import br.ifsp.rpg.stubs.attackStub;
-import br.ifsp.rpg.stubs.defendingStub;
+import br.ifsp.rpg.stubs.AttackStub;
+import br.ifsp.rpg.stubs.DefendingStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ public class TurnTest {
         RpgCharacter defender = new RpgCharacter("Defensor", ClassType.BERSERK, Race.HUMAN, Weapon.AXE,
                 hitDiceMock, attackDiceMock);
 
-        ChooseAction choosingAttack =  new attackStub();
+        ChooseAction choosingAttack =  new AttackStub();
         int lifeBeforeAttack = defender.getHealth();
 
         Turn turnTest = new Turn(atacker, defender, choosingAttack);
@@ -66,7 +66,7 @@ public class TurnTest {
 
         int healthBefore = defender.getHealth();
 
-        ChooseAction attackChoose = new attackStub();
+        ChooseAction attackChoose = new AttackStub();
         Turn attackTurn = new Turn(attacker, defender, attackChoose);
         attackTurn.execute();
 
@@ -92,9 +92,9 @@ public class TurnTest {
 
         int initialHealth = defender.getHealth();
 
-        Turn defendTurn = new Turn(defender, attacker, new defendingStub());
+        Turn defendTurn = new Turn(defender, attacker, new DefendingStub());
         defendTurn.execute();
-        Turn attackTurn = new Turn(attacker, defender, new attackStub());
+        Turn attackTurn = new Turn(attacker, defender, new AttackStub());
         attackTurn.execute();
 
         int damageTaken = initialHealth - defender.getHealth();
@@ -120,9 +120,9 @@ public class TurnTest {
 
         int initialHealth = defender.getHealth();
 
-        Turn defendTurn = new Turn(defender, attacker, new defendingStub());
+        Turn defendTurn = new Turn(defender, attacker, new DefendingStub());
         defendTurn.execute();
-        Turn attackTurn = new Turn(attacker, defender, new attackStub());
+        Turn attackTurn = new Turn(attacker, defender, new AttackStub());
         attackTurn.execute();
 
         int damageTaken = initialHealth - defender.getHealth();
@@ -172,7 +172,7 @@ public class TurnTest {
         Turn dodgeTurn = new Turn(defender, attacker, new DodgeStub());
         dodgeTurn.execute();
 
-        Turn attackTurn = new Turn(attacker, defender, new attackStub());
+        Turn attackTurn = new Turn(attacker, defender, new AttackStub());
         attackTurn.execute();
 
         int damageTaken = initialHealth - defender.getHealth();
@@ -206,13 +206,13 @@ public class TurnTest {
         assertEquals(expectedArmorWithDodge, dodgingPlayer.getArmor());
 
         int healthBefore = dodgingPlayer.getHealth();
-        ChooseAction attackChoose = new attackStub();
+        ChooseAction attackChoose = new AttackStub();
         Turn attackTurn = new Turn(attacker, dodgingPlayer, attackChoose);
         attackTurn.execute();
 
         assertEquals(healthBefore, dodgingPlayer.getHealth());
 
-        ChooseAction neutralChoose = new attackStub();
+        ChooseAction neutralChoose = new AttackStub();
         Turn nextTurn = new Turn(dodgingPlayer, attacker, neutralChoose);
         nextTurn.execute();
 

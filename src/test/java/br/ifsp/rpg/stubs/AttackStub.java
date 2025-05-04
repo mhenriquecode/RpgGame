@@ -3,11 +3,11 @@ package br.ifsp.rpg.stubs;
 import br.ifsp.web.interfaces.ChooseAction;
 import br.ifsp.web.interfaces.PlayerAction;
 import br.ifsp.web.model.RpgCharacter;
-import br.ifsp.web.model.actions.DefendingAction;
+import br.ifsp.web.model.actions.AttackAction;
 
-public class defendingStub implements ChooseAction {
+public class AttackStub implements ChooseAction {
     @Override
     public PlayerAction choose(RpgCharacter atual, RpgCharacter oponente) {
-        return new DefendingAction();
+        return new AttackAction();
     }
 }

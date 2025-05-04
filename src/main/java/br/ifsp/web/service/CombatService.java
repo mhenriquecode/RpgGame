@@ -6,11 +6,9 @@ import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.actions.ChooseUserAction;
 
 public class CombatService {
-        public Combat startCombat(RpgCharacter player1, RpgCharacter player2) {
-            if(player1 == null || player2 == null)
-                throw new NullPointerException("player1 and player2 cannot be null");
-
-            ChooseAction neutralAction = new ChooseUserAction(1);
-            return new Combat(player1, neutralAction, player2, neutralAction);
+        public Combat startCombat(RpgCharacter player1, ChooseAction strategy1, RpgCharacter player2, ChooseAction strategy2) {
+            Combat combat = new Combat(player1, strategy1, player2, strategy2);
+            combat.start();
+            return combat;
         }
 }

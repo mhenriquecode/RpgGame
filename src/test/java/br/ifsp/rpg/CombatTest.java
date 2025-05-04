@@ -1,6 +1,6 @@
 package br.ifsp.rpg;
 
-import br.ifsp.rpg.stubs.attackStub;
+import br.ifsp.rpg.stubs.AttackStub;
 import br.ifsp.web.interfaces.ChooseAction;
 import br.ifsp.web.model.Combat;
 import br.ifsp.web.model.RpgCharacter;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.util.Random;
 
@@ -25,13 +24,14 @@ public class CombatTest {
 
     private RpgCharacter player1;
     private Random mockRandom;
-
+    private ChooseAction attackAction;
     private CombatService combatService;
 
     @BeforeEach
     void setUp() {
         mockRandom = mock(Random.class);
         combatService = new CombatService();
+        attackAction = new AttackStub();
         player1 = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
     }
 
@@ -41,7 +41,7 @@ public class CombatTest {
     @DisplayName("Must create valid combat between two character")
     void mustCreateValidCombatBetweenTwoCharacters(){
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-        Combat combat = combatService.startCombat(player1, player2);
+        Combat combat = combatService.startCombat(player1, attackAction, player2, attackAction);
 
         assertThat(combat).isNotNull();
     }
@@ -51,7 +51,7 @@ public class CombatTest {
     @DisplayName("Should not start a combat when one of the characters is invalid test")
     void shouldStartACombatTest(){
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> combatService.startCombat(player1, null));
+                .isThrownBy(() -> combatService.startCombat(player1, attackAction, null, attackAction));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class CombatTest {
 
         RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
 
-        ChooseAction strategy = new attackStub();
+        ChooseAction strategy = new AttackStub();
 
         Combat combat = new Combat(player1, strategy, player2, strategy);
         combat.start();
