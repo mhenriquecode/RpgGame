@@ -4,6 +4,7 @@ import br.ifsp.rpg.stubs.attackStub;
 import br.ifsp.web.interfaces.ChooseAction;
 import br.ifsp.web.model.Combat;
 import br.ifsp.web.model.RpgCharacter;
+import br.ifsp.web.model.actions.ChooseUserAction;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
@@ -59,7 +60,8 @@ public class CombatTest {
     @DisplayName("Player one starts the combat when his speed is grater than player two's speed")
     void playerOneWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerTwoTest(){
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-        Combat combat = new Combat(player1, player2);
+        ChooseAction neutralAction = new ChooseUserAction(1);
+        Combat combat = new Combat(player1, neutralAction, player2, neutralAction);
 
         assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
 
@@ -74,7 +76,9 @@ public class CombatTest {
     @DisplayName("Player two starts the combat when his speed is grater than player one's speed")
     void playerTwoWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerOneTest(){
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-        Combat combat = new Combat(player1, player2);
+
+        ChooseAction neutralAction = new ChooseUserAction(1);
+        Combat combat = new Combat(player1, neutralAction,player2, neutralAction);
 
         assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
 
@@ -122,7 +126,8 @@ public class CombatTest {
 
         RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
 
-        Combat combat = new Combat(player1, player2);
+        ChooseAction neutralAction = new ChooseUserAction(1);
+        Combat combat = new Combat(player1, neutralAction, player2, neutralAction);
         combat.start();
 
         assertNotNull(combat.getWinner());

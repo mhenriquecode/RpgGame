@@ -10,12 +10,17 @@ import java.util.Random;
 public class Combat {
     private final RpgCharacter player1;
     private final RpgCharacter player2;
+    private  ChooseAction actionStrategy1;
+    private  ChooseAction actionStrategy2;
     private final Random random;
     private RpgCharacter winner;
 
-    public Combat(RpgCharacter player1, RpgCharacter player2) {
+    public Combat(RpgCharacter player1, ChooseAction actionStrategy1,
+                  RpgCharacter player2, ChooseAction actionStrategy2) {
         this.player1 = player1;
         this.player2 = player2;
+        this.actionStrategy1 = actionStrategy1;
+        this.actionStrategy2 = actionStrategy2;
         this.random = new Random();
     }
 
@@ -30,7 +35,7 @@ public class Combat {
         RpgCharacter opponent = current == player1 ? player2 : player1;
 
         while (player1.getHealth() > 0 && player2.getHealth() > 0) {
-            ChooseAction currentStrategy = new ChooseUserAction(1);
+            ChooseAction currentStrategy = (current == player1) ? actionStrategy1 : actionStrategy2;
 
             Turn turn = new Turn(current, opponent, currentStrategy);
             turn.execute();
