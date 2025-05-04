@@ -22,11 +22,12 @@ public class CombatTest {
     private RpgCharacter player1;
     private Random mockRandom;
 
-    @Mock private CombatService combatService;
+    private CombatService combatService;
 
     @BeforeEach
     void setUp() {
         mockRandom = mock(Random.class);
+        combatService = new CombatService();
         player1 = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
     }
 
@@ -36,7 +37,7 @@ public class CombatTest {
     @DisplayName("Must create valid combat between two character")
     void mustCreateValidCombatBetweenTwoCharacters(){
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-        Combat combat = new Combat(player1, player2);
+        Combat combat = combatService.startCombat(player1, player2);
 
         assertThat(combat).isNotNull();
     }
