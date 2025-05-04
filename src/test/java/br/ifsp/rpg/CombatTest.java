@@ -117,7 +117,7 @@ public class CombatTest {
     @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("combat winner could not be null")
-    void combatDeterminesWinnerCorrectly() {
+    void combatWinnerCouldNotBeNull() {
         RpgCharacter player1 = new RpgCharacter("Jogador1", ClassType.BERSERK, Race.ORC, Weapon.AXE);
 
         RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
