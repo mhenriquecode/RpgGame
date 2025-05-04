@@ -22,15 +22,15 @@ import static org.assertj.core.api.Assertions.*;
 
 public class CombatTest {
 
+    private CombatService mockService;
     private RpgCharacter player1;
     private Random mockRandom;
     private ChooseAction attackAction;
-    private CombatService combatService;
 
     @BeforeEach
     void setUp() {
+        mockService = mock(CombatService.class);
         mockRandom = mock(Random.class);
-        combatService = new CombatService();
         attackAction = new AttackStub();
         player1 = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
     }
@@ -41,7 +41,7 @@ public class CombatTest {
     @DisplayName("Must create valid combat between two character")
     void mustCreateValidCombatBetweenTwoCharacters(){
         RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-        Combat combat = combatService.startCombat(player1, attackAction, player2, attackAction);
+        Combat combat = mockService.startCombat(player1, attackAction, player2, attackAction);
 
         assertThat(combat).isNotNull();
     }
@@ -51,7 +51,7 @@ public class CombatTest {
     @DisplayName("Should not start a combat when one of the characters is invalid test")
     void shouldStartACombatTest(){
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> combatService.startCombat(player1, attackAction, null, attackAction));
+                .isThrownBy(() -> mockService.startCombat(player1, attackAction, null, attackAction));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class CombatTest {
 
         assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
 
-        RpgCharacter first = combat.getFirstToPlay();
+        RpgCharacter first = mockService.getFirstToPlay(player1, player2);
 
         assertThat(first).isEqualTo(player1);
     }
