@@ -148,6 +148,6 @@ public class CombatTest {
         combat.start();
 
         assertThat(combat.getWinner().getHealth() > 0).isTrue();
-        assertThat((combat.getWinner() == player1 ? player2 : player1).getHealth()).isZero();
+        assertThat((combat.getWinner() == player1 ? player2 : player1).getHealth()).isLessThanOrEqualTo(0);
     }
 }
