@@ -1,11 +1,15 @@
 package br.ifsp.web.controller;
 
+import br.ifsp.web.dto.CombatRequestDTO;
+import br.ifsp.web.dto.CombatResultDTO;
+import br.ifsp.web.interfaces.ChooseAction;
 import br.ifsp.web.model.Combat;
+import br.ifsp.web.model.actions.AttackAction;
+import br.ifsp.web.model.actions.ChooseUserAction;
 import br.ifsp.web.service.CombatService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,16 +26,14 @@ public class CombatController {
     private final CombatService combatService;
 
     @Operation(summary = "Start a combat")
-    @PostMapping()
-    public ResponseEntity<Combat> startCombat(@Valid @RequestBody Combat combatDTO) {
-        Combat startedCombat = combatService.startCombat(
-                combatDTO.getPlayer1(),
-                combatDTO.getActionStrategy1(),
-                combatDTO.getPlayer2(),
-                combatDTO.getActionStrategy2()
-        );
+    @PostMapping
+    public ResponseEntity<CombatResultDTO> startCombat(@RequestBody CombatRequestDTO request) {
+        ChooseAction strategy1 = new ChooseUserAction(1);
+        ChooseAction strategy2 = new ChooseUserAction(1);
 
-        return ResponseEntity.ok(startedCombat);
+        Combat combat = combatService.startCombat(request.player1(), strategy1,
+                request.player2(), strategy2);
+
+        return ResponseEntity.ok(new CombatResultDTO(combat.getWinner()));
     }
-
 }

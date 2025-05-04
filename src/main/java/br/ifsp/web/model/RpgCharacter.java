@@ -43,14 +43,14 @@ public class RpgCharacter {
     @Column(nullable = false)
     private Weapon weapon;
 
-    private int maxHealth;
-    private int health;
-    private int strength;
-    private int defense;
-    private int speed;
-    private int armor;
-    private boolean defending = false;
-    private boolean hasDodgeBonus = false;
+    @JsonIgnore private int maxHealth;
+    @JsonIgnore private int health;
+    @JsonIgnore private int strength;
+    @JsonIgnore private int defense;
+    @JsonIgnore private int speed;
+    @JsonIgnore private int armor;
+    @JsonIgnore private boolean defending = false;
+    @JsonIgnore private boolean hasDodgeBonus = false;
 
 
     @Transient @JsonIgnore private RollAttackDice attackDice;
