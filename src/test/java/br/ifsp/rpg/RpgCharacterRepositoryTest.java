@@ -110,6 +110,15 @@ public class RpgCharacterRepositoryTest {
 
     @Test
     @Tag("Unit-test")
+    @DisplayName("Trying to save invalid class type character test")
+    void tryingToSaveInvalidClassTypeCharacterTest(){
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> service.save(new RpgCharacter(
+                        "New Character", null, Race.HUMAN,Weapon.HAMMER)));
+    }
+
+    @Test
+    @Tag("Unit-test")
     @DisplayName("Trying to save invalid name character test")
     void tryingToSaveInvalidNameCharacterTest(){
         assertThatExceptionOfType(NullPointerException.class)
