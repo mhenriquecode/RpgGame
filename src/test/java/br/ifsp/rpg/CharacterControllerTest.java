@@ -230,7 +230,6 @@ public class CharacterControllerTest {
 
                 verify(service).update(eq(characterId), any());
             }
-
         }
     }
 }

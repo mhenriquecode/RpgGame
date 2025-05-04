@@ -38,6 +38,14 @@ public class CombatTest {
     }
 
     @Test
+    @Tag("Unit-Test")
+    @DisplayName("Should not start a combat when one of the characters is invalid test")
+    void shouldStartACombatTest(){
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> comabatService.start(player1, null));
+    }
+
+    @Test
     @Tag("Unit-test")
     @Tag("TDD")
     @DisplayName("Player one starts the combat when his speed is grater than player two's speed")
