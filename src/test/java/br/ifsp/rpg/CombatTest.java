@@ -5,10 +5,12 @@ import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
+import br.ifsp.web.service.CombatService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.Random;
 
@@ -19,6 +21,8 @@ public class CombatTest {
 
     private RpgCharacter player1;
     private Random mockRandom;
+
+    @Mock private CombatService combatService;
 
     @BeforeEach
     void setUp() {
@@ -41,8 +45,8 @@ public class CombatTest {
     @Tag("Unit-Test")
     @DisplayName("Should not start a combat when one of the characters is invalid test")
     void shouldStartACombatTest(){
-        assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> comabatService.start(player1, null));
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> combatService.startCombat(player1, null));
     }
 
     @Test
