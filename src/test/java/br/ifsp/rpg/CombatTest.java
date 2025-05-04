@@ -127,4 +127,22 @@ public class CombatTest {
 
         assertNotNull(combat.getWinner());
     }
+
+    @Test
+    @Tag("Unit-test")
+    @Tag("TDD")
+    @DisplayName("combat determines winner correctly")
+    void combatDeterminesWinnerCorrectly() {
+        RpgCharacter player1 = new RpgCharacter("Jogador1", ClassType.BERSERK, Race.ORC, Weapon.AXE);
+
+        RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
+
+        ChooseAction strategy = new attackStub();
+
+        Combat combat = new Combat(player1, strategy, player2, strategy);
+        combat.start();
+
+        assertThat(combat.getWinner().getHealth() > 0).isTrue();
+        assertThat((combat.getWinner() == player1 ? player2 : player1).getHealth()).isZero();
+    }
 }
