@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
@@ -33,6 +35,9 @@ public class Combat {
 
     @Transient
     private ChooseAction actionStrategy2;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime timestamp;
 
     @Transient
     private Random random = new Random();

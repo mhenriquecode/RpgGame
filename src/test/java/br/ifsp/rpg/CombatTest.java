@@ -9,6 +9,7 @@ import br.ifsp.web.model.actions.ChooseUserAction;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
+import br.ifsp.web.repository.CombatLogRepository;
 import br.ifsp.web.service.CombatService;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
@@ -28,10 +29,12 @@ public class CombatTest {
     private RpgCharacter player1;
     private Random mockRandom;
     private ChooseAction attackAction;
+    private CombatLogRepository mockRepository;
 
     @BeforeEach
     void setUp() {
-        service = new CombatService();
+        mockRepository = mock(CombatLogRepository.class);
+        service = new CombatService(mockRepository);
         mockRandom = mock(Random.class);
         attackAction = new AttackStub();
         player1 = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
