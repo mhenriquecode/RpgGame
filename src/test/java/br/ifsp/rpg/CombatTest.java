@@ -2,6 +2,7 @@ package br.ifsp.rpg;
 
 import br.ifsp.rpg.stubs.AttackStub;
 import br.ifsp.web.interfaces.ChooseAction;
+import br.ifsp.web.log.CombatLog;
 import br.ifsp.web.model.Combat;
 import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.actions.ChooseUserAction;
@@ -14,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.time.LocalDateTime;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -148,8 +150,7 @@ public class CombatTest {
         @DisplayName("Should create CombatLog with correct values")
         void shouldCreateCombatLogWithCorrectValues() {
             RpgCharacter player2 = new RpgCharacter("candidor", ClassType.BERSERK, Race.ORC, Weapon.DAGGER);
-
-            LocalDateTime now = LocalDateTime.now();
+            
             RpgCharacter winner = player1;
             CombatLog combatLog = new CombatLog(player1, player2, winner);
 
