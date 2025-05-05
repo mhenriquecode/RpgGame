@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class TurnTest {
     @Test
     @Tag("TDD")
-    @Tag("Unit-Test")
+    @Tag("Unit-test")
     @DisplayName("Damage caused by attacker must be the same as defender receives")
     void damageCausedByAttackerMustBeTheSameAsDefenderReceives() {
         RollHitDice hitDiceMock = mock(RollHitDice.class);
@@ -49,7 +49,7 @@ public class TurnTest {
     }
 
     @Test
-    @Tag("Unit-Test")
+    @Tag("Unit-test")
     @DisplayName("attack should not deal damage if hit dice is less than opponent's armor")
     void attackShouldNotDealDamageIfHitFails() {
         RollHitDice hitDiceMock = mock(RollHitDice.class);
@@ -75,7 +75,7 @@ public class TurnTest {
 
     @Test
     @Tag("TDD")
-    @Tag("Unit-Test")
+    @Tag("Unit-test")
     @DisplayName("defend should reduce damage using defense points")
     void defendShouldReduceDamageUsingDefensePoints() {
         RollHitDice hitDiceMock = mock(RollHitDice.class);
@@ -103,7 +103,7 @@ public class TurnTest {
     }
 
     @Test
-    @Tag("Unit-Test")
+    @Tag("Unit-test")
     @DisplayName("defend should prevent damage when armor exceeds attack")
     void defendShouldPreventDamageWhenArmorExceedsAttack() {
         RollHitDice hitDiceMock = mock(RollHitDice.class);
@@ -132,7 +132,7 @@ public class TurnTest {
 
     @Test
     @Tag("TDD")
-    @Tag("Unit-Test")
+    @Tag("Unit-test")
     @DisplayName("dodge should increase armor in the turn")
     void dodgeShouldIncreaseArmorInTheTurn() {
         RpgCharacter character = new RpgCharacter("Jogador", ClassType.DUELIST, Race.ELF, Weapon.SWORD);
@@ -152,7 +152,7 @@ public class TurnTest {
     }
 
     @Test
-    @Tag("Unit-Test")
+    @Tag("Unit-test")
     @DisplayName("dodge Should Increase Armor And Still Take Damage If Hit Dice Exceeds It")
     void dodgeShouldIncreaseArmorAndStillTakeDamageIfHitDiceExceedsIt() {
         RollHitDice hitDiceMock = mock(RollHitDice.class);
@@ -181,7 +181,7 @@ public class TurnTest {
 
     @Test
     @Tag("TDD")
-    @Tag("Unit-Test")
+    @Tag("Unit-test")
     @DisplayName("dodge Bonus Should Expire After Opponents Turn")
     void dodgeBonusShouldExpireAfterOpponentsTurn() {
         RollHitDice hitDiceMock = mock(RollHitDice.class);
@@ -221,7 +221,7 @@ public class TurnTest {
 
     @Test
     @Tag("TDD")
-    @Tag("Unit-Test")
+    @Tag("Unit-test")
     @DisplayName("Dodge should not increase armor above 18")
     void dodgeShouldNotIncreaseArmorAbove18() {
         RpgCharacter character = new RpgCharacter("Jogador", ClassType.DUELIST, Race.ELF, Weapon.SWORD);
