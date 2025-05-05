@@ -52,7 +52,6 @@ public class RpgCharacter {
     @JsonIgnore private boolean defending = false;
     @JsonIgnore private boolean hasDodgeBonus = false;
 
-
     @Transient @JsonIgnore private RollAttackDice attackDice;
     @Transient @JsonIgnore private RollHitDice hitDice;
     @Transient @JsonIgnore private Random random;
