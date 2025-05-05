@@ -25,8 +25,8 @@ import java.util.UUID;
 @NoArgsConstructor(force = true)
 public class RpgCharacter {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     @Column(nullable = false, length = 50)
     private String name;
@@ -59,7 +59,6 @@ public class RpgCharacter {
     @Transient @JsonIgnore private SpecialEffect specialEffect;
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon) {
-        this.id = UUID.randomUUID();
         this.name = name;
         this.classType = classType;
         this.race = race;
