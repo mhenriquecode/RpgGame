@@ -84,6 +84,14 @@ public class RpgCharacter {
         this.random = random;
     }
 
+    @PostLoad
+    private void initTransientFields() {
+        this.attackDice = new RollAttackDice(this.weapon);
+        this.hitDice = new RollHitDice();
+        this.random = new Random();
+        this.specialEffect = chooseSpecialEffect(this.classType);
+    }
+
     public void initializeAttributes() {
         this.maxHealth = 100 + race.getBonusHealth() + classType.getBonusHealth();
         this.health = maxHealth;
