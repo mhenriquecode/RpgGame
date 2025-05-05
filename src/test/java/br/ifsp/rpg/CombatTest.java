@@ -142,6 +142,25 @@ public class CombatTest {
             assertThat(combat.getWinner().getHealth() > 0).isTrue();
             assertThat((combat.getWinner() == player1 ? player2 : player1).getHealth()).isLessThanOrEqualTo(0);
         }
+        @Test
+        @Tag("Unit-test")
+        @Tag("TDD")
+        @DisplayName("Should create CombatLog with correct values")
+        void shouldCreateCombatLogWithCorrectValues() {
+            RpgCharacter player2 = new RpgCharacter("candidor", ClassType.BERSERK, Race.ORC, Weapon.DAGGER);
+
+            LocalDateTime now = LocalDateTime.now();
+            RpgCharacter winner = player1;
+            CombatLog combatLog = new CombatLog(player1, player2, winner);
+
+            assertThat(combatLog).isNotNull();
+            assertThat(combatLog.getPlayer1()).isEqualTo(player1);
+            assertThat(combatLog.getPlayer2()).isEqualTo(player2);
+            assertThat(combatLog.getWinner()).isEqualTo(winner);
+            assertThat(combatLog.getTimestamp()).isNotNull();
+
+            assertThat(combatLog.getTimestamp()).isBeforeOrEqualTo(LocalDateTime.now());
+        }
     }
     @Nested
     @DisplayName("Unit combat test")
