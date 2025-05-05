@@ -1,5 +1,6 @@
 package br.ifsp.web.controller;
 
+import br.ifsp.web.dto.CombatHistoryDTO;
 import br.ifsp.web.dto.CombatRequestDTO;
 import br.ifsp.web.dto.CombatResultDTO;
 import br.ifsp.web.interfaces.ChooseAction;
@@ -14,10 +15,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/combat")
@@ -43,5 +43,12 @@ public class CombatController {
                 player2, strategy2);
 
         return ResponseEntity.ok(new CombatResultDTO(combat.getWinner()));
+    }
+
+    @GetMapping("/history")
+    @Operation(summary = "Get all past combats")
+    public ResponseEntity<List<CombatHistoryDTO>> getCombatHistory() {
+        List<CombatHistoryDTO> history = combatService.getCombatHistory();
+        return ResponseEntity.ok(history);
     }
 }
