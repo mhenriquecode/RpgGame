@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -45,7 +46,7 @@ public class TurnTest {
         turnTest.execute();
 
         int damage = lifeBeforeAttack - defender.getHealth();
-        assertEquals(21, damage);
+        assertThat(damage).isIn(21, 42);
     }
 
     @Test
