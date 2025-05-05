@@ -20,5 +20,4 @@ public enum ClassType {
         this.bonusDefense = bonusDefense;
         this.bonusSpeed = bonusSpeed;
     }
-
 }

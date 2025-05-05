@@ -26,10 +26,9 @@ public class CharacterService {
         if(characterDTO.weapon() == null)
             throw new IllegalArgumentException("Weapon cannot be null");
 
-        RpgCharacter character = new RpgCharacter(characterDTO.name(), characterDTO.classType(), characterDTO.race(), characterDTO.weapon());
-        repository.save(character);
+        repository.save(characterDTO.toEntity());
 
-        return character;
+        return characterDTO.toEntity();
     }
 
     public void save(RpgCharacter character) {

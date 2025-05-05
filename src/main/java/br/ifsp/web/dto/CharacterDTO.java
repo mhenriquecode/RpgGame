@@ -22,4 +22,8 @@ public record CharacterDTO (
                 character.getWeapon()
         );
     }
+
+    public RpgCharacter toEntity() {
+        return new RpgCharacter(name, classType, race, weapon);
+    }
 }
