@@ -124,15 +124,30 @@ public class RpgCharacterTest {
         @Test
         @Tag("Unit-test")
         @Tag("TDD")
-        @DisplayName("Applying paladin special attack effect test")
-        void applyingPaladinSpecialAttackEffectTest() {
+        @DisplayName("Applying paladin special attack effect when health points is full test")
+        void applyingPaladinSpecialAttackEffectWhenHealthIsFullTest() {
             when(mockRandom.nextInt(100)).thenReturn(5);
 
             RpgCharacter player = new RpgCharacter("Character", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD, mockRandom);
             player.attack();
 
             assertThat(player.getClassType()).isEqualTo(ClassType.PALADIN);
-            assertThat(player.getHealth()).isGreaterThanOrEqualTo(118);
+            assertThat(player.getHealth()).isEqualTo(115);
+        }
+
+        @Test
+        @Tag("Unit-test")
+        @Tag("TDD")
+        @DisplayName("Applying paladin special attack effect when health points is not full test")
+        void applyingPaladinSpecialAttackEffectWhenHealthIsNotFullTest() {
+            when(mockRandom.nextInt(100)).thenReturn(5);
+
+            RpgCharacter player = new RpgCharacter("Character", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD, mockRandom);
+            player.setHealth(80);
+            player.attack();
+
+            assertThat(player.getClassType()).isEqualTo(ClassType.PALADIN);
+            assertThat(player.getHealth()).isBetween(93, 103);
         }
 
         @Test

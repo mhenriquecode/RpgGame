@@ -15,7 +15,10 @@ public class CombatService {
     private Random random;
 
     public Combat startCombat(RpgCharacter player1, ChooseAction strategy1, RpgCharacter player2, ChooseAction strategy2) {
-
+        if (player1 == null) {throw new IllegalArgumentException("player1 cannot be null");}
+        if (player2 == null) {throw new IllegalArgumentException("player2 cannot be null");}
+        if (strategy1 == null) {throw new IllegalArgumentException("player1 action cannot be null");}
+        if (strategy2 == null) {throw new IllegalArgumentException("player2 action cannot be null");}
         Combat combat = new Combat(player1, strategy1, player2, strategy2);
         RpgCharacter winner = executeCombat(player1, strategy1, player2, strategy2);
         combat.setWinner(winner);

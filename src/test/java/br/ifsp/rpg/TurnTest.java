@@ -112,8 +112,8 @@ public class TurnTest {
         @Test
         @Tag("TDD")
         @Tag("Unit-Test")
-        @DisplayName("defend should prevent damage when armor exceeds attack")
-        void defendShouldPreventDamageWhenArmorExceedsAttack() {
+        @DisplayName("defend should prevent damage when defense exceeds attack")
+        void defendShouldPreventDamageWhenDefenseExceedsAttack() {
             RollHitDice hitDiceMock = mock(RollHitDice.class);
             RollAttackDice attackDiceMock = mock(RollAttackDice.class);
 

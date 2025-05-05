@@ -153,6 +153,5 @@ public class CombatTest {
             assertThatExceptionOfType(NullPointerException.class)
                     .isThrownBy(() -> service.startCombat(player1, attackAction, null, attackAction));
         }
-
     }
 }
