@@ -9,10 +9,7 @@ import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
 import br.ifsp.web.service.CombatService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -38,117 +35,124 @@ public class CombatTest {
         player1 = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
     }
 
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Must create valid combat between two character")
-    void mustCreateValidCombatBetweenTwoCharacters(){
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-        Combat combat = service.startCombat(player1, attackAction, player2, attackAction);
+    @Nested
+    @DisplayName("TDD combat test")
+    class TddCombatTest {
+        @Test
+        @Tag("Unit-test")
+        @Tag("TDD")
+        @DisplayName("Must create valid combat between two character")
+        void mustCreateValidCombatBetweenTwoCharacters(){
+            RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
+            Combat combat = service.startCombat(player1, attackAction, player2, attackAction);
 
-        assertThat(combat).isNotNull();
+            assertThat(combat).isNotNull();
+        }
+        @Test
+        @Tag("Unit-test")
+        @Tag("TDD")
+        @DisplayName("Player one starts the combat when his speed is grater than player two's speed")
+        void playerOneWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerTwoTest(){
+            RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
+
+            assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
+
+            RpgCharacter first = service.getFirstToPlay(player1, player2);
+
+            assertThat(first).isEqualTo(player1);
+        }
+
+        @Test
+        @Tag("Unit-test")
+        @Tag("TDD")
+        @DisplayName("Player two starts the combat when his speed is grater than player one's speed")
+        void playerTwoWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerOneTest(){
+            RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
+
+            ChooseAction neutralAction = new ChooseUserAction(1);
+            Combat combat = new Combat(player1, neutralAction, player2, neutralAction);
+
+            assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
+
+            RpgCharacter first = service.getFirstToPlay(player1, player2);
+
+            assertThat(first).isEqualTo(player1);
+        }
+
+        @Test
+        @Tag("Unit-test")
+        @Tag("TDD")
+        @DisplayName("Player one starts when speed is equal to player two's speed")
+        void playerOneStartsWhenSpeedIsEqualToThePlayerTwo(){
+            when(mockRandom.nextInt(2)).thenReturn(0);
+
+            RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, Race.HUMAN, Weapon.AXE);
+
+
+            assertThat(player1.getSpeed()).isEqualTo(player2.getSpeed());
+            RpgCharacter first = service.getFirstToPlay(player1, player2, mockRandom);
+
+            assertThat(first).isEqualTo(player1);
+
+        }
+
+        @Test
+        @Tag("Unit-test")
+        @Tag("TDD")
+        @DisplayName("Player two starts when speed is equal to player one's speed")
+        void playerTwoStartsWhenSpeedIsEqualToThePlayerOne(){
+            when(mockRandom.nextInt(2)).thenReturn(1);
+
+            RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, Race.HUMAN, Weapon.AXE);
+
+            assertThat(player1.getSpeed()).isEqualTo(player2.getSpeed());
+            RpgCharacter first = service.getFirstToPlay(player1, player2, mockRandom);
+
+            assertThat(first).isEqualTo(player2);
+        }
+
+        @Test
+        @Tag("Unit-test")
+        @Tag("TDD")
+        @DisplayName("combat winner could not be null")
+        void combatWinnerCouldNotBeNull() {
+            RpgCharacter player1 = new RpgCharacter("Jogador1", ClassType.BERSERK, Race.ORC, Weapon.AXE);
+
+            RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
+
+            ChooseAction neutralAction = new ChooseUserAction(1);
+            Combat combat = service.startCombat(player1, neutralAction, player2, neutralAction);
+
+            assertNotNull(combat.getWinner());
+        }
+
+        @Test
+        @Tag("Unit-test")
+        @Tag("TDD")
+        @DisplayName("combat determines winner correctly")
+        void combatDeterminesWinnerCorrectly() {
+            RpgCharacter player1 = new RpgCharacter("Jogador1", ClassType.BERSERK, Race.ORC, Weapon.AXE);
+
+            RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
+
+            ChooseAction strategy = new AttackStub();
+
+            Combat combat = service.startCombat(player1, strategy, player2, strategy);
+
+            assertThat(combat.getWinner().getHealth() > 0).isTrue();
+            assertThat((combat.getWinner() == player1 ? player2 : player1).getHealth()).isLessThanOrEqualTo(0);
+        }
     }
+    @Nested
+    @DisplayName("Unit combat test")
+    class UnitCombatTest {
+        @Test
+        @Tag("Unit-Test")
+        @DisplayName("Should not start a combat when one of the characters is invalid test")
+        void shouldStartACombatTest(){
+            assertThatExceptionOfType(NullPointerException.class)
+                    .isThrownBy(() -> service.startCombat(player1, attackAction, null, attackAction));
+        }
 
-    @Test
-    @Tag("Unit-Test")
-    @DisplayName("Should not start a combat when one of the characters is invalid test")
-    void shouldStartACombatTest(){
-        assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> service.startCombat(player1, attackAction, null, attackAction));
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Player one starts the combat when his speed is grater than player two's speed")
-    void playerOneWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerTwoTest(){
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-
-        assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
-
-        RpgCharacter first = service.getFirstToPlay(player1, player2);
-
-        assertThat(first).isEqualTo(player1);
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Player two starts the combat when his speed is grater than player one's speed")
-    void playerTwoWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerOneTest(){
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-
-        ChooseAction neutralAction = new ChooseUserAction(1);
-        Combat combat = new Combat(player1, neutralAction, player2, neutralAction);
-
-        assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
-
-        RpgCharacter first = service.getFirstToPlay(player1, player2);
-
-        assertThat(first).isEqualTo(player1);
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Player one starts when speed is equal to player two's speed")
-    void playerOneStartsWhenSpeedIsEqualToThePlayerTwo(){
-        when(mockRandom.nextInt(2)).thenReturn(0);
-
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, Race.HUMAN, Weapon.AXE);
-
-
-        assertThat(player1.getSpeed()).isEqualTo(player2.getSpeed());
-        RpgCharacter first = service.getFirstToPlay(player1, player2, mockRandom);
-
-        assertThat(first).isEqualTo(player1);
-
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("Player two starts when speed is equal to player one's speed")
-    void playerTwoStartsWhenSpeedIsEqualToThePlayerOne(){
-        when(mockRandom.nextInt(2)).thenReturn(1);
-
-        RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, Race.HUMAN, Weapon.AXE);
-
-        assertThat(player1.getSpeed()).isEqualTo(player2.getSpeed());
-        RpgCharacter first = service.getFirstToPlay(player1, player2, mockRandom);
-
-        assertThat(first).isEqualTo(player2);
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("combat winner could not be null")
-    void combatWinnerCouldNotBeNull() {
-        RpgCharacter player1 = new RpgCharacter("Jogador1", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-
-        RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
-
-        ChooseAction neutralAction = new ChooseUserAction(1);
-        Combat combat = service.startCombat(player1, neutralAction, player2, neutralAction);
-
-        assertNotNull(combat.getWinner());
-    }
-
-    @Test
-    @Tag("Unit-test")
-    @Tag("TDD")
-    @DisplayName("combat determines winner correctly")
-    void combatDeterminesWinnerCorrectly() {
-        RpgCharacter player1 = new RpgCharacter("Jogador1", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-
-        RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
-
-        ChooseAction strategy = new AttackStub();
-
-        Combat combat = service.startCombat(player1, strategy, player2, strategy);
-
-        assertThat(combat.getWinner().getHealth() > 0).isTrue();
-        assertThat((combat.getWinner() == player1 ? player2 : player1).getHealth()).isLessThanOrEqualTo(0);
     }
 }
