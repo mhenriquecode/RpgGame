@@ -15,6 +15,7 @@ public class CombatService {
     private Random random;
 
     public Combat startCombat(RpgCharacter player1, ChooseAction strategy1, RpgCharacter player2, ChooseAction strategy2) {
+
         Combat combat = new Combat(player1, strategy1, player2, strategy2);
         RpgCharacter winner = executeCombat(player1, strategy1, player2, strategy2);
         combat.setWinner(winner);

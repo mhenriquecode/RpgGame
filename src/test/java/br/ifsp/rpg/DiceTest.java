@@ -101,6 +101,4 @@ public class DiceTest {
         assertEquals(12, result);
         verify(mockRandom, times(4)).nextInt(3);
     }
-
-
 }

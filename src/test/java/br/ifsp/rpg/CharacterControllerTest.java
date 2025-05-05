@@ -84,9 +84,13 @@ public class CharacterControllerTest {
             @Tag("TDD")
             @DisplayName("return character by ID test")
             void shouldReturnCharacterById() throws Exception {
-                when(service.getCharacter(createdCharacter.getId())).thenReturn(Optional.of(createdCharacter));
+                UUID id = UUID.randomUUID();
+                RpgCharacter createdCharacter = new RpgCharacter("Character", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
+                createdCharacter.setId(id);
 
-                mockMvc.perform(get("/api/characters/{id}", createdCharacter.getId())
+                when(service.getCharacter(id)).thenReturn(Optional.of(createdCharacter));
+
+                mockMvc.perform(get("/api/characters/{id}", id)
                                 .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.name").value("Character"))

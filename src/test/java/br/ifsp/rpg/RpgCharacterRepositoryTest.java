@@ -35,7 +35,7 @@ public class RpgCharacterRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        character = new RpgCharacter("Character", ClassType.DUELIST, Race.HUMAN, Weapon.DAGGER);
+        character = service.create(new CharacterDTO("Character", ClassType.DUELIST, Race.HUMAN, Weapon.DAGGER));
     }
 
     @Test
@@ -81,13 +81,23 @@ public class RpgCharacterRepositoryTest {
     @Tag("TDD")
     @DisplayName("Save character test")
     void saveCharacterTest(){
-        when(repository.findById(Mockito.any())).thenReturn(Optional.empty());
+        UUID fakeId = UUID.randomUUID();
 
-        service.save(character);
-        assertThat(character.getId()).isNotNull();
+        when(repository.save(any(RpgCharacter.class))).thenAnswer(invocation -> {
+            RpgCharacter saved = invocation.getArgument(0);
+            saved.setId(fakeId);
+            return saved;
+        });
 
-        when(repository.findById(character.getId())).thenReturn(Optional.of(character));
-        assertThat(service.getCharacter(character.getId())).isEqualTo(Optional.of(character));
+        when(repository.findById(fakeId)).thenReturn(Optional.of(character));
+
+        RpgCharacter savedCharacter = service.create(new CharacterDTO(
+                "Character", ClassType.WARRIOR, Race.HUMAN, Weapon.HAMMER));
+
+        savedCharacter.setId(fakeId);
+
+        assertThat(savedCharacter.getId()).isNotNull();
+        assertThat(service.getCharacter(savedCharacter.getId())).isEqualTo(Optional.of(character));
     }
 
     @Test
