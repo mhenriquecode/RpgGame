@@ -28,8 +28,8 @@ public class CombatController {
     @Operation(summary = "Start a combat")
     @PostMapping
     public ResponseEntity<CombatResultDTO> startCombat(@RequestBody CombatRequestDTO request) {
-        ChooseAction strategy1 = new ChooseUserAction(1);
-        ChooseAction strategy2 = new ChooseUserAction(1);
+        ChooseAction strategy1 = new ChooseUserAction(request.strategy1());
+        ChooseAction strategy2 = new ChooseUserAction(request.strategy2());
 
         Combat combat = combatService.startCombat(request.player1(), strategy1,
                 request.player2(), strategy2);
