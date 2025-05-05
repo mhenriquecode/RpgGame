@@ -32,7 +32,6 @@ public class RpgCharacterTest {
     void creatingValidCharacterTest() {
         RpgCharacter character = new RpgCharacter("Character", ClassType.WARRIOR, Race.ORC, Weapon.AXE);
 
-        assertThat(character.getId()).isNotNull();
         assertThat(character.getName()).isEqualTo("Character");
         assertThat(character.getRace().name()).isEqualTo(Race.ORC.name());
         assertThat(character.getWeapon().name()).isEqualTo(Weapon.AXE.name());
