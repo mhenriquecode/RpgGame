@@ -25,11 +25,15 @@ public class CombatService {
         if (player2 == null) {throw new NullPointerException("player2 cannot be null");}
         if (strategy1 == null) {throw new NullPointerException("player1 action cannot be null");}
         if (strategy2 == null) {throw new NullPointerException("player2 action cannot be null");}
-        Combat combat = new Combat(player1, strategy1, player2, strategy2);
-        RpgCharacter winner = executeCombat(player1, strategy1, player2, strategy2);
-        combat.setWinner(winner);
+        RpgCharacter clone1 = player1.cloneForCombat();
+        RpgCharacter clone2 = player2.cloneForCombat();
 
-        combat.setTimestamp(LocalDateTime.now());
+        Combat combat = new Combat(player1, strategy1, player2, strategy2);
+
+        RpgCharacter combatWinner = executeCombat(clone1, strategy1, clone2, strategy2);
+        RpgCharacter actualWinner = (combatWinner == clone1) ? player1 : player2;
+
+        combat.setWinner(actualWinner);
         saveCombatLog(combat);
 
         return combat;
@@ -63,7 +67,7 @@ public class CombatService {
                 combat.getPlayer2(),
                 combat.getWinner()
         );
-        log.setTimestamp(combat.getTimestamp());
+        log.setTimestamp(LocalDateTime.now());
         combatLogRepository.save(log);
     }
 

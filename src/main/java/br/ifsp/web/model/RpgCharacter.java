@@ -92,6 +92,25 @@ public class RpgCharacter {
         this.specialEffect = chooseSpecialEffect(this.classType);
     }
 
+    public RpgCharacter cloneForCombat() {
+        RpgCharacter clone = new RpgCharacter(name, classType, race, weapon);
+        clone.setHealth(this.getHealth());
+        clone.setStrength(this.getStrength());
+        clone.setSpeed(this.getSpeed());
+        clone.setDefense(this.getDefense());
+        clone.setArmor(this.getArmor());
+        clone.setDefending(this.isDefending());
+        clone.setHasDodgeBonus(this.isHasDodgeBonus());
+
+        clone.setAttackDice(new RollAttackDice(this.weapon));
+        clone.setHitDice(new RollHitDice());
+        clone.setRandom(new Random());
+        clone.setSpecialEffect(chooseSpecialEffect(this.classType));
+
+        return clone;
+    }
+
+
     public void initializeAttributes() {
         this.maxHealth = 100 + race.getBonusHealth() + classType.getBonusHealth();
         this.health = maxHealth;
