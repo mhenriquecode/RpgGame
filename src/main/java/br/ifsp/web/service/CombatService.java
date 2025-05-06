@@ -33,6 +33,8 @@ public class CombatService {
         RpgCharacter combatWinner = executeCombat(clone1, strategy1, clone2, strategy2);
         RpgCharacter actualWinner = (combatWinner == clone1) ? player1 : player2;
 
+        combat.setFinalClone1(clone1);
+        combat.setFinalClone2(clone2);
         combat.setWinner(actualWinner);
         saveCombatLog(combat);
 

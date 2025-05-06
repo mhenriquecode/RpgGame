@@ -35,10 +35,11 @@ public class Combat {
 
     @Transient
     private ChooseAction actionStrategy2;
+    @Transient
+    private RpgCharacter finalClone1;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime timestamp;
-
+    @Transient
+    private RpgCharacter finalClone2;
     @Transient
     private Random random = new Random();
 

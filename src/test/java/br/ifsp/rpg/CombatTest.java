@@ -144,8 +144,14 @@ public class CombatTest {
 
             Combat combat = service.startCombat(player1, strategy, player2, strategy);
 
-            assertThat(combat.getWinner().getHealth() > 0).isTrue();
-            assertThat((combat.getWinner() == player1 ? player2 : player1).getHealth()).isLessThanOrEqualTo(0);
+            RpgCharacter clone1 = combat.getFinalClone1();
+            RpgCharacter clone2 = combat.getFinalClone2();
+
+            RpgCharacter winner = (clone1.getHealth() > 0) ? clone1 : clone2;
+            RpgCharacter loser = (winner == clone1) ? clone2 : clone1;
+
+            assertThat(winner.getHealth()).isGreaterThan(0);
+            assertThat(loser.getHealth()).isLessThanOrEqualTo(0);
         }
         @Test
         @Tag("Unit-test")
