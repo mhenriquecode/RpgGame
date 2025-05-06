@@ -74,9 +74,6 @@ public class CombatTest {
         void playerTwoWhoStartsTheCombatWhenSpeedIsGreaterThanThePlayerOneTest(){
             RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
 
-            ChooseAction neutralAction = new ChooseUserAction(1);
-            Combat combat = new Combat(player1, neutralAction, player2, neutralAction);
-
             assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
 
             RpgCharacter first = service.getFirstToPlay(player1, player2);
@@ -93,12 +90,10 @@ public class CombatTest {
 
             RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, Race.HUMAN, Weapon.AXE);
 
-
             assertThat(player1.getSpeed()).isEqualTo(player2.getSpeed());
             RpgCharacter first = service.getFirstToPlay(player1, player2, mockRandom);
 
             assertThat(first).isEqualTo(player1);
-
         }
 
         @Test
@@ -122,7 +117,6 @@ public class CombatTest {
         @DisplayName("combat winner could not be null")
         void combatWinnerCouldNotBeNull() {
             RpgCharacter player1 = new RpgCharacter("Jogador1", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-
             RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
 
             ChooseAction neutralAction = new ChooseUserAction(1);
@@ -137,9 +131,7 @@ public class CombatTest {
         @DisplayName("combat determines winner correctly")
         void combatDeterminesWinnerCorrectly() {
             RpgCharacter player1 = new RpgCharacter("Jogador1", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-
             RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
-
             ChooseAction strategy = new AttackStub();
 
             Combat combat = service.startCombat(player1, strategy, player2, strategy);

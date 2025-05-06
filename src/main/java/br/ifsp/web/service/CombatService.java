@@ -21,10 +21,10 @@ public class CombatService {
     private final CombatLogRepository combatLogRepository;
 
     public Combat startCombat(RpgCharacter player1, ChooseAction strategy1, RpgCharacter player2, ChooseAction strategy2) {
-        if (player1 == null) {throw new NullPointerException("player1 cannot be null");}
-        if (player2 == null) {throw new NullPointerException("player2 cannot be null");}
-        if (strategy1 == null) {throw new NullPointerException("player1 action cannot be null");}
-        if (strategy2 == null) {throw new NullPointerException("player2 action cannot be null");}
+        if (player1 == null) throw new NullPointerException("player1 cannot be null");
+        if (player2 == null) throw new NullPointerException("player2 cannot be null");
+        if (strategy1 == null) throw new NullPointerException("player1 action cannot be null");
+        if (strategy2 == null) throw new NullPointerException("player2 action cannot be null");
         RpgCharacter clone1 = player1.cloneForCombat();
         RpgCharacter clone2 = player2.cloneForCombat();
 
