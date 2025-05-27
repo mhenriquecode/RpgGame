@@ -39,8 +39,10 @@ public class CombatController {
         ChooseAction strategy1 = new ChooseUserAction(request.strategy1());
         ChooseAction strategy2 = new ChooseUserAction(request.strategy2());
 
-        Combat combat = combatService.startCombat(player1, strategy1,
-                player2, strategy2);
+
+
+        Combat combat = new Combat(player1, strategy1, player2, strategy2);
+        combat.startCombat(player1, strategy1, player2, strategy2);
 
         return ResponseEntity.ok(new CombatResultDTO(combat.getWinner()));
     }
