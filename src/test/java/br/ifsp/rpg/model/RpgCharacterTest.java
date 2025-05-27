@@ -1,4 +1,4 @@
-package br.ifsp.rpg;
+package br.ifsp.rpg.model;
 
 import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.enums.ClassType;
@@ -21,7 +21,6 @@ public class RpgCharacterTest {
     void setUp() {
         player1 = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
     }
-
 
     @Nested
     @DisplayName("TDD Characters test")
@@ -268,9 +267,4 @@ public class RpgCharacterTest {
             assertEquals(expectedDefense, character.getDefense());
         }
     }
-
-
-
-
-
 }

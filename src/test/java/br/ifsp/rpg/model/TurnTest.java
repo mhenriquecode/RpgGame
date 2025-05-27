@@ -1,4 +1,4 @@
-package br.ifsp.rpg;
+package br.ifsp.rpg.model;
 
 import br.ifsp.web.interfaces.ChooseAction;
 import br.ifsp.web.model.RpgCharacter;

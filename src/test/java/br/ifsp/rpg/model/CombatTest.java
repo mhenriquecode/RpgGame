@@ -1,4 +1,4 @@
-package br.ifsp.rpg;
+package br.ifsp.rpg.model;
 
 import br.ifsp.rpg.stubs.AttackStub;
 import br.ifsp.web.interfaces.ChooseAction;
@@ -12,9 +12,6 @@ import br.ifsp.web.model.enums.Weapon;
 import br.ifsp.web.repository.CombatLogRepository;
 import br.ifsp.web.service.CombatService;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -49,10 +46,13 @@ public class CombatTest {
         @DisplayName("Must create valid combat between two character")
         void mustCreateValidCombatBetweenTwoCharacters(){
             RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.BERSERK, Race.ORC, Weapon.AXE);
-            Combat combat = service.startCombat(player1, attackAction, player2, attackAction);
+            Combat combat = new Combat(player1, attackAction, player2, attackAction);
+            combat.startCombat(player1, attackAction, player2, attackAction);
+
 
             assertThat(combat).isNotNull();
         }
+
         @Test
         @Tag("Unit-test")
         @Tag("TDD")
@@ -62,7 +62,9 @@ public class CombatTest {
 
             assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
 
-            RpgCharacter first = service.getFirstToPlay(player1, player2);
+            Combat combat = new Combat(player1, attackAction, player2, attackAction);
+
+            RpgCharacter first = combat.getFirstToPlay(player1, player2);
 
             assertThat(first).isEqualTo(player1);
         }
@@ -76,7 +78,9 @@ public class CombatTest {
 
             assertThat(player1.getSpeed()).isGreaterThan(player2.getSpeed());
 
-            RpgCharacter first = service.getFirstToPlay(player1, player2);
+            Combat combat = new Combat(player1, attackAction, player2, attackAction);
+
+            RpgCharacter first = combat.getFirstToPlay(player1, player2);
 
             assertThat(first).isEqualTo(player1);
         }
@@ -91,7 +95,9 @@ public class CombatTest {
             RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, Race.HUMAN, Weapon.AXE);
 
             assertThat(player1.getSpeed()).isEqualTo(player2.getSpeed());
-            RpgCharacter first = service.getFirstToPlay(player1, player2, mockRandom);
+
+            Combat combat = new Combat(player1, attackAction, player2, attackAction);
+            RpgCharacter first = combat.getFirstToPlay(player1, player2, mockRandom);
 
             assertThat(first).isEqualTo(player1);
         }
@@ -106,7 +112,8 @@ public class CombatTest {
             RpgCharacter player2 = new RpgCharacter("Matheus", ClassType.PALADIN, Race.HUMAN, Weapon.AXE);
 
             assertThat(player1.getSpeed()).isEqualTo(player2.getSpeed());
-            RpgCharacter first = service.getFirstToPlay(player1, player2, mockRandom);
+            Combat combat = new Combat(player1, attackAction, player2, attackAction);
+            RpgCharacter first = combat.getFirstToPlay(player1, player2, mockRandom);
 
             assertThat(first).isEqualTo(player2);
         }
@@ -120,7 +127,8 @@ public class CombatTest {
             RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
 
             ChooseAction neutralAction = new ChooseUserAction(1);
-            Combat combat = service.startCombat(player1, neutralAction, player2, neutralAction);
+            Combat combat = new Combat(player1, neutralAction, player2, neutralAction);
+            combat.startCombat(player1, neutralAction, player2, neutralAction);
 
             assertNotNull(combat.getWinner());
         }
@@ -134,7 +142,9 @@ public class CombatTest {
             RpgCharacter player2 = new RpgCharacter("Jogador2", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
             ChooseAction strategy = new AttackStub();
 
-            Combat combat = service.startCombat(player1, strategy, player2, strategy);
+            Combat combat = new Combat(player1, strategy, player2, strategy);
+
+            combat.startCombat(player1, strategy, player2, strategy);
 
             RpgCharacter clone1 = combat.getFinalClone1();
             RpgCharacter clone2 = combat.getFinalClone2();
@@ -145,6 +155,7 @@ public class CombatTest {
             assertThat(winner.getHealth()).isGreaterThan(0);
             assertThat(loser.getHealth()).isLessThanOrEqualTo(0);
         }
+
         @Test
         @Tag("Unit-test")
         @Tag("TDD")
@@ -164,6 +175,7 @@ public class CombatTest {
             assertThat(combatLog.getTimestamp()).isBeforeOrEqualTo(LocalDateTime.now());
         }
     }
+
     @Nested
     @DisplayName("Unit combat test")
     class UnitCombatTest {
@@ -171,8 +183,9 @@ public class CombatTest {
         @Tag("Unit-Test")
         @DisplayName("Should not start a combat when one of the characters is invalid test")
         void shouldStartACombatTest(){
+            Combat combat = new Combat(player1, attackAction, null, attackAction);
             assertThatExceptionOfType(NullPointerException.class)
-                    .isThrownBy(() -> service.startCombat(player1, attackAction, null, attackAction));
+                    .isThrownBy(() -> combat.startCombat(player1, attackAction, null, attackAction));
         }
     }
 }
