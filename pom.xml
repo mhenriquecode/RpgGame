@@ -162,8 +162,8 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <targetClasses></targetClasses>
-                    <targetTests></targetTests>
+                    <targetClasses>br.ifsp.web.model*</targetClasses>
+                    <targetTests>br.ifsp.rpg.model*</targetTests>
                 </configuration>
             </plugin>
             <plugin>
