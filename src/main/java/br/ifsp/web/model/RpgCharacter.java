@@ -10,53 +10,30 @@ import br.ifsp.web.model.specialEffects.SpecialEffectBerserk;
 import br.ifsp.web.model.specialEffects.SpecialEffectDuelist;
 import br.ifsp.web.model.specialEffects.SpecialEffectPaladin;
 import br.ifsp.web.model.specialEffects.SpecialEffectWarrior;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Random;
 import java.util.UUID;
 
-@Getter
-@Setter
-@Entity
-@NoArgsConstructor(force = true)
 public class RpgCharacter {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-
-    @Column(nullable = false, length = 50)
     private String name;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private ClassType classType;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Race race;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Weapon weapon;
 
-    @JsonIgnore private int maxHealth;
-    @JsonIgnore private int health;
-    @JsonIgnore private int strength;
-    @JsonIgnore private int defense;
-    @JsonIgnore private int speed;
-    @JsonIgnore private int armor;
-    @JsonIgnore private boolean defending = false;
-    @JsonIgnore private boolean hasDodgeBonus = false;
+    private int maxHealth;
+    private int health;
+    private int strength;
+    private int defense;
+    private int speed;
+    private int armor;
+    private boolean defending = false;
+    private boolean hasDodgeBonus = false;
 
-    @Transient @JsonIgnore private RollAttackDice attackDice;
-    @Transient @JsonIgnore private RollHitDice hitDice;
-    @Transient @JsonIgnore private Random random;
-    @Transient @JsonIgnore private SpecialEffect specialEffect;
+    private RollAttackDice attackDice;
+    private RollHitDice hitDice;
+    private Random random;
+    private SpecialEffect specialEffect;
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon) {
         this.name = name;
@@ -83,8 +60,7 @@ public class RpgCharacter {
         initializeAttributes();
         this.random = random;
     }
-
-    @PostLoad
+    
     private void initTransientFields() {
         this.attackDice = new RollAttackDice(this.weapon);
         this.hitDice = new RollHitDice();
@@ -109,7 +85,6 @@ public class RpgCharacter {
 
         return clone;
     }
-
 
     public void initializeAttributes() {
         this.maxHealth = 100 + race.getBonusHealth() + classType.getBonusHealth();
@@ -142,6 +117,7 @@ public class RpgCharacter {
     public int rollAttackDice() {
         return attackDice.roll();
     }
+
     public int rollHitDice(){
         return hitDice.roll();
     }
@@ -162,5 +138,139 @@ public class RpgCharacter {
         int finalDamage = defending ? Math.max(0, damageReceived - defense) : damageReceived;
         health -= finalDamage;
         defending = false;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if(name == null) throw new NullPointerException("Name cannot be null");
+        this.name = name;
+    }
+
+    public ClassType getClassType() {
+        return classType;
+    }
+
+    public void setClassType(ClassType classType) {
+        if(classType == null) throw new NullPointerException("ClassType cannot be null");
+        this.classType = classType;
+    }
+
+    public Race getRace() {
+        return race;
+    }
+
+    public void setRace(Race race) {
+        if(race == null) throw new NullPointerException("Race cannot be null");
+        this.race = race;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(Weapon weapon) {
+        if(weapon == null) throw new NullPointerException("Weapon cannot be null");
+        this.weapon = weapon;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getArmor() {
+        return armor;
+    }
+
+    public void setArmor(int armor) {
+        this.armor = armor;
+    }
+
+    public boolean isDefending() {
+        return defending;
+    }
+
+    public void setDefending(boolean defending) {this.defending = defending;}
+
+    public boolean isHasDodgeBonus() {
+        return hasDodgeBonus;
+    }
+
+    public void setHasDodgeBonus(boolean hasDodgeBonus) {
+        this.hasDodgeBonus = hasDodgeBonus;
+    }
+
+    public RollAttackDice getAttackDice() {
+        return attackDice;
+    }
+
+    public void setAttackDice(RollAttackDice attackDice) {
+        this.attackDice = attackDice;
+    }
+
+    public RollHitDice getHitDice() {
+        return hitDice;
+    }
+
+    public void setHitDice(RollHitDice hitDice) {
+        this.hitDice = hitDice;
+    }
+
+    public Random getRandom() {
+        return random;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
+    }
+
+    public SpecialEffect getSpecialEffect() {
+        return specialEffect;
+    }
+
+    public void setSpecialEffect(SpecialEffect specialEffect) {
+        this.specialEffect = specialEffect;
     }
 }
