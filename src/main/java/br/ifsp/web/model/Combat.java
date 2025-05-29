@@ -74,6 +74,9 @@ public class Combat {
 
         return player1.getHealth() > 0 ? player1 : player2;
     }
+    public void run() {
+        startCombat(player1, actionStrategy1, player2, actionStrategy2);
+    }
 
     public RpgCharacter getFirstToPlay(RpgCharacter player1, RpgCharacter player2) {
         if (player1.getSpeed() > player2.getSpeed()) {
@@ -137,24 +140,16 @@ public class Combat {
     public RpgCharacter getFinalClone1() {
         return finalClone1;
     }
+    public RpgCharacter getFinalClone2() {
+        return finalClone2;
+    }
 
     public void setFinalClone1(RpgCharacter finalClone1) {
         this.finalClone1 = finalClone1;
     }
 
-    public RpgCharacter getFinalClone2() {
-        return finalClone2;
-    }
 
     public void setFinalClone2(RpgCharacter finalClone2) {
         this.finalClone2 = finalClone2;
-    }
-
-    public Random getRandom() {
-        return random;
-    }
-
-    public void setRandom(Random random) {
-        this.random = random;
     }
 }

@@ -10,6 +10,7 @@ import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
 import br.ifsp.web.repository.CombatLogRepository;
+import br.ifsp.web.repository.RpgCharacterEntity;
 import br.ifsp.web.service.CombatService;
 import org.junit.jupiter.api.*;
 
@@ -26,12 +27,9 @@ public class CombatTest {
     private RpgCharacter player1;
     private Random mockRandom;
     private ChooseAction attackAction;
-    private CombatLogRepository mockRepository;
 
     @BeforeEach
     void setUp() {
-        mockRepository = mock(CombatLogRepository.class);
-        service = new CombatService(mockRepository);
         mockRandom = mock(Random.class);
         attackAction = new AttackStub();
         player1 = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
@@ -161,9 +159,10 @@ public class CombatTest {
         @Tag("TDD")
         @DisplayName("Should create CombatLog with correct values")
         void shouldCreateCombatLogWithCorrectValues() {
-            RpgCharacter player2 = new RpgCharacter("candidor", ClassType.BERSERK, Race.ORC, Weapon.DAGGER);
-            
-            RpgCharacter winner = player1;
+            RpgCharacterEntity player2 = new RpgCharacterEntity("candidor", ClassType.BERSERK, Race.ORC, Weapon.DAGGER);
+            RpgCharacterEntity player1 = new RpgCharacterEntity("blablabla", ClassType.BERSERK, Race.ORC, Weapon.DAGGER);
+
+            RpgCharacterEntity winner = player1;
             CombatLog combatLog = new CombatLog(player1, player2, winner);
 
             assertThat(combatLog).isNotNull();

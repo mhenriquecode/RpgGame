@@ -60,16 +60,10 @@ public class RpgCharacter {
         initializeAttributes();
         this.random = random;
     }
-    
-    private void initTransientFields() {
-        this.attackDice = new RollAttackDice(this.weapon);
-        this.hitDice = new RollHitDice();
-        this.random = new Random();
-        this.specialEffect = chooseSpecialEffect(this.classType);
-    }
 
     public RpgCharacter cloneForCombat() {
         RpgCharacter clone = new RpgCharacter(name, classType, race, weapon);
+        clone.id = this.id;
         clone.setHealth(this.getHealth());
         clone.setStrength(this.getStrength());
         clone.setSpeed(this.getSpeed());

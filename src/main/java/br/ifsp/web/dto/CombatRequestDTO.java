@@ -18,9 +18,9 @@ public record CombatRequestDTO(
         @Min(1)
         @Max(3)
         Integer strategy1,
+        @NotNull UUID player2,
         @NotNull
         @Min(1)
         @Max(3)
-        UUID player2,
-        @NotNull Integer strategy2) {
+        Integer strategy2) {
 }

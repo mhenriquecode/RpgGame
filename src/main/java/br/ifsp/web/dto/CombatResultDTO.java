@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
 
-public record CombatResultDTO(@NotNull RpgCharacter winner) {
+
+public record CombatResultDTO(UUID winnerId, String winnerName) {
 }

@@ -8,6 +8,7 @@ import br.ifsp.web.model.Combat;
 import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.actions.AttackAction;
 import br.ifsp.web.model.actions.ChooseUserAction;
+import br.ifsp.web.repository.CharacterRepository;
 import br.ifsp.web.service.CharacterService;
 import br.ifsp.web.service.CombatService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/api/combat")
@@ -30,22 +33,23 @@ public class CombatController {
     @Operation(summary = "Start a combat")
     @PostMapping
     public ResponseEntity<CombatResultDTO> startCombat(@RequestBody CombatRequestDTO request) {
-        RpgCharacter player1 = characterService.getCharacter(request.player1())
+        RpgCharacter player1 = characterService.getCharacterDomain(request.player1())
                 .orElseThrow(() -> new IllegalArgumentException("Player 1 not found"));
-        RpgCharacter player2 = characterService.getCharacter(request.player2())
+        RpgCharacter player2 = characterService.getCharacterDomain(request.player2())
                 .orElseThrow(() -> new IllegalArgumentException("Player 2 not found"));
-
 
         ChooseAction strategy1 = new ChooseUserAction(request.strategy1());
         ChooseAction strategy2 = new ChooseUserAction(request.strategy2());
 
-
-
         Combat combat = new Combat(player1, strategy1, player2, strategy2);
-        combat.startCombat(player1, strategy1, player2, strategy2);
+        combat.run();
+        combatService.saveCombatLog(combat);
 
-        return ResponseEntity.ok(new CombatResultDTO(combat.getWinner()));
+        RpgCharacter winner = combat.getWinner();
+        CombatResultDTO dto = new CombatResultDTO(winner.getId(), winner.getName());
+        return ResponseEntity.ok(dto);
     }
+
 
     @GetMapping("/history")
     @Operation(summary = "Get all past combats")

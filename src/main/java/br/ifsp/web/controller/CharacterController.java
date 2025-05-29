@@ -1,7 +1,6 @@
 package br.ifsp.web.controller;
 
 import br.ifsp.web.dto.CharacterDTO;
-import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.service.CharacterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/api/characters")
+@RequestMapping("/api/characters")
 @AllArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Characters", description = "RPG Character Manager")
@@ -26,31 +25,30 @@ public class CharacterController {
     @Operation(summary = "Create new character")
     @PostMapping
     public ResponseEntity<CharacterDTO> createCharacter(@Valid @RequestBody CharacterDTO characterDTO) {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(CharacterDTO.from(characterService.create(characterDTO)));
+        CharacterDTO created = characterService.create(characterDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @Operation(summary = "Find character by ID")
     @GetMapping("/{id}")
     public ResponseEntity<CharacterDTO> getCharacter(@PathVariable UUID id) {
         return characterService.getCharacter(id)
-                .map(character -> ResponseEntity.ok(CharacterDTO.from(character)))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @Operation(summary = "Get all characters")
     @GetMapping
     public ResponseEntity<List<CharacterDTO>> getAllCharacters() {
-        List<CharacterDTO> dtoList = characterService.getAllCharacters().stream()
-                .map(CharacterDTO::from).toList();
-
+        List<CharacterDTO> dtoList = characterService.getAllCharacters();
         return ResponseEntity.ok(dtoList);
     }
 
     @Operation(summary = "Update character")
     @PutMapping("/{id}")
     public ResponseEntity<CharacterDTO> updateCharacter(@PathVariable UUID id, @RequestBody @Valid CharacterDTO characterDTO) {
-        return ResponseEntity.ok(CharacterDTO.from(characterService.update(id, characterDTO)));
+        CharacterDTO updated = characterService.update(id, characterDTO);
+        return ResponseEntity.ok(updated);
     }
 
     @Operation(summary = "Delete character by ID")

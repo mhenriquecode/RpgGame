@@ -2,11 +2,13 @@ package br.ifsp.web.service;
 
 import br.ifsp.web.dto.CharacterDTO;
 import br.ifsp.web.exception.CharacterNotFoundException;
-import br.ifsp.web.repository.CharacterRepository;
 import br.ifsp.web.model.RpgCharacter;
+import br.ifsp.web.repository.CharacterRepository;
+import br.ifsp.web.repository.RpgCharacterEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,65 +18,78 @@ import java.util.UUID;
 public class CharacterService {
     private final CharacterRepository repository;
 
-    public RpgCharacter create(CharacterDTO characterDTO) {
-        if(characterDTO.name() == null || characterDTO.name().isEmpty())
-            throw new IllegalArgumentException("Name cannot be empty or null");
-        if(characterDTO.classType() == null)
-            throw new IllegalArgumentException("ClassType cannot be null");
-        if(characterDTO.race() == null)
-            throw new IllegalArgumentException("Race cannot be null");
-        if(characterDTO.weapon() == null)
-            throw new IllegalArgumentException("Weapon cannot be null");
-
-        repository.save(characterDTO.toEntity());
-
-        return characterDTO.toEntity();
+    public CharacterDTO create(CharacterDTO characterDTO) {
+        RpgCharacter domain = characterDTO.toEntity();
+        RpgCharacterEntity saved = repository.save(toEntity(domain));
+        return CharacterDTO.from(toDomain(saved));
     }
 
-    public void save(RpgCharacter character) {
-        if(character.getId() == null)
-            throw new NullPointerException("Character id is null");
-        if(character.getName() == null || character.getName().isEmpty())
-            throw new NullPointerException("Character name is null or empty");
-        if(character.getClassType() == null)
-            throw new NullPointerException("Character class type is null");
-        if(character.getRace() == null)
-            throw new NullPointerException("Character race is null");
-        if(character.getWeapon() == null)
-            throw new NullPointerException("Character weapon is null");
-        if(repository.findById(character.getId()).isPresent())
-            throw new IllegalArgumentException("Character already exists");
 
-        repository.save(character);
+    public Optional<CharacterDTO> getCharacter(UUID id) {
+        return repository.findById(id)
+                .map(this::toDomain)
+                .map(CharacterDTO::from);
     }
 
-    public Optional<RpgCharacter> getCharacter(UUID id) {
-        if(repository.findById(id).isEmpty())
-            throw new IllegalArgumentException("Character not found");
-
-        return repository.findById(id);
+    public List<CharacterDTO> getAllCharacters() {
+        return repository.findAll().stream()
+                .map(this::toDomain)
+                .map(CharacterDTO::from)
+                .toList();
     }
 
-    public List<RpgCharacter> getAllCharacters() {
-        return repository.findAll();
+    public CharacterDTO update(UUID id, CharacterDTO characterDTO) {
+        RpgCharacterEntity entity = repository.findById(id)
+                .orElseThrow(() -> new CharacterNotFoundException(id));
+
+        entity.setName(characterDTO.name());
+        entity.setClassType(characterDTO.classType());
+        entity.setRace(characterDTO.race());
+        entity.setWeapon(characterDTO.weapon());
+
+        RpgCharacterEntity saved = repository.save(entity);
+        return CharacterDTO.from(toDomain(saved));
     }
 
-    public RpgCharacter update(UUID id, CharacterDTO characterDTO) {
-        if(repository.findById(id).isEmpty()) throw new IllegalArgumentException("Character not found");
-        RpgCharacter character = repository.findById(id).get();
-        character.setName(characterDTO.name());
-        character.setClassType(characterDTO.classType());
-        character.setRace(characterDTO.race());
-        character.setWeapon(characterDTO.weapon());
-        repository.save(character);
+    public void delete(UUID id) {
+        RpgCharacterEntity entity = repository.findById(id)
+                .orElseThrow(() -> new CharacterNotFoundException(id));
+        repository.delete(entity);
+    }
+
+    private RpgCharacterEntity toEntity(RpgCharacter domain) {
+        RpgCharacterEntity entity = new RpgCharacterEntity(
+                domain.getName(),
+                domain.getClassType(),
+                domain.getRace(),
+                domain.getWeapon()
+        );
+        entity.setId(domain.getId());
+        return entity;
+    }
+
+    private RpgCharacter toDomain(RpgCharacterEntity entity) {
+        RpgCharacter character = new RpgCharacter(
+                entity.getName(),
+                entity.getClassType(),
+                entity.getRace(),
+                entity.getWeapon()
+        );
+        character.setMaxHealth(character.getMaxHealth());
+        character.setHealth(character.getMaxHealth());
+
+        try {
+            Field idField = RpgCharacter.class.getDeclaredField("id");
+            idField.setAccessible(true);
+            idField.set(character, entity.getId());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao setar ID no RpgCharacter", e);
+        }
 
         return character;
     }
 
-    public void delete(UUID id) {
-        RpgCharacter character = repository.findById(id)
-                .orElseThrow(() -> new CharacterNotFoundException(id));
-
-        repository.delete(character);
+    public Optional<RpgCharacter> getCharacterDomain(UUID id) {
+        return repository.findById(id).map(this::toDomain);
     }
 }
