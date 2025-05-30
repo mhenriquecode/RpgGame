@@ -28,11 +28,16 @@ public class CombatTest {
     private RpgCharacter player1;
     private Random mockRandom;
     private ChooseAction attackAction;
+    RpgCharacter mockPlayer;
+    ChooseAction mockAction;
+
 
     @BeforeEach
     void setUp() {
         mockRandom = mock(Random.class);
         attackAction = new AttackStub();
+         mockPlayer = mock(RpgCharacter.class);
+         mockAction = mock(ChooseAction.class);
         player1 = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
     }
 
@@ -206,7 +211,7 @@ public class CombatTest {
         @Tag("Structural")
         @Tag("Unit-Test")
         @DisplayName("Should return DodgeAction when chosenAction is 3")
-        void shouldReturnDodgeAction_whenChosenActionIs3() {
+        void shouldReturnDodgeActionWhenChosenActionIs3() {
             ChooseUserAction chooseUserAction = new ChooseUserAction(3);
 
             assertThat(chooseUserAction.choose(player1, player1))
@@ -216,12 +221,28 @@ public class CombatTest {
         @Tag("Structural")
         @Tag("Unit-Test")
         @DisplayName("Should throw IllegalArgumentException for invalid chosenAction")
-        void shouldThrowException_whenChosenActionIsInvalid() {
+        void shouldThrowExceptionWhenChosenActionIsInvalid() {
             ChooseUserAction chooseUserAction = new ChooseUserAction(4);
 
             assertThatThrownBy(() -> chooseUserAction.choose(player1, player1))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Invalid action");
+        }
+
+        @Test
+        @Tag("Structural")
+        @Tag("Unit-Test")
+        @DisplayName("startCombat Throws When Player1 Is Null")
+        void startCombatThrowsWhenPlayer1IsNull() {
+            RpgCharacter player2 = mockPlayer;
+            ChooseAction strategy1 = mockAction;
+            ChooseAction strategy2 = mockAction;
+
+            Combat combat = new Combat(player2, strategy2, player2, strategy2);
+
+            NullPointerException exception = assertThrows(NullPointerException.class,
+                    () -> combat.startCombat(null, strategy1, player2, strategy2));
+            assertEquals("player1 cannot be null", exception.getMessage());
         }
     }
 }
