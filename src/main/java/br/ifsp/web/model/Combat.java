@@ -29,13 +29,6 @@ public class Combat {
         this.random = new Random();
     }
 
-    public Combat(RpgCharacter player1, RpgCharacter player2, Random random) {
-        this.id = UUID.randomUUID();
-        this.player1 = player1;
-        this.player2 = player2;
-        this.random = random;
-    }
-
     public void startCombat(RpgCharacter player1, ChooseAction strategy1, RpgCharacter player2, ChooseAction strategy2) {
         if (player1 == null) throw new NullPointerException("player1 cannot be null");
         if (player2 == null) throw new NullPointerException("player2 cannot be null");
@@ -117,24 +110,6 @@ public class Combat {
     public void setWinner(RpgCharacter winner) {
         if(winner == null) throw new NullPointerException("winner cannot be null");
         this.winner = winner;
-    }
-
-    public ChooseAction getActionStrategy1() {
-        return actionStrategy1;
-    }
-
-    public void setActionStrategy1(ChooseAction actionStrategy1) {
-        if(actionStrategy1 == null) throw new NullPointerException("actionStrategy1 cannot be null");
-        this.actionStrategy1 = actionStrategy1;
-    }
-
-    public ChooseAction getActionStrategy2() {
-        return actionStrategy2;
-    }
-
-    public void setActionStrategy2(ChooseAction actionStrategy2) {
-        if(actionStrategy2 == null) throw new NullPointerException("actionStrategy2 cannot be null");
-        this.actionStrategy2 = actionStrategy2;
     }
 
     public RpgCharacter getFinalClone1() {
