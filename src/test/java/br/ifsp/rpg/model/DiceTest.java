@@ -8,6 +8,8 @@ import org.junit.jupiter.api.*;
 
 import java.util.Random;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -105,11 +107,25 @@ public class DiceTest {
             verify(mockRandom, times(4)).nextInt(3);
         }
     }
+    @Nested
+    @DisplayName("Struct dice tests")
+    class StructDiceTest {
+        @Test
+        @Tag("Structural")
+        @Tag("Unit-Test")
+        @DisplayName("should return zero if weapon dice is zero")
+        void shouldReturnZeroIfWeaponDiceIsZero() {
+            Weapon weaponMock = mock(Weapon.class);
+            when(weaponMock.getDice()).thenReturn(0);
+            when(weaponMock.getSides()).thenReturn(6);
 
+            DiceRoll attackDice = new RollAttackDice(weaponMock, mockRandom);
+            int result = attackDice.roll();
 
-
-
-
-
+            assertThat(result).isEqualTo(0);
+            verify(weaponMock).getDice();
+            verifyNoInteractions(mockRandom);
+        }
+    }
 
 }

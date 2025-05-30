@@ -190,7 +190,7 @@ public class CombatTest {
     }
 
     @Nested
-    @DisplayName("Struct tests")
+    @DisplayName("Struct combat tests")
     class StructCombatTest {
         @Test
         @Tag("Structural")
