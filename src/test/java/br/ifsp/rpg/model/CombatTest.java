@@ -6,10 +6,11 @@ import br.ifsp.web.log.CombatLog;
 import br.ifsp.web.model.Combat;
 import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.actions.ChooseUserAction;
+import br.ifsp.web.model.actions.DefendingAction;
+import br.ifsp.web.model.actions.DodgeAction;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
-import br.ifsp.web.repository.CombatLogRepository;
 import br.ifsp.web.repository.RpgCharacterEntity;
 import br.ifsp.web.service.CombatService;
 import org.junit.jupiter.api.*;
@@ -185,6 +186,21 @@ public class CombatTest {
             Combat combat = new Combat(player1, attackAction, null, attackAction);
             assertThatExceptionOfType(NullPointerException.class)
                     .isThrownBy(() -> combat.startCombat(player1, attackAction, null, attackAction));
+        }
+    }
+
+    @Nested
+    @DisplayName("Struct tests")
+    class StructCombatTest {
+        @Test
+        @Tag("Structural")
+        @Tag("Unit-Test")
+        @DisplayName("Should return DefendingAction when chosenAction is 2")
+        void shouldReturnDefendingActionWhenChosenActionIs2() {
+            ChooseUserAction chooseUserAction = new ChooseUserAction(2);
+
+            assertThat(chooseUserAction.choose(player1, player1))
+                    .isInstanceOf(DefendingAction.class);
         }
     }
 }
