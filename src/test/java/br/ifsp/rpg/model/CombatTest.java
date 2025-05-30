@@ -259,5 +259,20 @@ public class CombatTest {
                     () -> combat.startCombat(player1, strategy1, null, strategy2));
             assertEquals("player2 cannot be null", exception.getMessage());
         }
+        @Test
+        @Tag("Structural")
+        @Tag("Unit-Test")
+        @DisplayName("startCombat Throws When Strategy1 Is Null")
+        void startCombatThrowsWhenStrategy1IsNull() {
+            RpgCharacter player1 = mockPlayer;
+            RpgCharacter player2 = mockPlayer;
+            ChooseAction strategy2 = mockAction;
+
+            Combat combat = new Combat(player1, strategy2, player2, strategy2);
+
+            NullPointerException exception = assertThrows(NullPointerException.class,
+                    () -> combat.startCombat(player1, null, player2, strategy2));
+            assertEquals("player1 action cannot be null", exception.getMessage());
+        }
     }
 }
