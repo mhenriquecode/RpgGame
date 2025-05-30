@@ -202,5 +202,15 @@ public class CombatTest {
             assertThat(chooseUserAction.choose(player1, player1))
                     .isInstanceOf(DefendingAction.class);
         }
+        @Test
+        @Tag("Structural")
+        @Tag("Unit-Test")
+        @DisplayName("Should return DodgeAction when chosenAction is 3")
+        void shouldReturnDodgeAction_whenChosenActionIs3() {
+            ChooseUserAction chooseUserAction = new ChooseUserAction(3);
+
+            assertThat(chooseUserAction.choose(player1, player1))
+                    .isInstanceOf(DodgeAction.class);
+        }
     }
 }
