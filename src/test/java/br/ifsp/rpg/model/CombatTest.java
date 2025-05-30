@@ -212,5 +212,16 @@ public class CombatTest {
             assertThat(chooseUserAction.choose(player1, player1))
                     .isInstanceOf(DodgeAction.class);
         }
+        @Test
+        @Tag("Structural")
+        @Tag("Unit-Test")
+        @DisplayName("Should throw IllegalArgumentException for invalid chosenAction")
+        void shouldThrowException_whenChosenActionIsInvalid() {
+            ChooseUserAction chooseUserAction = new ChooseUserAction(4);
+
+            assertThatThrownBy(() -> chooseUserAction.choose(player1, player1))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Invalid action");
+        }
     }
 }
