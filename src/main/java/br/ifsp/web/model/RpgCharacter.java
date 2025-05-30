@@ -17,9 +17,9 @@ import java.util.UUID;
 public class RpgCharacter {
     private UUID id;
     private String name;
-    private ClassType classType;
-    private Race race;
-    private Weapon weapon;
+    private final ClassType classType;
+    private final Race race;
+    private final Weapon weapon;
 
     private int maxHealth;
     private int health;
@@ -63,20 +63,11 @@ public class RpgCharacter {
 
     public RpgCharacter cloneForCombat() {
         RpgCharacter clone = new RpgCharacter(name, classType, race, weapon);
-        clone.id = this.id;
         clone.setHealth(this.getHealth());
         clone.setStrength(this.getStrength());
         clone.setSpeed(this.getSpeed());
         clone.setDefense(this.getDefense());
         clone.setArmor(this.getArmor());
-        clone.setDefending(this.isDefending());
-        clone.setHasDodgeBonus(this.isHasDodgeBonus());
-
-        clone.setAttackDice(new RollAttackDice(this.weapon));
-        clone.setHitDice(new RollHitDice());
-        clone.setRandom(new Random());
-        clone.setSpecialEffect(chooseSpecialEffect(this.classType));
-
         return clone;
     }
 
@@ -151,27 +142,12 @@ public class RpgCharacter {
         return classType;
     }
 
-    public void setClassType(ClassType classType) {
-        if(classType == null) throw new NullPointerException("ClassType cannot be null");
-        this.classType = classType;
-    }
-
     public Race getRace() {
         return race;
     }
 
-    public void setRace(Race race) {
-        if(race == null) throw new NullPointerException("Race cannot be null");
-        this.race = race;
-    }
-
     public Weapon getWeapon() {
         return weapon;
-    }
-
-    public void setWeapon(Weapon weapon) {
-        if(weapon == null) throw new NullPointerException("Weapon cannot be null");
-        this.weapon = weapon;
     }
 
     public int getMaxHealth() {
@@ -236,24 +212,12 @@ public class RpgCharacter {
         this.hasDodgeBonus = hasDodgeBonus;
     }
 
-    public RollAttackDice getAttackDice() {
-        return attackDice;
-    }
-
     public void setAttackDice(RollAttackDice attackDice) {
         this.attackDice = attackDice;
     }
 
-    public RollHitDice getHitDice() {
-        return hitDice;
-    }
-
     public void setHitDice(RollHitDice hitDice) {
         this.hitDice = hitDice;
-    }
-
-    public Random getRandom() {
-        return random;
     }
 
     public void setRandom(Random random) {
@@ -262,9 +226,5 @@ public class RpgCharacter {
 
     public SpecialEffect getSpecialEffect() {
         return specialEffect;
-    }
-
-    public void setSpecialEffect(SpecialEffect specialEffect) {
-        this.specialEffect = specialEffect;
     }
 }
