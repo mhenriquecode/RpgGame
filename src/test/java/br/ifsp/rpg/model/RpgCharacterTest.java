@@ -303,5 +303,25 @@ public class RpgCharacterTest {
                 assertThat(character.getName()).isEqualTo("NewName");
             }
         }
+
+        @Nested
+        @DisplayName("Mutation Character test")
+        public class mutationCharacterTest {
+            @Test
+            @Tag("Unit-test")
+            @Tag("Mutation")
+            @DisplayName("Paladin Effect Should Return Original Damage")
+            void paladinEffectShouldReturnOriginalDamage() {
+                RpgCharacter character = mock(RpgCharacter.class);
+
+                when(character.getHealth()).thenReturn(60);
+                when(character.getMaxHealth()).thenReturn(100);
+
+                SpecialEffectPaladin effect = new SpecialEffectPaladin();
+                int result = effect.applyEffect(character, 30);
+
+                assertThat(30).isEqualTo(result);
+            }
+        }
     }
 }
