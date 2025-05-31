@@ -335,5 +335,35 @@ public class CombatTest {
 
             assertEquals(player1, combat.getWinner());
         }
+        @Test
+        @Tag("Structural")
+        @Tag("Unit-Test")
+        @DisplayName("startCombat Ends Immediately When Player1 Health Is Zero Or Less")
+        void startCombatEndsImmediatelyWhenPlayer1HealthIsZeroOrLess() {
+            RpgCharacter player1 = mockPlayer;
+            RpgCharacter player2 = mock(RpgCharacter.class);
+
+            when(player1.getSpeed()).thenReturn(5);
+            when(player2.getSpeed()).thenReturn(10);
+
+            when(player1.getHealth()).thenReturn(0); // player1 já morreu
+            when(player2.getHealth()).thenReturn(10);
+
+            when(player1.cloneForCombat()).thenReturn(player1);
+            when(player2.cloneForCombat()).thenReturn(player2);
+
+            PlayerAction action = mock(PlayerAction.class);
+            doNothing().when(action).execute(any(), any());
+
+            ChooseAction strategy1 = mock(ChooseAction.class);
+            ChooseAction strategy2 = mock(ChooseAction.class);
+            when(strategy1.choose(any(), any())).thenReturn(action);
+            when(strategy2.choose(any(), any())).thenReturn(action);
+
+            Combat combat = new Combat(player1, strategy1, player2, strategy2);
+            combat.startCombat(player1, strategy1, player2, strategy2);
+
+            assertEquals(player2, combat.getWinner());
+        }
     }
 }
