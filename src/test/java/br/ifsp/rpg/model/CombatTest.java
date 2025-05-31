@@ -390,5 +390,22 @@ public class CombatTest {
 
             assertEquals(player1, result);
         }
+        @Test
+        @Tag("Structural")
+        @Tag("Unit-Test")
+        @DisplayName("player2 speed greater than player1 speed returns player2")
+        void player2SpeedGreaterReturnsPlayer2() {
+            RpgCharacter player1 = mock(RpgCharacter.class);
+            RpgCharacter player2 = mock(RpgCharacter.class);
+            Random random = mock(Random.class);
+
+            when(player1.getSpeed()).thenReturn(10);
+            when(player2.getSpeed()).thenReturn(20);
+
+            Combat combat = new Combat(player1, null, player2, null);
+            RpgCharacter result = combat.getFirstToPlay(player1, player2, random);
+
+            assertEquals(player2, result);
+        }
     }
 }
