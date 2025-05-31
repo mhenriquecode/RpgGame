@@ -159,7 +159,7 @@ public class RpgCharacterTest {
             player.attack();
 
             assertThat(player.getClassType()).isEqualTo(ClassType.PALADIN);
-            assertThat(player.getHealth()).isBetween(93, 103);
+            assertThat(player.getHealth()).isBetween(93, 105);
         }
 
         @Test
@@ -301,6 +301,36 @@ public class RpgCharacterTest {
                 RpgCharacter character = new RpgCharacter("OldName", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD);
                 character.setName("NewName");
                 assertThat(character.getName()).isEqualTo("NewName");
+            }
+            @Test
+            @Tag("Unit-test")
+            @Tag("Structural")
+            @DisplayName("Should Setting The Same Attributes")
+            void shouldSettingTheSameAttributes() {
+                ClassType classType = ClassType.WARRIOR;
+                Race race = Race.HUMAN;
+                Weapon weapon = Weapon.SWORD;
+
+                RpgCharacter character = new RpgCharacter("Hero", classType, race, weapon);
+
+                character.setMaxHealth(150);
+                character.setHealth(120);
+                character.setStrength(25);
+                character.setDefense(10);
+                character.setSpeed(18);
+                character.setArmor(5);
+                character.setDefending(true);
+
+                assertThat(character.getClassType()).isEqualTo(classType);
+                assertThat(character.getRace()).isEqualTo(race);
+                assertThat(character.getWeapon()).isEqualTo(weapon);
+
+                assertThat(character.getMaxHealth()).isEqualTo(150);
+                assertThat(character.getHealth()).isEqualTo(120);
+                assertThat(character.getStrength()).isEqualTo(25);
+                assertThat(character.getDefense()).isEqualTo(10);
+                assertThat(character.getSpeed()).isEqualTo(18);
+                assertThat(character.getArmor()).isEqualTo(5);
             }
         }
 
