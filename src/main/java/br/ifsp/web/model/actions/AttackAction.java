@@ -10,8 +10,6 @@ public class AttackAction implements PlayerAction {
         if (d20 >= opponent.getArmor()) {
             int damage = current.attack();
             opponent.defends(damage);
-        } else {
-            System.out.println(current.getName() + " missed the attack.");
         }
     }
 }

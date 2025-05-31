@@ -4,7 +4,11 @@ import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
+import br.ifsp.web.model.specialEffects.SpecialEffectBerserk;
+import br.ifsp.web.model.specialEffects.SpecialEffectPaladin;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 
 import java.util.Random;
@@ -21,6 +25,12 @@ public class RpgCharacterTest {
     @BeforeEach
     void setUp() {
         player1 = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
+    }
+    private void assertCharacter(String name, ClassType classType, Race race) {
+        RpgCharacter character = new RpgCharacter(name, classType, race, Weapon.SWORD);
+        assertThat(character.getClassType()).isEqualTo(classType);
+        assertThat(character.getRace()).isEqualTo(race);
+        assertThat(character.getName()).isEqualTo(name);
     }
 
     @Nested
@@ -282,5 +292,16 @@ public class RpgCharacterTest {
                         .hasMessage("Name cannot be null");
             }
         }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Structural")
+        @DisplayName("Set Name Should Update Name")
+        void setNameShouldUpdateName() {
+            RpgCharacter character = new RpgCharacter("OldName", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD);
+            character.setName("NewName");
+            assertThat(character.getName()).isEqualTo("NewName");
+        }
+
+
     }
 }
