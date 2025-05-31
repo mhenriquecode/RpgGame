@@ -381,6 +381,27 @@ public class RpgCharacterTest {
 
                 verify(character).setHealth(100);
             }
+            @Test
+            @Tag("Unit-test")
+            @Tag("Mutation")
+            @DisplayName("Clone Should Copy Attributes Correctly")
+            void cloneShouldCopyAttributesCorrectly() {
+                RpgCharacter original = new RpgCharacter("Hero", ClassType.BERSERK, Race.ELF, Weapon.SWORD);
+                original.setHealth(80);
+                original.setStrength(20);
+                original.setSpeed(10);
+                original.setDefense(8);
+                original.setArmor(15);
+
+                RpgCharacter clone = original.cloneForCombat();
+
+                assertThat(clone.getHealth()).isEqualTo(80);
+                assertThat(clone.getStrength()).isEqualTo(20);
+                assertThat(clone.getSpeed()).isEqualTo(10);
+                assertThat(clone.getDefense()).isEqualTo(8);
+                assertThat(clone.getArmor()).isEqualTo(15);
+            }
+
         }
     }
 }
