@@ -322,6 +322,20 @@ public class RpgCharacterTest {
 
                 assertThat(30).isEqualTo(result);
             }
+            @Test
+            @Tag("Unit-test")
+            @Tag("Mutation")
+            @DisplayName("Paladin SetHealth To Max When Health Plus Damage Exceeds Max Health")
+            void shouldSetHealthToMaxWhenHealthPlusDamageExceedsMaxHealth() {
+                RpgCharacter character = mock(RpgCharacter.class);
+
+                when(character.getHealth()).thenReturn(90);
+                when(character.getMaxHealth()).thenReturn(100);
+
+                SpecialEffectPaladin effect = new SpecialEffectPaladin();
+                effect.applyEffect(character, 15);
+                verify(character).setHealth(100);
+            }
         }
     }
 }
