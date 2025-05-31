@@ -2,6 +2,8 @@ package br.ifsp.rpg.model;
 
 import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.actions.AttackAction;
+import br.ifsp.web.model.dice.RollAttackDice;
+import br.ifsp.web.model.dice.RollHitDice;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
@@ -400,6 +402,18 @@ public class RpgCharacterTest {
                 assertThat(clone.getSpeed()).isEqualTo(10);
                 assertThat(clone.getDefense()).isEqualTo(8);
                 assertThat(clone.getArmor()).isEqualTo(15);
+            }
+            @Test
+            @Tag("Unit-test")
+            @Tag("Mutation")
+            @DisplayName("Roll Attack Dice In RpgCharacter Should Use Injected Dice")
+            void rollAttackDiceShouldUseInjectedDice() {
+                RollAttackDice dice = mock(RollAttackDice.class);
+                when(dice.roll()).thenReturn(7);
+
+                RpgCharacter character = new RpgCharacter("Hero", ClassType.BERSERK, Race.ELF, Weapon.SWORD, new RollHitDice(), dice);
+
+                assertThat(character.rollAttackDice()).isEqualTo(7);
             }
 
         }
