@@ -336,6 +336,21 @@ public class RpgCharacterTest {
                 effect.applyEffect(character, 15);
                 verify(character).setHealth(100);
             }
+            @Test
+            @Tag("Unit-test")
+            @Tag("Mutation")
+            @DisplayName("Paladin Should Set Health To Health Plus Damage When Equal To MaxHealth")
+            void shouldSetHealthToHealthPlusDamageWhenEqualToMaxHealth() {
+                RpgCharacter character = mock(RpgCharacter.class);
+
+                when(character.getHealth()).thenReturn(80);
+                when(character.getMaxHealth()).thenReturn(100);
+
+                SpecialEffectPaladin effect = new SpecialEffectPaladin();
+                effect.applyEffect(character, 20);
+
+                verify(character).setHealth(100);
+            }
         }
     }
 }
