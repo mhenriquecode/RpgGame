@@ -407,5 +407,21 @@ public class CombatTest {
 
             assertEquals(player2, result);
         }
+        @Test
+        @Tag("Structural")
+        @Tag("Unit-Test")
+        @DisplayName("getFirstToPlay else if false goes to else block with equal speeds")
+        void getFirstToPlay_elseIfFalse_goesToElseBlock() {
+            RpgCharacter player1 = mock(RpgCharacter.class);
+            RpgCharacter player2 = mock(RpgCharacter.class);
+
+            when(player1.getSpeed()).thenReturn(10);
+            when(player2.getSpeed()).thenReturn(10);
+
+            Combat combat = new Combat(player1, null, player2, null);
+            RpgCharacter result = combat.getFirstToPlay(player1, player2);
+
+            assertTrue(result == player1 || result == player2);
+        }
     }
 }
