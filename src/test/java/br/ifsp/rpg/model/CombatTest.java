@@ -208,6 +208,7 @@ public class CombatTest {
             assertThat(chooseUserAction.choose(player1, player1))
                     .isInstanceOf(DefendingAction.class);
         }
+
         @Test
         @Tag("Structural")
         @Tag("Unit-Test")
@@ -218,6 +219,7 @@ public class CombatTest {
             assertThat(chooseUserAction.choose(player1, player1))
                     .isInstanceOf(DodgeAction.class);
         }
+
         @Test
         @Tag("Structural")
         @Tag("Unit-Test")
@@ -245,6 +247,7 @@ public class CombatTest {
                     () -> combat.startCombat(null, strategy1, player2, strategy2));
             assertEquals("player1 cannot be null", exception.getMessage());
         }
+
         @Test
         @Tag("Structural")
         @Tag("Unit-Test")
@@ -260,6 +263,7 @@ public class CombatTest {
                     () -> combat.startCombat(player1, strategy1, null, strategy2));
             assertEquals("player2 cannot be null", exception.getMessage());
         }
+
         @Test
         @Tag("Structural")
         @Tag("Unit-Test")
@@ -275,6 +279,7 @@ public class CombatTest {
                     () -> combat.startCombat(player1, null, player2, strategy2));
             assertEquals("player1 action cannot be null", exception.getMessage());
         }
+
         @Test
         @Tag("Structural")
         @Tag("Unit-Test")
@@ -290,6 +295,7 @@ public class CombatTest {
                     () -> combat.startCombat(player1, strategy1, player2, null));
             assertEquals("player2 action cannot be null", exception.getMessage());
         }
+
         @Test
         @Tag("Structural")
         @Tag("Unit-Test")
@@ -335,6 +341,7 @@ public class CombatTest {
 
             assertEquals(player1, combat.getWinner());
         }
+
         @Test
         @Tag("Structural")
         @Tag("Unit-Test")
@@ -364,6 +371,24 @@ public class CombatTest {
             combat.startCombat(player1, strategy1, player2, strategy2);
 
             assertEquals(player2, combat.getWinner());
+        }
+
+        @Test
+        @Tag("Structural")
+        @Tag("Unit-Test")
+        @DisplayName("player1 speed greater than player2 speed returns player1")
+        void player1SpeedGreaterReturnsPlayer1() {
+            RpgCharacter player1 = mock(RpgCharacter.class);
+            RpgCharacter player2 = mock(RpgCharacter.class);
+            Random random = mock(Random.class);
+
+            when(player1.getSpeed()).thenReturn(15);
+            when(player2.getSpeed()).thenReturn(10);
+
+            Combat combat = new Combat(player1, null, player2, null);
+            RpgCharacter result = combat.getFirstToPlay(player1, player2, random);
+
+            assertEquals(player1, result);
         }
     }
 }
