@@ -67,9 +67,6 @@ public class Combat {
 
         return player1.getHealth() > 0 ? player1 : player2;
     }
-    public void run() {
-        startCombat(player1, actionStrategy1, player2, actionStrategy2);
-    }
 
     public RpgCharacter getFirstToPlay(RpgCharacter player1, RpgCharacter player2) {
         if (player1.getSpeed() > player2.getSpeed()) {

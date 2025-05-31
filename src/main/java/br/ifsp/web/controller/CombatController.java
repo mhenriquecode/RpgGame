@@ -42,7 +42,7 @@ public class CombatController {
         ChooseAction strategy2 = new ChooseUserAction(request.strategy2());
 
         Combat combat = new Combat(player1, strategy1, player2, strategy2);
-        combat.run();
+        combat.startCombat(player1, strategy1, player2, strategy2);
         combatService.saveCombatLog(combat);
 
         RpgCharacter winner = combat.getWinner();
