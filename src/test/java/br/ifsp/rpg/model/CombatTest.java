@@ -6,6 +6,7 @@ import br.ifsp.web.interfaces.PlayerAction;
 import br.ifsp.web.log.CombatLog;
 import br.ifsp.web.model.Combat;
 import br.ifsp.web.model.RpgCharacter;
+import br.ifsp.web.model.actions.AttackAction;
 import br.ifsp.web.model.actions.ChooseUserAction;
 import br.ifsp.web.model.actions.DefendingAction;
 import br.ifsp.web.model.actions.DodgeAction;
@@ -15,6 +16,7 @@ import br.ifsp.web.model.enums.Weapon;
 import br.ifsp.web.repository.RpgCharacterEntity;
 import br.ifsp.web.service.CombatService;
 import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -422,6 +424,28 @@ public class CombatTest {
             RpgCharacter result = combat.getFirstToPlay(player1, player2);
 
             assertTrue(result == player1 || result == player2);
+        }
+    }
+
+    @Nested
+    @DisplayName("Combat and Action Mutation Test")
+    public class combatAndActionMutationTest {
+        @Test
+        @Tag("Mutation")
+        @Tag("Unit-Test")
+        @DisplayName("Test Attack Succeeds When Hi Equals Armor")
+        void testAttackSucceedsWhenHitEqualsArmor() {
+            RpgCharacter attacker = mock(RpgCharacter.class);
+            RpgCharacter opponent = mock(RpgCharacter.class);
+
+            when(attacker.rollHitDice()).thenReturn(15);
+            when(opponent.getArmor()).thenReturn(15);
+            when(attacker.attack()).thenReturn(10);
+
+
+            AttackAction action = new AttackAction();
+            action.execute(attacker, opponent);
+            verify(opponent).defends(10);
         }
     }
 }

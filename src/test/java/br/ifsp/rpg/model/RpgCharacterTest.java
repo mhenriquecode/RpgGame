@@ -1,6 +1,7 @@
 package br.ifsp.rpg.model;
 
 import br.ifsp.web.model.RpgCharacter;
+import br.ifsp.web.model.actions.AttackAction;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.Random;
 
@@ -291,17 +293,15 @@ public class RpgCharacterTest {
                         .isInstanceOf(NullPointerException.class)
                         .hasMessage("Name cannot be null");
             }
+            @Test
+            @Tag("Unit-test")
+            @Tag("Structural")
+            @DisplayName("Set Name Should Update Name")
+            void setNameShouldUpdateName() {
+                RpgCharacter character = new RpgCharacter("OldName", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD);
+                character.setName("NewName");
+                assertThat(character.getName()).isEqualTo("NewName");
+            }
         }
-        @Test
-        @Tag("Unit-test")
-        @Tag("Structural")
-        @DisplayName("Set Name Should Update Name")
-        void setNameShouldUpdateName() {
-            RpgCharacter character = new RpgCharacter("OldName", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD);
-            character.setName("NewName");
-            assertThat(character.getName()).isEqualTo("NewName");
-        }
-
-
     }
 }
