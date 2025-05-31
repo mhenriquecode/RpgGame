@@ -413,7 +413,7 @@ public class CombatTest {
         @Tag("Structural")
         @Tag("Unit-Test")
         @DisplayName("getFirstToPlay else if false goes to else block with equal speeds")
-        void getFirstToPlay_elseIfFalse_goesToElseBlock() {
+        void getFirstToPlayElseIfFalseGoesToElseBlock() {
             RpgCharacter player = mock(RpgCharacter.class);
             RpgCharacter player2 = mock(RpgCharacter.class);
 
@@ -424,6 +424,18 @@ public class CombatTest {
             RpgCharacter result = combat.getFirstToPlay(player, player2);
 
             assertTrue(result == player || result == player2);
+        }
+        @Test
+        @Tag("Structural")
+        @Tag("Unit-Test")
+        @DisplayName("should create Combat instance with correct player assignments and non-null ID")
+        void shouldCreateCombatWithCorrectPlayersAndNonNullId(){
+            RpgCharacter character = new RpgCharacter("Gor", ClassType.DUELIST, Race.ORC, Weapon.AXE);
+            RpgCharacter character2 = new RpgCharacter("Gotton", ClassType.WARRIOR, Race.ELF, Weapon.AXE);
+            Combat combat = new Combat(character2, mock(ChooseAction.class), character, mock(ChooseAction.class));
+            assertThat(combat.getId()).isNotNull();
+            assertThat(combat.getPlayer1()).isEqualTo(character2);
+            assertThat(combat.getPlayer2()).isEqualTo(character);
         }
     }
 
