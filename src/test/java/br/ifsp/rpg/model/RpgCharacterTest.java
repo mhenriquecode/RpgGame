@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -265,6 +266,21 @@ public class RpgCharacterTest {
 
             assertEquals(expectedMaxHealth, character.getMaxHealth());
             assertEquals(expectedDefense, character.getDefense());
+        }
+        @Nested
+        @DisplayName("Struct Character tests")
+        class StructCharacterTest {
+            @Test
+            @Tag("Unit-test")
+            @Tag("Structural")
+            @DisplayName("Set Name Throws Exception When Name Is Null")
+            void setNameThrowsExceptionWhenNameIsNull() {
+                RpgCharacter character = new RpgCharacter("Test", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD);
+
+                assertThatThrownBy(() -> character.setName(null))
+                        .isInstanceOf(NullPointerException.class)
+                        .hasMessage("Name cannot be null");
+            }
         }
     }
 }

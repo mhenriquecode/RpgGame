@@ -80,6 +80,7 @@ public class RpgCharacter {
         this.armor = 10;
     }
 
+
     private SpecialEffect chooseSpecialEffect(ClassType classType){
         return switch (classType){
             case BERSERK -> new SpecialEffectBerserk();
@@ -198,33 +199,6 @@ public class RpgCharacter {
         this.armor = armor;
     }
 
-    public boolean isDefending() {
-        return defending;
-    }
-
     public void setDefending(boolean defending) {this.defending = defending;}
 
-    public boolean isHasDodgeBonus() {
-        return hasDodgeBonus;
-    }
-
-    public void setHasDodgeBonus(boolean hasDodgeBonus) {
-        this.hasDodgeBonus = hasDodgeBonus;
-    }
-
-    public void setAttackDice(RollAttackDice attackDice) {
-        this.attackDice = attackDice;
-    }
-
-    public void setHitDice(RollHitDice hitDice) {
-        this.hitDice = hitDice;
-    }
-
-    public void setRandom(Random random) {
-        this.random = random;
-    }
-
-    public SpecialEffect getSpecialEffect() {
-        return specialEffect;
-    }
 }
