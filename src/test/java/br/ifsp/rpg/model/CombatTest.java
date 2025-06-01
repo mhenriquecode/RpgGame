@@ -491,5 +491,26 @@ public class CombatTest {
             combat.startCombat(player1, strategy1, player2, strategy2);
             assertEquals(player2, combat.getWinner());
         }
+        @Test
+        @Tag("Mutation")
+        @Tag("Unit-Test")
+        @DisplayName("combat ends immediately if player1 starts with zero health")
+        void combatEndsImmediatelyIfPlayer1StartsWithZeroHealth() {
+            RpgCharacter player1 = mock(RpgCharacter.class);
+            RpgCharacter player2 = mock(RpgCharacter.class);
+
+            when(player1.getHealth()).thenReturn(0);
+            when(player2.getHealth()).thenReturn(10);
+            when(player1.cloneForCombat()).thenReturn(player1);
+            when(player2.cloneForCombat()).thenReturn(player2);
+
+            ChooseAction strategy1 = mock(ChooseAction.class);
+            ChooseAction strategy2 = mock(ChooseAction.class);
+
+            Combat combat = new Combat(player1, strategy1, player2, strategy2);
+            combat.startCombat(player1, strategy1, player2, strategy2);
+
+            assertEquals(player2, combat.getWinner());
+        }
     }
 }
