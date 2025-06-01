@@ -441,6 +441,31 @@ public class RpgCharacterTest {
                 assertThat(attack).isEqualTo(999);
                 verify(effect).applyEffect(character, 15);
             }
+            @Test
+            @Tag("Unit-test")
+            @Tag("Mutation")
+            @DisplayName("should not apply special effect when random is 10 (chance = 11%)")
+            void shouldNotApplySpecialEffectWhenChanceFails() {
+                RollAttackDice attackDice = mock(RollAttackDice.class);
+                when(attackDice.roll()).thenReturn(5);
+
+                RollHitDice hitDice = mock(RollHitDice.class);
+
+                RpgCharacter character = new RpgCharacter("Hero", ClassType.BERSERK, Race.ELF, Weapon.SWORD, hitDice, attackDice);
+                character.setStrength(10);
+
+                SpecialEffect effect = mock(SpecialEffect.class);
+                character.setSpecialEffect(effect);
+
+                Random fixedRandom = mock(Random.class);
+                when(fixedRandom.nextInt(100)).thenReturn(10);
+                character.setRandom(fixedRandom);
+
+                int attack = character.attack();
+
+                assertThat(attack).isEqualTo(15); // 10 + 5 = 15
+                verify(effect, never()).applyEffect(any(), anyInt());
+            }
         }
     }
 }
