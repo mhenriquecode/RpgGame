@@ -1,5 +1,6 @@
 package br.ifsp.rpg.model;
 
+import br.ifsp.web.interfaces.SpecialEffect;
 import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.actions.AttackAction;
 import br.ifsp.web.model.dice.RollAttackDice;
@@ -323,6 +324,7 @@ public class RpgCharacterTest {
                 character.setArmor(5);
                 character.setDefending(true);
 
+                assertThat(character.getId()).isNotNull();
                 assertThat(character.getClassType()).isEqualTo(classType);
                 assertThat(character.getRace()).isEqualTo(race);
                 assertThat(character.getWeapon()).isEqualTo(weapon);
@@ -415,7 +417,30 @@ public class RpgCharacterTest {
 
                 assertThat(character.rollAttackDice()).isEqualTo(7);
             }
+            @Test
+            @Tag("Unit-test")
+            @Tag("Mutation")
+            @DisplayName("should apply special effect when random is 9 (chance = 10%)")
+            void shouldApplySpecialEffectWhenChanceSucceeds() {
+                RollAttackDice attackDice = mock(RollAttackDice.class);
+                when(attackDice.roll()).thenReturn(5);
+                RollHitDice hitDice = mock(RollHitDice.class);
 
+                RpgCharacter character = new RpgCharacter("Hero", ClassType.BERSERK, Race.ELF, Weapon.SWORD, hitDice, attackDice);
+                character.setStrength(10);
+
+                SpecialEffect effect = mock(SpecialEffect.class);
+                when(effect.applyEffect(any(), eq(15))).thenReturn(999); // 10 + 5 = 15 original
+                character.setSpecialEffect(effect);
+
+                Random fixedRandom = mock(Random.class);
+                when(fixedRandom.nextInt(100)).thenReturn(9);
+                character.setRandom(fixedRandom);
+                int attack = character.attack();
+
+                assertThat(attack).isEqualTo(999);
+                verify(effect).applyEffect(character, 15);
+            }
         }
     }
 }

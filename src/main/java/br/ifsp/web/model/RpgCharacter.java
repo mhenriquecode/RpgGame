@@ -153,6 +153,14 @@ public class RpgCharacter {
         return weapon;
     }
 
+    public void setRandom(Random random) {
+        this.random = random;
+    }
+
+    public void setSpecialEffect(SpecialEffect specialEffect) {
+        this.specialEffect = specialEffect;
+    }
+
     public int getMaxHealth() {
         return maxHealth;
     }
