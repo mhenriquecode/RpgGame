@@ -16,7 +16,6 @@ import java.util.UUID;
 @NoArgsConstructor(force = true)
 public class CombatEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @ManyToOne(optional = false)

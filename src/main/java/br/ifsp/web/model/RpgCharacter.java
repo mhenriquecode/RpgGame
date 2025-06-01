@@ -10,6 +10,7 @@ import br.ifsp.web.model.specialEffects.SpecialEffectBerserk;
 import br.ifsp.web.model.specialEffects.SpecialEffectDuelist;
 import br.ifsp.web.model.specialEffects.SpecialEffectPaladin;
 import br.ifsp.web.model.specialEffects.SpecialEffectWarrior;
+import br.ifsp.web.repository.RpgCharacterEntity;
 
 import java.util.Random;
 import java.util.UUID;
@@ -36,6 +37,7 @@ public class RpgCharacter {
     private SpecialEffect specialEffect;
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.classType = classType;
         this.race = race;

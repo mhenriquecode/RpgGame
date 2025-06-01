@@ -14,7 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor(force = true)
 public class RpgCharacterEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(nullable = false, length = 50)
