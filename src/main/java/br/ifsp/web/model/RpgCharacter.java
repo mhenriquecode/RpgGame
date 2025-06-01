@@ -53,13 +53,10 @@ public class RpgCharacter {
         this(name, classType, race, weapon);
         this.hitDice = hitDice;
         this.attackDice = attackDice;
-        initializeAttributes();
-        this.specialEffect = chooseSpecialEffect(classType);
     }
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon, Random random) {
         this(name, classType, race, weapon);
-        initializeAttributes();
         this.random = random;
     }
 

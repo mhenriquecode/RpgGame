@@ -10,6 +10,7 @@ import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
 import br.ifsp.web.model.specialEffects.SpecialEffectBerserk;
 import br.ifsp.web.model.specialEffects.SpecialEffectPaladin;
+import br.ifsp.web.model.specialEffects.SpecialEffectWarrior;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -30,12 +31,6 @@ public class RpgCharacterTest {
     @BeforeEach
     void setUp() {
         player1 = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
-    }
-    private void assertCharacter(String name, ClassType classType, Race race) {
-        RpgCharacter character = new RpgCharacter(name, classType, race, Weapon.SWORD);
-        assertThat(character.getClassType()).isEqualTo(classType);
-        assertThat(character.getRace()).isEqualTo(race);
-        assertThat(character.getName()).isEqualTo(name);
     }
 
     @Nested
@@ -466,6 +461,32 @@ public class RpgCharacterTest {
                 assertThat(attack).isEqualTo(15); // 10 + 5 = 15
                 verify(effect, never()).applyEffect(any(), anyInt());
             }
+            @Test
+            @Tag("Unit-test")
+            @Tag("Mutation")
+            @DisplayName("should initialize attributes correctly via all constructors")
+            void shouldInitializeAttributesViaAllConstructors() {
+                var hitDice = mock(RollHitDice.class);
+                var attackDice = mock(RollAttackDice.class);
+                var random = mock(Random.class);
+
+                var c1 = new RpgCharacter("Alice", ClassType.BERSERK, Race.HUMAN, Weapon.AXE, hitDice, attackDice);
+                var c2 = new RpgCharacter("Bob", ClassType.WARRIOR, Race.ORC, Weapon.SWORD, random);
+
+                assertThat(c1.getHealth()).isEqualTo(100 + 5 + 20);     // 125
+                assertThat(c1.getStrength()).isEqualTo(10 + 2 + 5);     // 17
+                assertThat(c1.getDefense()).isEqualTo(5 + 2 + 0);       // 7
+                assertThat(c1.getSpeed()).isEqualTo(4 + 2 + 0);         // 6
+                assertThat(c1.getArmor()).isEqualTo(10);                // base
+
+                assertThat(c2.getHealth()).isEqualTo(100 + 0 + 0);      // 100
+                assertThat(c2.getStrength()).isEqualTo(10 + 5 + 5);     // 20
+                assertThat(c2.getDefense()).isEqualTo(5 + 0 + 5);       // 10
+                assertThat(c2.getSpeed()).isEqualTo(4 + 0 + 0);         // 4
+                assertThat(c2.getArmor()).isEqualTo(10);                // base
+            }
+
+
         }
     }
 }
