@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import '../styles/RegisterForm.css';
 
 function RegisterForm({ onSwitchToLogin }) {
     const [name, setName] = useState('');

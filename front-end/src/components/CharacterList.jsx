@@ -6,7 +6,6 @@ function CharacterList({ characters, isLoading, error, onCharacterDeleted }) {
     const [deleteError, setDeleteError] = useState(null);
 
     const handleDelete = async (characterId, characterName) => {
-        // Confirmação antes de deletar
         if (!window.confirm(`Tem certeza que deseja deletar o personagem "${characterName}"?`)) {
             return;
         }

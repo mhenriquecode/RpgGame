@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import '../styles/LoginForm.css';
 
 function LoginForm({ onSwitchToRegister }) {
     const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ function LoginForm({ onSwitchToRegister }) {
 
     return (
         <div className="auth-form-container">
-            <h2>Login 🔑</h2>
+            <h2>Login</h2>
             {authError && <p className="error-message">{authError}</p>}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">

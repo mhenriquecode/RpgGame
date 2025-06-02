@@ -41,7 +41,7 @@ function AppContent() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/personagens" element={<CharacterManagementPage />} />
                 <Route path="/combate" element={<CombatPage />} />
-                <Route path="/historico-combates" element={<CombatHistoryPage />} /> {/* <-- Nova rota */}
+                <Route path="/historico-combates" element={<CombatHistoryPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </>
