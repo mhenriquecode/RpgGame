@@ -39,8 +39,8 @@ public class CombatTest {
     void setUp() {
         mockRandom = mock(Random.class);
         attackAction = new AttackStub();
-         mockPlayer = mock(RpgCharacter.class);
-         mockAction = mock(ChooseAction.class);
+        mockPlayer = mock(RpgCharacter.class);
+        mockAction = mock(ChooseAction.class);
         player = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
     }
 
@@ -74,6 +74,7 @@ public class CombatTest {
             RpgCharacter first = combat.getFirstToPlay(player, player2);
 
             assertThat(first).isEqualTo(player);
+            assertThat(first).isNotEqualTo(player2);
         }
 
         @Test
@@ -90,6 +91,7 @@ public class CombatTest {
             RpgCharacter first = combat.getFirstToPlay(player, player2);
 
             assertThat(first).isEqualTo(player);
+            assertThat(first).isNotEqualTo(player2);
         }
 
         @Test
@@ -107,6 +109,7 @@ public class CombatTest {
             RpgCharacter first = combat.getFirstToPlay(player, player2, mockRandom);
 
             assertThat(first).isEqualTo(player);
+            assertThat(first).isNotEqualTo(player2);
         }
 
         @Test
@@ -123,6 +126,7 @@ public class CombatTest {
             RpgCharacter first = combat.getFirstToPlay(player, player2, mockRandom);
 
             assertThat(first).isEqualTo(player2);
+            assertThat(first).isNotEqualTo(player);
         }
 
         @Test
@@ -387,7 +391,7 @@ public class CombatTest {
             when(player.getSpeed()).thenReturn(15);
             when(player2.getSpeed()).thenReturn(10);
 
-            Combat combat = new Combat(player, null, player2, null);
+            Combat combat = new Combat(player, mock(ChooseAction.class), player2, mock(ChooseAction.class));
             RpgCharacter result = combat.getFirstToPlay(player, player2, random);
 
             assertEquals(player, result);
@@ -404,7 +408,7 @@ public class CombatTest {
             when(player.getSpeed()).thenReturn(10);
             when(player2.getSpeed()).thenReturn(20);
 
-            Combat combat = new Combat(player, null, player2, null);
+            Combat combat = new Combat(player, mock(ChooseAction.class), player2, mock(ChooseAction.class));
             RpgCharacter result = combat.getFirstToPlay(player, player2, random);
 
             assertEquals(player2, result);
@@ -533,40 +537,79 @@ public class CombatTest {
 
             assertEquals(player1, combat.getWinner());
         }
-    }
+        @Test
+        @Tag("Mutation")
+        @Tag("Unit-Test")
+        @DisplayName("startCombat returns current player as winner when opponent health drops to 0 or less")
+        void startCombatReturnsCurrentWhenOpponentHealthIsZeroOrLess() {
+            RpgCharacter player1 = mock(RpgCharacter.class);
+            RpgCharacter player2 = mock(RpgCharacter.class);
+            ChooseAction strategy1 = mock(ChooseAction.class);
+            ChooseAction strategy2 = mock(ChooseAction.class);
+            PlayerAction attackAction = mock(PlayerAction.class);
 
-    @Test
-    @Tag("Mutation")
-    @Tag("Unit-Test")
-    @DisplayName("startCombat returns current player as winner when opponent health drops to 0 or less")
-    void startCombatReturnsCurrentWhenOpponentHealthIsZeroOrLess() {
-        RpgCharacter player1 = mock(RpgCharacter.class);
-        RpgCharacter player2 = mock(RpgCharacter.class);
-        ChooseAction strategy1 = mock(ChooseAction.class);
-        ChooseAction strategy2 = mock(ChooseAction.class);
-        PlayerAction attackAction = mock(PlayerAction.class);
+            when(player1.getSpeed()).thenReturn(10);
+            when(player2.getSpeed()).thenReturn(5);
 
-        when(player1.getSpeed()).thenReturn(10);
-        when(player2.getSpeed()).thenReturn(5);
+            when(player1.getHealth()).thenReturn(10);
+            when(player2.getHealth()).thenReturn(10).thenReturn(0); // a segunda chamada simula o golpe fatal
 
-        when(player1.getHealth()).thenReturn(10);
-        when(player2.getHealth()).thenReturn(10).thenReturn(0); // a segunda chamada simula o golpe fatal
+            when(player1.cloneForCombat()).thenReturn(player1);
+            when(player2.cloneForCombat()).thenReturn(player2);
 
-        when(player1.cloneForCombat()).thenReturn(player1);
-        when(player2.cloneForCombat()).thenReturn(player2);
+            when(strategy1.choose(any(), any())).thenReturn(attackAction);
+            when(strategy2.choose(any(), any())).thenReturn(attackAction);
 
-        when(strategy1.choose(any(), any())).thenReturn(attackAction);
-        when(strategy2.choose(any(), any())).thenReturn(attackAction);
+            // quando player1 ataca player2, player2 perde vida e chega a 0
+            doAnswer(invocation -> {
+                when(player2.getHealth()).thenReturn(0);
+                return null;
+            }).when(attackAction).execute(eq(player1), eq(player2));
 
-        // quando player1 ataca player2, player2 perde vida e chega a 0
-        doAnswer(invocation -> {
-            when(player2.getHealth()).thenReturn(0);
-            return null;
-        }).when(attackAction).execute(eq(player1), eq(player2));
+            Combat combat = new Combat(player1, strategy1, player2, strategy2);
+            combat.startCombat(player1, strategy1, player2, strategy2);
 
-        Combat combat = new Combat(player1, strategy1, player2, strategy2);
-        combat.startCombat(player1, strategy1, player2, strategy2);
+            assertEquals(player1, combat.getWinner());
+        }
+        @Test
+        @Tag("Mutation")
+        @DisplayName("Each Player Uses Their Own Strategy")
+        void eachPlayerUsesTheirOwnStrategy() {
+            RpgCharacter player1 = mock(RpgCharacter.class);
+            RpgCharacter player2 = mock(RpgCharacter.class);
+            ChooseAction strategy1 = mock(ChooseAction.class);
+            ChooseAction strategy2 = mock(ChooseAction.class);
+            PlayerAction action1 = mock(PlayerAction.class);
+            PlayerAction action2 = mock(PlayerAction.class);
 
-        assertEquals(player1, combat.getWinner());
+            when(player1.getHealth()).thenReturn(10, 10, 0);
+            when(player2.getHealth()).thenReturn(10, 10);
+
+            when(player1.getSpeed()).thenReturn(10);
+            when(player2.getSpeed()).thenReturn(5);
+
+            when(player1.cloneForCombat()).thenReturn(player1);
+            when(player2.cloneForCombat()).thenReturn(player2);
+
+            when(strategy1.choose(any(), any())).thenReturn(action1);
+            when(strategy2.choose(any(), any())).thenReturn(action2);
+
+            doNothing().when(action1).execute(eq(player1), eq(player2));
+            doAnswer(inv -> {
+                when(player1.getHealth()).thenReturn(0);
+                return null;
+            }).when(action2).execute(eq(player2), eq(player1));
+
+            Combat combat = new Combat(player1, strategy1, player2, strategy2);
+            combat.startCombat(player1, strategy1, player2, strategy2);
+
+            verify(strategy1, atLeastOnce()).choose(eq(player1), eq(player2));
+            verify(action1).execute(eq(player1), eq(player2));
+
+            verify(strategy2, atLeastOnce()).choose(eq(player2), eq(player1));
+            verify(action2).execute(eq(player2), eq(player1));
+
+            assertEquals(player2, combat.getWinner());
+        }
     }
 }
