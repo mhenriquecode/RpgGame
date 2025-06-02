@@ -8,6 +8,7 @@ import CharacterCreatePage from './pages/CharacterCreatePage';
 import CharacterListPage from './pages/CharacterListPage';   
 import CombatPage from './pages/CombatPage';
 import CombatHistoryPage from './pages/CombatHistoryPage';
+import './styles/App.css'; 
 
 function AppContent() {
     const { isAuthenticated, user, logout, isLoading: authIsLoading } = useAuth();
