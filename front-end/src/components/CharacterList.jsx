@@ -1,6 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react'; 
+import { deleteCharacter } from '../services/characterApiService';
 
-function CharacterList({ characters, isLoading, error }) {
+function CharacterList({ characters, isLoading, error, onCharacterDeleted }) {
+    const [deletingId, setDeletingId] = useState(null); 
+    const [deleteError, setDeleteError] = useState(null);
+
+    const handleDelete = async (characterId, characterName) => {
+        // Confirmação antes de deletar
+        if (!window.confirm(`Tem certeza que deseja deletar o personagem "${characterName}"?`)) {
+            return;
+        }
+
+        setDeletingId(characterId);
+        setDeleteError(null);
+        try {
+            await deleteCharacter(characterId);
+            if (onCharacterDeleted) {
+                onCharacterDeleted(); 
+            }
+        } catch (err) {
+            setDeleteError(err.message || `Falha ao deletar ${characterName}.`);
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
     if (isLoading) {
         return <p className="loading-message">Carregando personagens...</p>;
     }
@@ -16,11 +40,20 @@ function CharacterList({ characters, isLoading, error }) {
     return (
         <div className="character-list-container">
             <h3>Personagens Criados 📜</h3>
+            {deleteError && <p className="error-message item-error-message">{deleteError}</p>} 
             <ul>
                 {characters.map((char) => (
-                    <li key={char.id}>
-                        <strong>{char.name}</strong> ({char.race}, {char.classType}) - Arma: {char.weapon}
-                        {} {}
+                    <li key={char.id} className="character-item">
+                        <div className="character-info">
+                            <strong>{char.name}</strong> ({char.race}, {char.classType}) - Arma: {char.weapon}
+                        </div>
+                        <button
+                            onClick={() => handleDelete(char.id, char.name)}
+                            disabled={deletingId === char.id}
+                            className="delete-button"
+                        >
+                            {deletingId === char.id ? 'Deletando...' : 'Deletar'}
+                        </button>
                     </li>
                 ))}
             </ul>

@@ -4,7 +4,7 @@ import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import CharacterCreateForm from './components/CharacterCreateForm';
 import CharacterList from './components/CharacterList';
-import { getAllCharacters } from './services/characterApiService';
+import { getAllCharacters, deleteCharacter } from './services/characterApiService';
 
 function AppContent() {
     const { isAuthenticated, user, logout, isLoading: authIsLoading } = useAuth();
@@ -36,11 +36,16 @@ function AppContent() {
             fetchCharacters();
         } else {
             setCharacters([]); 
+            setCharacterListError(null);
         }
     }, [isAuthenticated, fetchCharacters]);
 
     const handleCharacterCreated = () => {
         fetchCharacters(); 
+    };
+
+    const handleCharacterDeleted = () => {
+        fetchCharacters();
     };
 
     if (authIsLoading) {
@@ -61,14 +66,17 @@ function AppContent() {
 
     return (
         <>
-            <button onClick={logout} className="logout-button">Sair</button>
-            {user && <p className="welcome-message">Bem-vindo, {user.name || user.email}!</p>}
+            <div className="user-session-controls">
+                {user && <p className="welcome-message">Bem-vindo, {user.name || user.email}!</p>}
+                <button onClick={logout} className="logout-button">Sair</button>
+            </div>
             <CharacterCreateForm onCharacterCreated={handleCharacterCreated} />
             <hr className="section-divider" />
             <CharacterList
                 characters={characters}
                 isLoading={isLoadingCharacters}
                 error={characterListError}
+                onCharacterDeleted={handleCharacterDeleted} 
             />
         </>
     );
