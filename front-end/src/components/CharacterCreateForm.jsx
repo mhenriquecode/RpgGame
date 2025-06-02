@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { races, classTypes, weapons } from '../data/rpgOptions';
 import { createCharacter } from '../services/characterApiService';
+import '../styles/CharacterCreateForm.css'; 
 
 function CharacterCreateForm({ onCharacterCreated }) {
     const [name, setName] = useState('');
@@ -51,7 +52,7 @@ function CharacterCreateForm({ onCharacterCreated }) {
 
     return (
         <div className="character-form-container">
-            <h2>Criar Novo Personagem 🧙‍♂️</h2>
+            <h2>Criar Novo Personagem ⚔️</h2>
             {error && <p className="error-message">{error}</p>}
             {successMessage && <p className="success-message">{successMessage}</p>}
             <form onSubmit={handleSubmit}>

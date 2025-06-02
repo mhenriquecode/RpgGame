@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CharacterCreateForm from '../components/CharacterCreateForm';
+import '../styles/CharacterCreatePage.css';
 
 function CharacterCreatePage() {
     const navigate = useNavigate();
