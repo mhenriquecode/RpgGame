@@ -33,14 +33,25 @@ public class CombatTest {
     private ChooseAction attackAction;
     RpgCharacter mockPlayer;
     ChooseAction mockAction;
-
+    RpgCharacter player1;
+    RpgCharacter player2;
+    ChooseAction strategy1;
+    ChooseAction strategy2;
+    PlayerAction action1;
+    PlayerAction action2;
 
     @BeforeEach
     void setUp() {
+         player1 = mock(RpgCharacter.class);
+         player2 = mock(RpgCharacter.class);
+         strategy1 = mock(ChooseAction.class);
+         strategy2 = mock(ChooseAction.class);
+         action1 = mock(PlayerAction.class);
+         action2 = mock(PlayerAction.class);
         mockRandom = mock(Random.class);
         attackAction = new AttackStub();
-        mockPlayer = mock(RpgCharacter.class);
-        mockAction = mock(ChooseAction.class);
+         mockPlayer = mock(RpgCharacter.class);
+         mockAction = mock(ChooseAction.class);
         player = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
     }
 
@@ -71,7 +82,7 @@ public class CombatTest {
 
             Combat combat = new Combat(player, attackAction, player2, attackAction);
 
-            RpgCharacter first = combat.getFirstToPlay(player, player2);
+            RpgCharacter first = combat.getFirstToPlay(player, player2, mockRandom);
 
             assertThat(first).isEqualTo(player);
             assertThat(first).isNotEqualTo(player2);
@@ -88,7 +99,7 @@ public class CombatTest {
 
             Combat combat = new Combat(player, attackAction, player2, attackAction);
 
-            RpgCharacter first = combat.getFirstToPlay(player, player2);
+            RpgCharacter first = combat.getFirstToPlay(player, player2, mockRandom);
 
             assertThat(first).isEqualTo(player);
             assertThat(first).isNotEqualTo(player2);
@@ -172,16 +183,16 @@ public class CombatTest {
         @Tag("TDD")
         @DisplayName("Should create CombatLog with correct values")
         void shouldCreateCombatLogWithCorrectValues() {
+            RpgCharacterEntity player1 = new RpgCharacterEntity("blablabla", ClassType.BERSERK, Race.ORC, Weapon.DAGGER);
             RpgCharacterEntity player2 = new RpgCharacterEntity("candidor", ClassType.BERSERK, Race.ORC, Weapon.DAGGER);
-            RpgCharacterEntity player = new RpgCharacterEntity("blablabla", ClassType.BERSERK, Race.ORC, Weapon.DAGGER);
 
-            RpgCharacterEntity winner = player;
-            CombatLog combatLog = new CombatLog(player, player2, winner);
+            RpgCharacterEntity winner = player1;
+            CombatLog combatLog = new CombatLog(player1, player2, winner);
 
             assertThat(combatLog).isNotNull();
-            assertThat(combatLog.getPlayer1()).isEqualTo(player);
-            assertThat(combatLog.getPlayer2()).isEqualTo(player2);
-            assertThat(combatLog.getWinner()).isEqualTo(winner);
+            assertThat(combatLog.getPlayer1Id()).isEqualTo(player1.getId());
+            assertThat(combatLog.getPlayer2Id()).isEqualTo(player2.getId());
+            assertThat(combatLog.getWinnerId()).isEqualTo(winner.getId());
             assertThat(combatLog.getTimestamp()).isNotNull();
 
             assertThat(combatLog.getTimestamp()).isBeforeOrEqualTo(LocalDateTime.now());
@@ -309,7 +320,6 @@ public class CombatTest {
         void setWinnerThrowsWhenWinnerIsNull() {
             RpgCharacter player = mockPlayer;
             ChooseAction strategy = mockAction;
-
             Combat combat = new Combat(player, strategy, player, strategy);
 
             NullPointerException exception = assertThrows(NullPointerException.class,
@@ -323,8 +333,6 @@ public class CombatTest {
         @DisplayName("startCombat Ends Immediately When Player2 Health Is Zero Or Less")
         void startCombatEndsImmediatelyWhenPlayer2HealthIsZeroOrLess() {
             RpgCharacter player = mockPlayer;
-            RpgCharacter player2 = mock(RpgCharacter.class);
-
             when(player.getSpeed()).thenReturn(10);
             when(player2.getSpeed()).thenReturn(5);
 
@@ -354,8 +362,6 @@ public class CombatTest {
         @DisplayName("startCombat Ends Immediately When Player1 Health Is Zero Or Less")
         void startCombatEndsImmediatelyWhenPlayer1HealthIsZeroOrLess() {
             RpgCharacter player = mockPlayer;
-            RpgCharacter player2 = mock(RpgCharacter.class);
-
             when(player.getSpeed()).thenReturn(5);
             when(player2.getSpeed()).thenReturn(10);
 
@@ -385,14 +391,12 @@ public class CombatTest {
         @DisplayName("player speed greater than player2 speed returns player")
         void playerSpeedGreaterReturnsPlayer1() {
             RpgCharacter player = mock(RpgCharacter.class);
-            RpgCharacter player2 = mock(RpgCharacter.class);
-            Random random = mock(Random.class);
 
             when(player.getSpeed()).thenReturn(15);
             when(player2.getSpeed()).thenReturn(10);
 
             Combat combat = new Combat(player, mock(ChooseAction.class), player2, mock(ChooseAction.class));
-            RpgCharacter result = combat.getFirstToPlay(player, player2, random);
+            RpgCharacter result = combat.getFirstToPlay(player, player2, mockRandom);
 
             assertEquals(player, result);
         }
@@ -401,15 +405,11 @@ public class CombatTest {
         @Tag("Unit-Test")
         @DisplayName("player2 speed greater than player speed returns player2")
         void player2SpeedGreaterReturnsPlayer2() {
-            RpgCharacter player = mock(RpgCharacter.class);
-            RpgCharacter player2 = mock(RpgCharacter.class);
-            Random random = mock(Random.class);
-
             when(player.getSpeed()).thenReturn(10);
             when(player2.getSpeed()).thenReturn(20);
 
             Combat combat = new Combat(player, mock(ChooseAction.class), player2, mock(ChooseAction.class));
-            RpgCharacter result = combat.getFirstToPlay(player, player2, random);
+            RpgCharacter result = combat.getFirstToPlay(player, player2, mockRandom);
 
             assertEquals(player2, result);
         }
@@ -418,14 +418,11 @@ public class CombatTest {
         @Tag("Unit-Test")
         @DisplayName("getFirstToPlay else if false goes to else block with equal speeds")
         void getFirstToPlayElseIfFalseGoesToElseBlock() {
-            RpgCharacter player = mock(RpgCharacter.class);
-            RpgCharacter player2 = mock(RpgCharacter.class);
-
             when(player.getSpeed()).thenReturn(10);
             when(player2.getSpeed()).thenReturn(10);
 
             Combat combat = new Combat(player, null, player2, null);
-            RpgCharacter result = combat.getFirstToPlay(player, player2);
+            RpgCharacter result = combat.getFirstToPlay(player, player2, mockRandom);
 
             assertTrue(result == player || result == player2);
         }
@@ -468,10 +465,6 @@ public class CombatTest {
         @Tag("Unit-Test")
         @DisplayName("startCombat fails if opponent is wrongly assigned")
         void startCombatFailsIfOpponentAssignmentIsWrong() {
-            RpgCharacter player1 = mock(RpgCharacter.class);
-            RpgCharacter player2 = mock(RpgCharacter.class);
-            ChooseAction strategy1 = mock(ChooseAction.class);
-            ChooseAction strategy2 = mock(ChooseAction.class);
             PlayerAction attackAction = mock(PlayerAction.class);
 
             when(player1.getSpeed()).thenReturn(5);
@@ -500,9 +493,6 @@ public class CombatTest {
         @Tag("Unit-Test")
         @DisplayName("combat ends immediately if player1 starts with zero health")
         void combatEndsImmediatelyIfPlayer1StartsWithZeroHealth() {
-            RpgCharacter player1 = mock(RpgCharacter.class);
-            RpgCharacter player2 = mock(RpgCharacter.class);
-
             when(player1.getHealth()).thenReturn(0);
             when(player2.getHealth()).thenReturn(10);
             when(player1.cloneForCombat()).thenReturn(player1);
@@ -521,9 +511,6 @@ public class CombatTest {
         @Tag("Unit-Test")
         @DisplayName("combat ends immediately if player2 starts with zero health")
         void combatEndsImmediatelyIfPlayer2StartsWithZeroHealth() {
-            RpgCharacter player1 = mock(RpgCharacter.class);
-            RpgCharacter player2 = mock(RpgCharacter.class);
-
             when(player1.getHealth()).thenReturn(10);
             when(player2.getHealth()).thenReturn(0);
             when(player1.cloneForCombat()).thenReturn(player1);
@@ -542,12 +529,7 @@ public class CombatTest {
         @Tag("Unit-Test")
         @DisplayName("startCombat returns current player as winner when opponent health drops to 0 or less")
         void startCombatReturnsCurrentWhenOpponentHealthIsZeroOrLess() {
-            RpgCharacter player1 = mock(RpgCharacter.class);
-            RpgCharacter player2 = mock(RpgCharacter.class);
-            ChooseAction strategy1 = mock(ChooseAction.class);
-            ChooseAction strategy2 = mock(ChooseAction.class);
             PlayerAction attackAction = mock(PlayerAction.class);
-
             when(player1.getSpeed()).thenReturn(10);
             when(player2.getSpeed()).thenReturn(5);
 
@@ -575,13 +557,6 @@ public class CombatTest {
         @Tag("Mutation")
         @DisplayName("Each Player Uses Their Own Strategy")
         void eachPlayerUsesTheirOwnStrategy() {
-            RpgCharacter player1 = mock(RpgCharacter.class);
-            RpgCharacter player2 = mock(RpgCharacter.class);
-            ChooseAction strategy1 = mock(ChooseAction.class);
-            ChooseAction strategy2 = mock(ChooseAction.class);
-            PlayerAction action1 = mock(PlayerAction.class);
-            PlayerAction action2 = mock(PlayerAction.class);
-
             when(player1.getHealth()).thenReturn(10, 10, 0);
             when(player2.getHealth()).thenReturn(10, 10);
 
