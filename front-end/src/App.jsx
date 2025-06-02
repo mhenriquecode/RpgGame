@@ -1,57 +1,23 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { AuthProvider, useAuth } from './contexts/AuthContext'; 
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
-import CharacterCreateForm from './components/CharacterCreateForm';
-import CharacterList from './components/CharacterList';
-import { getAllCharacters, deleteCharacter } from './services/characterApiService';
+
+import HomePage from './pages/HomePage';
+import CharacterManagementPage from './pages/CharacterManagementPage';
+import CombatPage from './pages/CombatPage';
 
 function AppContent() {
     const { isAuthenticated, user, logout, isLoading: authIsLoading } = useAuth();
     const [showLogin, setShowLogin] = useState(true); 
 
-    const [characters, setCharacters] = useState([]);
-    const [isLoadingCharacters, setIsLoadingCharacters] = useState(false);
-    const [characterListError, setCharacterListError] = useState(null);
-
-    const fetchCharacters = useCallback(async () => {
-        if (!isAuthenticated) return; 
-        setIsLoadingCharacters(true);
-        setCharacterListError(null);
-        try {
-            const data = await getAllCharacters();
-            setCharacters(data);
-        } catch (error) {
-            setCharacterListError(error.message || 'Falha ao buscar personagens.');
-            if (error.status === 401 || error.status === 403) { 
-                logout(); 
-            }
-        } finally {
-            setIsLoadingCharacters(false);
-        }
-    }, [isAuthenticated, logout]); 
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            fetchCharacters();
-        } else {
-            setCharacters([]); 
-            setCharacterListError(null);
-        }
-    }, [isAuthenticated, fetchCharacters]);
-
-    const handleCharacterCreated = () => {
-        fetchCharacters(); 
-    };
-
-    const handleCharacterDeleted = () => {
-        fetchCharacters();
-    };
-
     if (authIsLoading) {
         return <div className="loading-fullpage">Carregando Autenticação...</div>;
     }
 
+    
     if (!isAuthenticated) {
         return (
             <div className="auth-page">
@@ -70,32 +36,32 @@ function AppContent() {
                 {user && <p className="welcome-message">Bem-vindo, {user.name || user.email}!</p>}
                 <button onClick={logout} className="logout-button">Sair</button>
             </div>
-            <CharacterCreateForm onCharacterCreated={handleCharacterCreated} />
-            <hr className="section-divider" />
-            <CharacterList
-                characters={characters}
-                isLoading={isLoadingCharacters}
-                error={characterListError}
-                onCharacterDeleted={handleCharacterDeleted} 
-            />
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/personagens" element={<CharacterManagementPage />} />
+                <Route path="/combate" element={<CombatPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
         </>
     );
 }
 
 function App() {
     return (
-        <AuthProvider> {}
-            <div className="app-container">
-                <header className="app-header">
-                    <h1>⚔️ Simulador de Batalha RPG 🛡️</h1>
-                </header>
-                <main className="app-main">
-                    <AppContent />
-                </main>
-                <footer className="app-footer">
-                    <p>&copy; {new Date().getFullYear()} Seu Jogo de RPG. Todos os direitos reservados.</p>
-                </footer>
-            </div>
+        <AuthProvider> 
+            <Router>   
+                <div className="app-container">
+                    <header className="app-header">
+                        <h1>⚔️ Simulador de Batalha RPG 🛡️</h1>
+                    </header>
+                    <main className="app-main">
+                        <AppContent />
+                    </main>
+                    <footer className="app-footer">
+                        <p>Projeto desenvolvido por Matheus Souza e Pedro Candido</p>
+                    </footer>
+                </div>
+            </Router>
         </AuthProvider>
     );
 }
