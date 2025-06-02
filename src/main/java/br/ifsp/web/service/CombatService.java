@@ -9,6 +9,7 @@ import br.ifsp.web.repository.CharacterRepository;
 import br.ifsp.web.repository.CombatLogRepository;
 import br.ifsp.web.repository.RpgCharacterEntity;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -34,46 +35,9 @@ public class CombatService {
         combatLogRepository.save(log);
     }
 
-
     public List<CombatHistoryDTO> getCombatHistory() {
-        return combatLogRepository.findAll().stream()
-                .map(log -> CombatHistoryDTO.from(
-                        toDomain(log.getPlayer1()),
-                        toDomain(log.getPlayer2()),
-                        toDomain(log.getWinner()),
-                        log.getTimestamp()
-                ))
+        return combatLogRepository.findAll(Sort.by(Sort.Direction.DESC, "timestamp")).stream()
+                .map(CombatHistoryDTO::from)
                 .toList();
-    }
-
-    private RpgCharacterEntity toEntity(RpgCharacter domain) {
-        RpgCharacterEntity entity = new RpgCharacterEntity(
-                domain.getName(),
-                domain.getClassType(),
-                domain.getRace(),
-                domain.getWeapon()
-        );
-        return entity;
-    }
-    private RpgCharacter toDomain(RpgCharacterEntity entity) {
-        RpgCharacter character = new RpgCharacter(
-                entity.getName(),
-                entity.getClassType(),
-                entity.getRace(),
-                entity.getWeapon()
-        );
-        character.setMaxHealth(character.getMaxHealth());
-        character.setHealth(character.getMaxHealth());
-
-
-        try {
-            Field idField = RpgCharacter.class.getDeclaredField("id");
-            idField.setAccessible(true);
-            idField.set(character, entity.getId());
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao setar ID no RpgCharacter", e);
-        }
-
-        return character;
     }
 }
