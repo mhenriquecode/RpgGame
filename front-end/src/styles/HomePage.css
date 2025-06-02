@@ -1,0 +1,29 @@
+.home-page-container {
+    text-align: center;
+    padding: 40px;
+    font-family: Arial, sans-serif;
+}
+
+.home-navigation-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* espaçamento entre os botões */
+    margin-top: 20px;
+}
+
+.home-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    width: 250px;
+    text-align: center;
+}
+
+.home-button:hover {
+    background-color: #45a049;
+}
