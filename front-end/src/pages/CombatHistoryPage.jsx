@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { getCombatHistory } from '../services/combatApiService';
 import { useAuth } from '../contexts/AuthContext';
+import '../styles/CombatHistoryPage.css'; 
 
 function CombatHistoryPage() {
     const { logout } = useAuth();
