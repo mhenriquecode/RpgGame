@@ -27,6 +27,7 @@ public class TurnTest {
     @DisplayName("TDD turn tests")
     class TddTurnTests {
         @Test
+        @Tag("Functional")
         @Tag("TDD")
         @Tag("Unit-Test")
         @DisplayName("Damage caused by attacker must be the same as defender receives")
@@ -55,6 +56,7 @@ public class TurnTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("TDD")
         @Tag("Unit-Test")
         @DisplayName("attack should not deal damage if hit dice is less than opponent's armor")
@@ -81,6 +83,7 @@ public class TurnTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("TDD")
         @Tag("Unit-Test")
         @DisplayName("defend should reduce damage using defense points")
@@ -110,6 +113,7 @@ public class TurnTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("TDD")
         @Tag("Unit-Test")
         @DisplayName("defend should prevent damage when defense exceeds attack")
@@ -139,6 +143,7 @@ public class TurnTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("TDD")
         @Tag("Unit-Test")
         @DisplayName("dodge should increase armor in the turn")
@@ -160,6 +165,7 @@ public class TurnTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("TDD")
         @Tag("Unit-Test")
         @DisplayName("dodge Should Increase Armor And Still Take Damage If Hit Dice Exceeds It")
@@ -189,6 +195,7 @@ public class TurnTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("TDD")
         @Tag("Unit-Test")
         @DisplayName("dodge Bonus Should Expire After Opponents Turn")
@@ -229,6 +236,7 @@ public class TurnTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("TDD")
         @Tag("Unit-Test")
         @DisplayName("Dodge should not increase armor above 18")
@@ -243,5 +251,4 @@ public class TurnTest {
             assertEquals(18, character.getArmor());
         }
     }
-
 }

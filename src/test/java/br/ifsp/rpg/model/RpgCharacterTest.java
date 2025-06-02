@@ -37,6 +37,7 @@ public class RpgCharacterTest {
     @DisplayName("TDD Characters test")
     class TddCharactersTest {
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Creating valid character test")
@@ -50,6 +51,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Calculate character attributes test")
@@ -63,6 +65,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Character attack test")
@@ -77,6 +80,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("should increase armor when the character dodges")
@@ -88,6 +92,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("should decrease damage taken when character defends")
@@ -104,6 +109,7 @@ public class RpgCharacterTest {
             assertThat(player1.getHealth()).isEqualTo(expectedHealth);
         }
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Applying berserk special attack effect test")
@@ -117,6 +123,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Applying warrior special attack effect test")
@@ -132,6 +139,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Applying paladin special attack effect when health points is full test")
@@ -146,6 +154,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Applying paladin special attack effect when health points is not full test")
@@ -161,6 +170,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Applying duelist special attack effect test")
@@ -178,6 +188,7 @@ public class RpgCharacterTest {
     @DisplayName("Unit Characters test")
     class UnitCharactersTest {
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("User Chooses Elf Then Character Gets Speed Bonus")
         void userChoosesElfThenCharacterGetsSpeedBonus() {
@@ -188,6 +199,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("User Chooses Dwarf Then Character Receives Life And Defense Bonus")
         void userChoosesDwarfThenCharacterReceivesLifeAndDefenseBonus() {
@@ -201,6 +213,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("User Chooses Human Then Character Receives Moderate Bonus To All Attributes")
         void userChoosesHumanThenCharacterReceivesModerateBonusToAllAttributes() {
@@ -217,6 +230,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("User Chooses Orc Then Character Receives Bonus To Strength")
         void userChoosesOrcThenCharacterReceivesBonusToStrength() {
@@ -227,6 +241,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("User Chooses Berserk Then Character Receives Bonus To Health And Strength")
         void userChoosesBerserkThenCharacterReceivesBonusToHealthAndStrength() {
@@ -240,6 +255,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("User Chooses Warrior Then Character Receives Bonus To Strength And Defense")
         void userChoosesWarriorThenCharacterReceivesBonusToStrengthAndDefense() {
@@ -253,6 +269,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("User Chooses Duelist Then Character Receives Bonus To Strength And Speed")
         void userChoosesDuelistThenCharacterReceivesBonusToStrengthAndSpeed() {
@@ -266,6 +283,7 @@ public class RpgCharacterTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("User Chooses Paladin Then Character Receives Bonus To Health And Defense")
         void userChoosesPaladinThenCharacterReceivesBonusToHealthAndDefense() {
@@ -499,8 +517,6 @@ public class RpgCharacterTest {
                 assertThat(character.getHealth()).isEqualTo(115);
                 assertThat(returned).isEqualTo(15);
             }
-
-
         }
     }
 }

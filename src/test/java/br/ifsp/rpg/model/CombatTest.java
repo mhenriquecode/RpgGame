@@ -59,6 +59,7 @@ public class CombatTest {
     @DisplayName("TDD combat test")
     class TddCombatTest {
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Must create valid combat between two character")
@@ -72,6 +73,7 @@ public class CombatTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Player one starts the combat when his speed is grater than player two's speed")
@@ -89,6 +91,7 @@ public class CombatTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Player two starts the combat when his speed is grater than player one's speed")
@@ -106,6 +109,7 @@ public class CombatTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Player one starts when speed is equal to player two's speed")
@@ -124,6 +128,7 @@ public class CombatTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Player two starts when speed is equal to player one's speed")
@@ -141,6 +146,7 @@ public class CombatTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("combat winner could not be null")
@@ -156,6 +162,7 @@ public class CombatTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("combat determines winner correctly")
@@ -179,6 +186,7 @@ public class CombatTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("Should create CombatLog with correct values")
@@ -203,6 +211,7 @@ public class CombatTest {
     @DisplayName("Unit combat test")
     class UnitCombatTest {
         @Test
+        @Tag("Functional")
         @Tag("Unit-Test")
         @DisplayName("Should not start a combat when one of the characters is invalid test")
         void shouldStartACombatTest(){
@@ -460,6 +469,7 @@ public class CombatTest {
             action.execute(attacker, opponent);
             verify(opponent).defends(10);
         }
+
         @Test
         @Tag("Mutation")
         @Tag("Unit-Test")
@@ -488,6 +498,7 @@ public class CombatTest {
             combat.startCombat(player1, strategy1, player2, strategy2);
             assertEquals(player2, combat.getWinner());
         }
+
         @Test
         @Tag("Mutation")
         @Tag("Unit-Test")
@@ -506,6 +517,7 @@ public class CombatTest {
 
             assertEquals(player2, combat.getWinner());
         }
+
         @Test
         @Tag("Mutation")
         @Tag("Unit-Test")
@@ -524,6 +536,7 @@ public class CombatTest {
 
             assertEquals(player1, combat.getWinner());
         }
+
         @Test
         @Tag("Mutation")
         @Tag("Unit-Test")
@@ -553,8 +566,10 @@ public class CombatTest {
 
             assertEquals(player1, combat.getWinner());
         }
+
         @Test
         @Tag("Mutation")
+        @Tag("Unit-Test")
         @DisplayName("Each Player Uses Their Own Strategy")
         void eachPlayerUsesTheirOwnStrategy() {
             when(player1.getHealth()).thenReturn(10, 10, 0);

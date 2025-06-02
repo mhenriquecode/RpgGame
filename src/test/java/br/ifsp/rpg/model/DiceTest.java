@@ -26,6 +26,7 @@ public class DiceTest {
     @DisplayName("TDD dice test")
     class TddDiceTest {
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("hit dice should return minimum value")
@@ -39,6 +40,7 @@ public class DiceTest {
             verify(mockRandom).nextInt(20);
         }
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @Tag("TDD")
         @DisplayName("should return sum of simulated values for axe weapon")
@@ -57,6 +59,7 @@ public class DiceTest {
     @DisplayName("Unit dice test")
     class UnitDiceTest {
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("hit dice should return max value")
         void hitDiceShouldReturnMaxValue(){
@@ -70,6 +73,7 @@ public class DiceTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("should return simulated value for hammer weapon")
         void shouldReturnSimulatedValueForHammerWeapon() {
@@ -82,6 +86,7 @@ public class DiceTest {
             verify(mockRandom, times(1)).nextInt(12);
         }
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("should return simulated value for sword weapon")
         void shouldReturnSimulatedValueForSwordWeapon() {
@@ -95,6 +100,7 @@ public class DiceTest {
         }
 
         @Test
+        @Tag("Functional")
         @Tag("Unit-test")
         @DisplayName("should return simulated value for dagger weapon")
         void shouldReturnSimulatedValueForDaggerWeapon() {
