@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import CharacterList from '../components/CharacterList'; 
 import { getAllCharacters } from '../services/characterApiService';
 import { useAuth } from '../contexts/AuthContext';
+import '../styles/CharacterListPage.css';
 
 function CharacterListPage() {
     const { logout } = useAuth();
@@ -38,7 +39,7 @@ function CharacterListPage() {
     return (
         <div className="character-list-page-container">
             <div className="page-header">
-                <h2>Meus Personagens Criados 🎲</h2>
+                <h2>Meus Personagens Criados</h2>
                 <Link to="/personagens/criar" className="nav-button create-new-char-button">
                     + Criar Novo Personagem
                 </Link>

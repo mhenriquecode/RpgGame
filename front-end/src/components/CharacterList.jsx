@@ -1,5 +1,6 @@
 import React, { useState } from 'react'; 
 import { deleteCharacter } from '../services/characterApiService';
+import '../styles/CharacterList.css';
 
 function CharacterList({ characters, isLoading, error, onCharacterDeleted }) {
     const [deletingId, setDeletingId] = useState(null); 
