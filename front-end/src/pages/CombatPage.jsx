@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getAllCharacters } from '../services/characterApiService';
 import { startFullCombat } from '../services/combatApiService'; 
 import { useAuth } from '../contexts/AuthContext';
+import '../styles/CombatPage.css';
 
 const playerActions = [
     { value: 1, label: 'Atacar' }
