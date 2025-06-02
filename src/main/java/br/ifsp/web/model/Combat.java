@@ -17,16 +17,24 @@ public class Combat {
     private RpgCharacter finalClone1;
     private RpgCharacter finalClone2;
 
-    private Random random = new Random();
+    private Random random;
 
+    // Construtor padrão (usado em produção)
     public Combat(RpgCharacter player1, ChooseAction actionStrategy1,
                   RpgCharacter player2, ChooseAction actionStrategy2) {
+        this(player1, actionStrategy1, player2, actionStrategy2, new Random());
+    }
+
+    // Construtor com Random injetado (útil para testes)
+    public Combat(RpgCharacter player1, ChooseAction actionStrategy1,
+                  RpgCharacter player2, ChooseAction actionStrategy2,
+                  Random random) {
         this.id = UUID.randomUUID();
         this.player1 = player1;
         this.player2 = player2;
         this.actionStrategy1 = actionStrategy1;
         this.actionStrategy2 = actionStrategy2;
-        this.random = new Random();
+        this.random = random;
     }
 
     public void startCombat(RpgCharacter player1, ChooseAction strategy1, RpgCharacter player2, ChooseAction strategy2) {
@@ -47,7 +55,8 @@ public class Combat {
     }
 
     private RpgCharacter executeCombat(RpgCharacter player1, ChooseAction strategy1, RpgCharacter player2, ChooseAction strategy2) {
-        RpgCharacter current = getFirstToPlay(player1, player2);
+        // Usa o Random injetado na construção
+        RpgCharacter current = getFirstToPlay(player1, player2, random);
         RpgCharacter opponent = current == player1 ? player2 : player1;
 
         while (player1.getHealth() > 0 && player2.getHealth() > 0) {
@@ -66,16 +75,6 @@ public class Combat {
         }
 
         return player1.getHealth() > 0 ? player1 : player2;
-    }
-
-    public RpgCharacter getFirstToPlay(RpgCharacter player1, RpgCharacter player2) {
-        if (player1.getSpeed() > player2.getSpeed()) {
-            return player1;
-        } else if (player2.getSpeed() > player1.getSpeed()) {
-            return player2;
-        } else {
-            return new Random().nextInt(2) == 0 ? player1 : player2;
-        }
     }
 
     public RpgCharacter getFirstToPlay(RpgCharacter player1, RpgCharacter player2, Random random) {
@@ -105,13 +104,14 @@ public class Combat {
     }
 
     public void setWinner(RpgCharacter winner) {
-        if(winner == null) throw new NullPointerException("winner cannot be null");
+        if (winner == null) throw new NullPointerException("winner cannot be null");
         this.winner = winner;
     }
 
     public RpgCharacter getFinalClone1() {
         return finalClone1;
     }
+
     public RpgCharacter getFinalClone2() {
         return finalClone2;
     }
@@ -119,7 +119,6 @@ public class Combat {
     public void setFinalClone1(RpgCharacter finalClone1) {
         this.finalClone1 = finalClone1;
     }
-
 
     public void setFinalClone2(RpgCharacter finalClone2) {
         this.finalClone2 = finalClone2;
