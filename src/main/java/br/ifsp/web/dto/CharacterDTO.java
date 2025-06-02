@@ -15,15 +15,25 @@ public record CharacterDTO (
         @NotBlank String name,
         @NotNull ClassType classType,
         @NotNull Race race,
-        @NotNull Weapon weapon)
-{
+        @NotNull Weapon weapon,
+        Integer maxHealth,
+        Integer strength,
+        Integer defense,
+        Integer speed,
+        Integer armor
+) {
     public static CharacterDTO from(RpgCharacter character) {
         return new CharacterDTO(
                 character.getId(),
                 character.getName(),
                 character.getClassType(),
                 character.getRace(),
-                character.getWeapon()
+                character.getWeapon(),
+                character.getMaxHealth(),
+                character.getStrength(),
+                character.getDefense(),
+                character.getSpeed(),
+                character.getArmor()
         );
     }
 
