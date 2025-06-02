@@ -20,7 +20,7 @@ function CharacterList({ characters, isLoading, error }) {
                 {characters.map((char) => (
                     <li key={char.id}>
                         <strong>{char.name}</strong> ({char.race}, {char.classType}) - Arma: {char.weapon}
-                        {/* <small>ID: {char.id}</small> */} {/* Descomente se quiser ver o ID */}
+                        {} {}
                     </li>
                 ))}
             </ul>

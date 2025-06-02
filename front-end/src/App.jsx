@@ -1,15 +1,18 @@
-import { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <h1>RpgGame</h1>
-      </div>
-    </>
-  )
+    return (
+        <div className="app-container">
+                <header className="app-header">
+                    <h1>⚔️ Simulador de Batalha RPG 🛡️</h1>
+                </header>
+                <main className="app-main">
+                </main>
+                <footer className="app-footer">
+                    <p>Desenvolvido por Matheus Souza e Pedro Candido</p>
+                </footer>  
+        </div>
+    );
 }
 
-export default App
+export default App;

@@ -38,10 +38,9 @@ function CharacterCreateForm({ onCharacterCreated }) {
         try {
             const newCharacter = await createCharacter(characterData);
             setSuccessMessage(`Personagem "${newCharacter.name}" criado com sucesso!`);
-            setName(''); // Limpa o campo nome
-            // Opcionalmente, resete os selects para o valor padrão ou deixe como está
+            setName(''); 
             if (onCharacterCreated) {
-                onCharacterCreated(newCharacter); // Chama a função de callback passada como prop
+                onCharacterCreated(newCharacter); 
             }
         } catch (err) {
             setError(err.response?.data?.message || err.message || 'Falha ao criar personagem. Tente novamente.');
