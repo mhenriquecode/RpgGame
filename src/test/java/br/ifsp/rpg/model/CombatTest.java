@@ -534,4 +534,39 @@ public class CombatTest {
             assertEquals(player1, combat.getWinner());
         }
     }
+
+    @Test
+    @Tag("Mutation")
+    @Tag("Unit-Test")
+    @DisplayName("startCombat returns current player as winner when opponent health drops to 0 or less")
+    void startCombatReturnsCurrentWhenOpponentHealthIsZeroOrLess() {
+        RpgCharacter player1 = mock(RpgCharacter.class);
+        RpgCharacter player2 = mock(RpgCharacter.class);
+        ChooseAction strategy1 = mock(ChooseAction.class);
+        ChooseAction strategy2 = mock(ChooseAction.class);
+        PlayerAction attackAction = mock(PlayerAction.class);
+
+        when(player1.getSpeed()).thenReturn(10);
+        when(player2.getSpeed()).thenReturn(5);
+
+        when(player1.getHealth()).thenReturn(10);
+        when(player2.getHealth()).thenReturn(10).thenReturn(0); // a segunda chamada simula o golpe fatal
+
+        when(player1.cloneForCombat()).thenReturn(player1);
+        when(player2.cloneForCombat()).thenReturn(player2);
+
+        when(strategy1.choose(any(), any())).thenReturn(attackAction);
+        when(strategy2.choose(any(), any())).thenReturn(attackAction);
+
+        // quando player1 ataca player2, player2 perde vida e chega a 0
+        doAnswer(invocation -> {
+            when(player2.getHealth()).thenReturn(0);
+            return null;
+        }).when(attackAction).execute(eq(player1), eq(player2));
+
+        Combat combat = new Combat(player1, strategy1, player2, strategy2);
+        combat.startCombat(player1, strategy1, player2, strategy2);
+
+        assertEquals(player1, combat.getWinner());
+    }
 }
