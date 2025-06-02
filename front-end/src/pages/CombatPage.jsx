@@ -178,18 +178,19 @@ function CombatPage() {
                     <p>🎉 O vencedor é: <strong>{combatResult.winnerName}</strong> (ID: {combatResult.winnerId}) 🎉</p>
                 </div>
             )}
+
+            <div className="combat-page-navigation"> 
+                <Link to="/historico-combates" className="nav-button history-button">
+                    Ver Histórico de Combates
+                </Link>
+                <Link to="/" className="nav-button secondary back-home-button"> 
+                    Voltar para a Tela Inicial
+                </Link>
+            </div>
             
             <Link to="/" className="back-home-button">
                 Voltar para a Tela Inicial
             </Link>
-
-            <div className="combat-explanation">
-                <h4>Nota sobre o Combate Atual:</h4>
-                <p>
-                    Nesta versão, o combate é simulado inteiramente no servidor com base na <strong>estratégia inicial</strong> escolhida para cada personagem.
-                    A interação turno a turno, onde você escolhe a ação a cada rodada, será uma próxima etapa de desenvolvimento e exigirá mudanças na forma como o backend processa o combate.
-                </p>
-            </div>
         </div>
     );
 }

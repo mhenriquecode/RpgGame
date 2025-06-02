@@ -8,6 +8,7 @@ import RegisterForm from './components/RegisterForm';
 import HomePage from './pages/HomePage';
 import CharacterManagementPage from './pages/CharacterManagementPage';
 import CombatPage from './pages/CombatPage';
+import CombatHistoryPage from './pages/CombatHistoryPage';
 
 function AppContent() {
     const { isAuthenticated, user, logout, isLoading: authIsLoading } = useAuth();
@@ -40,6 +41,7 @@ function AppContent() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/personagens" element={<CharacterManagementPage />} />
                 <Route path="/combate" element={<CombatPage />} />
+                <Route path="/historico-combates" element={<CombatHistoryPage />} /> {/* <-- Nova rota */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </>
