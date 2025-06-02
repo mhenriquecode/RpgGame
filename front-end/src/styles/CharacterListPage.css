@@ -142,3 +142,52 @@
 .nav-button.secondary:hover {
     background-color: #5a6268;
 }
+
+.search-controls-charlist {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaço entre input e botão de limpar */
+    margin-bottom: 25px; /* Espaço abaixo da barra de busca */
+    padding: 10px;
+    background-color: #ffffff; /* Fundo para a seção de busca */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: 1px solid #e0e6ed; /* Borda sutil */
+}
+
+.search-input-charlist {
+    flex-grow: 1; /* Input ocupa o máximo de espaço possível */
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input-charlist:focus {
+    border-color: #007bff; /* Destaque azul no foco */
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    outline: none;
+}
+
+.search-input-charlist:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+.clear-search-button-charlist {
+    background-color: #6c757d; /* Cinza */
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    white-space: nowrap; /* Para não quebrar o texto "Limpar" */
+}
+
+.clear-search-button-charlist:hover {
+    background-color: #5a6268;
+}
