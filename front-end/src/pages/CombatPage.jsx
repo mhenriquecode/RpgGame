@@ -59,11 +59,7 @@ function CombatPage() {
         if (!selectedPlayer1 || !selectedPlayer2) {
             setError("Selecione os dois personagens para o combate.");
             return;
-        }
-        if (selectedPlayer1 === selectedPlayer2) {
-            setError("Os personagens selecionados para o combate devem ser diferentes.");
-            return;
-        }
+        }   
 
         const combatRequest = {
             player1: selectedPlayer1,
