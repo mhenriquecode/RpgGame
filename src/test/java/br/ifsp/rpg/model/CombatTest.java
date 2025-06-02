@@ -17,6 +17,8 @@ import br.ifsp.web.repository.RpgCharacterEntity;
 import br.ifsp.web.service.CombatService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -600,6 +602,30 @@ public class CombatTest {
             verify(action2).execute(eq(player2), eq(player1));
 
             assertEquals(player2, combat.getWinner());
+        }
+
+        @Test
+        @Tag("Mutation")
+        @Tag("Unit-Test")
+        @DisplayName("Attacker wins if combat results in Draw/Loss")
+        void attackerWinsIfCombatResultsInDrawOrLoss() {
+            when(player1.getSpeed()).thenReturn(10);
+            when(player2.getSpeed()).thenReturn(5);
+
+            when(player1.getHealth()).thenReturn(10).thenReturn(0);
+            when(player2.getHealth()).thenReturn(10).thenReturn(0).thenReturn(0);
+
+            when(player1.cloneForCombat()).thenReturn(player1);
+            when(player2.cloneForCombat()).thenReturn(player2);
+
+            when(strategy1.choose(player1, player2)).thenReturn(action1);
+
+            doNothing().when(action1).execute(player1, player2);
+
+            Combat combat = new Combat(player1, strategy1, player2, strategy2);
+            combat.startCombat(player1, strategy1, player2, strategy2);
+
+            assertEquals(player1, combat.getWinner());
         }
     }
 }
