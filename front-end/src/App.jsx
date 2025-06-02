@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
-
 import HomePage from './pages/HomePage';
-import CharacterManagementPage from './pages/CharacterManagementPage';
+import CharacterCreatePage from './pages/CharacterCreatePage'; 
+import CharacterListPage from './pages/CharacterListPage';   
 import CombatPage from './pages/CombatPage';
 import CombatHistoryPage from './pages/CombatHistoryPage';
 
@@ -39,7 +38,10 @@ function AppContent() {
             </div>
             <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/personagens" element={<CharacterManagementPage />} />
+                <Route path="/personagens/criar" element={<CharacterCreatePage />} />
+                <Route path="/personagens/lista" element={<CharacterListPage />} />
+                {/* Redireciona /personagens para a lista como padrão, se alguém usar o link antigo */}
+                <Route path="/personagens" element={<Navigate to="/personagens/lista" replace />} />
                 <Route path="/combate" element={<CombatPage />} />
                 <Route path="/historico-combates" element={<CombatHistoryPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />

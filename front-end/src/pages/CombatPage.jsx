@@ -5,9 +5,7 @@ import { startFullCombat } from '../services/combatApiService';
 import { useAuth } from '../contexts/AuthContext';
 
 const playerActions = [
-    { value: 1, label: 'Atacar' },
-    { value: 2, label: 'Defender' },
-    { value: 3, label: 'Esquivar' },
+    { value: 1, label: 'Atacar' }
 ];
 
 function CombatPage() {
@@ -187,10 +185,6 @@ function CombatPage() {
                     Voltar para a Tela Inicial
                 </Link>
             </div>
-            
-            <Link to="/" className="back-home-button">
-                Voltar para a Tela Inicial
-            </Link>
         </div>
     );
 }
