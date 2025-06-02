@@ -16,7 +16,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class RpgCharacter {
-    private UUID id;
+    private final UUID id;
     private String name;
     private final ClassType classType;
     private final Race race;
@@ -42,7 +42,12 @@ public class RpgCharacter {
         this.classType = classType;
         this.race = race;
         this.weapon = weapon;
-        initializeAttributes();
+        this.maxHealth = 100 + race.getBonusHealth() + classType.getBonusHealth();
+        this.health = maxHealth;
+        this.strength = 10 + race.getBonusStrength() + classType.getBonusStrength();
+        this.defense = 5 + race.getBonusDefense() + classType.getBonusDefense();
+        this.speed = 4 + race.getBonusSpeed() + classType.getBonusSpeed();
+        this.armor = 10;
         this.attackDice = new RollAttackDice(this.weapon);
         this.hitDice = new RollHitDice();
         this.specialEffect = chooseSpecialEffect(classType);
@@ -69,16 +74,6 @@ public class RpgCharacter {
         clone.setArmor(this.getArmor());
         return clone;
     }
-
-    public void initializeAttributes() {
-        this.maxHealth = 100 + race.getBonusHealth() + classType.getBonusHealth();
-        this.health = maxHealth;
-        this.strength = 10 + race.getBonusStrength() + classType.getBonusStrength();
-        this.defense = 5 + race.getBonusDefense() + classType.getBonusDefense();
-        this.speed = 4 + race.getBonusSpeed() + classType.getBonusSpeed();
-        this.armor = 10;
-    }
-
 
     private SpecialEffect chooseSpecialEffect(ClassType classType){
         return switch (classType){

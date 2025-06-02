@@ -18,6 +18,7 @@ public class RollHitDice implements DiceRoll {
 
     @Override
     public int roll() {
-        return random.nextInt(20) + 1;
+        int total = random.nextInt(20) + 1;
+        return total;
     }
 }
