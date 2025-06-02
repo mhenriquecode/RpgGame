@@ -485,6 +485,20 @@ public class RpgCharacterTest {
                 assertThat(c2.getSpeed()).isEqualTo(4 + 0 + 0);         // 4
                 assertThat(c2.getArmor()).isEqualTo(10);                // base
             }
+            @Test
+            @Tag("Unit-test")
+            @Tag("Mutation")
+            @DisplayName("should Set Health To Exact Max When Health Plus Damage Equals Max")
+            void shouldSetHealthToExactMaxWhenHealthPlusDamageEqualsMax() {
+                RpgCharacter character = new RpgCharacter("Paladino", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
+                character.setHealth(100); // maxHealth = 115
+
+                SpecialEffectPaladin effect = new SpecialEffectPaladin();
+                int returned = effect.applyEffect(character, 15); // 100 + 15 == 115 (exatamente igual)
+
+                assertThat(character.getHealth()).isEqualTo(115);
+                assertThat(returned).isEqualTo(15);
+            }
 
 
         }
