@@ -303,5 +303,27 @@ public class TurnTest {
             assertThat(log).contains("Turno de Atacante contra Defensor");
             assertThat(log).contains("Errou o ataque (rolagem de acerto: 5, necessário: 10)");
         }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Turn Log Should Never Return Null")
+        void getTurnLogShouldNeverReturnNull() {
+            ChooseAction action = mock(ChooseAction.class);
+            when(current.getName()).thenReturn("Atacante");
+            when(opponent.getName()).thenReturn("Defensor");
+
+            RollHitDice hitDice = mock(RollHitDice.class);
+            when(current.getHitDice()).thenReturn(hitDice);
+            when(hitDice.getLastRoll()).thenReturn(1);
+
+            when(opponent.getArmor()).thenReturn(10);
+
+            Turn turn = new Turn(current, opponent, action);
+
+            TurnLogDTO logDTO = turn.getTurnLog();
+
+            assertThat(logDTO).isNotNull();
+            assertThat(logDTO.actionDescription()).isNotNull();
+        }
     }
 }
