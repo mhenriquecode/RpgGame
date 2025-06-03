@@ -672,5 +672,23 @@ public class CombatTest {
 
             assertEquals(player1, combat.getWinner());
         }
+        @Test
+        @Tag("Mutation")
+        @Tag("Unit-Test")
+        @DisplayName("Should Contain Entries After Combat")
+        void ShouldContainEntriesAfterCombat() {
+            RpgCharacter p1 = new RpgCharacter("Hero", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD);
+            RpgCharacter p2 = new RpgCharacter("Monster", ClassType.BERSERK, Race.ORC, Weapon.DAGGER);
+
+            ChooseAction strategy = (attacker, defender) -> new AttackAction();
+
+            Combat combat = new Combat(p1, strategy, p2, strategy);
+            combat.startCombat(p1, strategy, p2, strategy);
+
+            List<TurnLogDTO> logs = combat.getTurnLogs();
+
+            assertThat(logs).isNotNull();
+            assertThat(logs).isNotEmpty();
+        }
     }
 }
