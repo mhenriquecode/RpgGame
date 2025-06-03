@@ -145,6 +145,24 @@ public class DiceTest {
 
             assertThat(rollAttackDice.getWeapon()).isEqualTo(Weapon.DAGGER);
         }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Roll Should Return Sum Of Dice Rolls And Set Last Roll")
+        void rollShouldReturnSumOfDiceRollsAndSetLastRoll() {
+            when(mockRandom.nextInt(anyInt())).thenReturn(2);
+
+            RollAttackDice rollAttackDice = new RollAttackDice(Weapon.AXE, mockRandom);
+            int expectedRolls = Weapon.AXE.getDice();
+            int expectedSides = Weapon.AXE.getSides();
+            int rollResult = rollAttackDice.roll();
+            int expectedTotal = expectedRolls * 3;
+
+            assertThat(rollResult).isEqualTo(expectedTotal);
+            assertThat(rollAttackDice.getLastRoll()).isEqualTo(expectedTotal);
+
+            verify(mockRandom, times(expectedRolls)).nextInt(expectedSides);
+        }
     }
 
 
