@@ -1,6 +1,9 @@
 package br.ifsp.rpg.model;
 
+import br.ifsp.web.dto.TurnLogDTO;
 import br.ifsp.web.interfaces.ChooseAction;
+import br.ifsp.web.interfaces.PlayerAction;
+import br.ifsp.web.interfaces.SpecialEffect;
 import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.Turn;
 import br.ifsp.web.model.dice.RollAttackDice;
@@ -11,18 +14,27 @@ import br.ifsp.web.model.enums.Weapon;
 import br.ifsp.rpg.stubs.DodgeStub;
 import br.ifsp.rpg.stubs.AttackStub;
 import br.ifsp.rpg.stubs.DefendingStub;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import br.ifsp.web.model.specialEffects.SpecialEffectBerserk;
+import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TurnTest {
 
+    RpgCharacter current;
+    RpgCharacter opponent;
+    RollHitDice hitDice;
+    RollAttackDice attackDice;
+
+    @BeforeEach
+    void setup() {
+        current = mock(RpgCharacter.class);
+        opponent = mock(RpgCharacter.class);
+        hitDice = mock(RollHitDice.class);
+        attackDice = mock(RollAttackDice.class);
+    }
     @Nested
     @DisplayName("TDD turn tests")
     class TddTurnTests {
@@ -249,6 +261,150 @@ public class TurnTest {
             new Turn(character, opponent, dodgeChoose).execute();
 
             assertEquals(18, character.getArmor());
+        }
+    }
+    @Nested
+    @DisplayName("Mutation Turn test")
+    class MutationTurn {
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Execute Should Call On New Turn Start And Action Execute")
+        void executeShouldCallOnNewTurnStartAndActionExecute() {
+            ChooseAction chooseAction = mock(ChooseAction.class);
+            PlayerAction action = mock(PlayerAction.class);
+
+            when(chooseAction.choose(current, opponent)).thenReturn(action);
+
+            Turn turn = new Turn(current, opponent, chooseAction);
+
+            turn.execute();
+
+            verify(current, times(1)).onNewTurnStart();
+            verify(action, times(1)).execute(current, opponent);
+        }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Turn Log Should Log Attack Miss")
+        void getTurnLogShouldLogAttackMiss() {
+            when(current.getName()).thenReturn("Atacante");
+            when(opponent.getName()).thenReturn("Defensor");
+
+            when(current.getHitDice()).thenReturn(hitDice);
+            when(hitDice.getLastRoll()).thenReturn(5);
+            when(opponent.getArmor()).thenReturn(10);
+
+            Turn turn = new Turn(current, opponent, (c, o) -> mock(PlayerAction.class));
+
+            TurnLogDTO logDTO = turn.getTurnLog();
+            String log = logDTO.actionDescription();
+
+            assertThat(log).contains("Turno de Atacante contra Defensor");
+            assertThat(log).contains("Errou o ataque (rolagem de acerto: 5, necessário: 10)");
+        }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Turn Log Should Never Return Null")
+        void getTurnLogShouldNeverReturnNull() {
+            ChooseAction action = mock(ChooseAction.class);
+            when(current.getName()).thenReturn("Atacante");
+            when(opponent.getName()).thenReturn("Defensor");
+
+            RollHitDice hitDice = mock(RollHitDice.class);
+            when(current.getHitDice()).thenReturn(hitDice);
+            when(hitDice.getLastRoll()).thenReturn(1);
+
+            when(opponent.getArmor()).thenReturn(10);
+
+            Turn turn = new Turn(current, opponent, action);
+
+            TurnLogDTO logDTO = turn.getTurnLog();
+
+            assertThat(logDTO).isNotNull();
+            assertThat(logDTO.actionDescription()).isNotNull();
+        }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Turn Log Should Log Attack Hit With Special Effect")
+        void getTurnLogShouldLogAttackHitWithSpecialEffect() {
+            when(current.getName()).thenReturn("Atacante");
+            when(opponent.getName()).thenReturn("Defensor");
+
+            when(current.getHitDice()).thenReturn(hitDice);
+            when(current.getAttackDice()).thenReturn(attackDice);
+
+            when(hitDice.getLastRoll()).thenReturn(15);
+            when(opponent.getArmor()).thenReturn(10);
+            when(attackDice.getLastRoll()).thenReturn(7);
+
+            when(current.wasLastSpecialEffectUsed()).thenReturn(true);
+
+            SpecialEffectBerserk specialEffect = new SpecialEffectBerserk();
+            when(current.getSpecialEffect()).thenReturn(specialEffect);
+
+            Turn turn = new Turn(current, opponent, (c, o) -> mock(PlayerAction.class));
+
+            TurnLogDTO logDTO = turn.getTurnLog();
+            String log = logDTO.actionDescription();
+
+            assertThat(log).contains("Turno de Atacante contra Defensor");
+            assertThat(log).contains("Acertou o ataque! Dano causado: 7");
+            assertThat(log).contains("Efeito especial");
+        }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Turn Log Should Log Attack Hit When Hit Roll Equals Threshold")
+        void getTurnLogShouldLogAttackHitWhenHitRollEqualsThreshold() {
+            when(current.getName()).thenReturn("Atacante");
+            when(opponent.getName()).thenReturn("Defensor");
+
+            when(current.getHitDice()).thenReturn(hitDice);
+            when(current.getAttackDice()).thenReturn(attackDice);
+
+            int hitThreshold = 10;
+            when(opponent.getArmor()).thenReturn(hitThreshold);
+
+            // Caso hitRoll exatamente igual ao hitThreshold
+            when(hitDice.getLastRoll()).thenReturn(hitThreshold);
+            when(attackDice.getLastRoll()).thenReturn(5);
+
+            when(current.wasLastSpecialEffectUsed()).thenReturn(false);
+            when(current.getSpecialEffect()).thenReturn(new SpecialEffectBerserk());
+
+            Turn turn = new Turn(current, opponent, (c, o) -> mock(PlayerAction.class));
+
+            TurnLogDTO logDTO = turn.getTurnLog();
+            String log = logDTO.actionDescription();
+
+            assertThat(log).contains("Acertou o ataque! Dano causado: 5");
+        }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Turn Log Should Log Attack Miss When Hit Roll Just Below Threshold")
+        void getTurnLogShouldLogAttackMissWhenHitRollJustBelowThreshold() {
+            when(current.getName()).thenReturn("Atacante");
+            when(opponent.getName()).thenReturn("Defensor");
+
+            when(current.getHitDice()).thenReturn(hitDice);
+            when(current.getAttackDice()).thenReturn(attackDice);
+
+            int hitThreshold = 10;
+            when(opponent.getArmor()).thenReturn(hitThreshold);
+
+            // Caso hitRoll um ponto abaixo do hitThreshold
+            when(hitDice.getLastRoll()).thenReturn(hitThreshold - 1);
+
+            Turn turn = new Turn(current, opponent, (c, o) -> mock(PlayerAction.class));
+
+            TurnLogDTO logDTO = turn.getTurnLog();
+            String log = logDTO.actionDescription();
+
+            assertThat(log).contains("Errou o ataque");
         }
     }
 }

@@ -133,5 +133,66 @@ public class DiceTest {
             verifyNoInteractions(mockRandom);
         }
     }
+    @Nested
+    @DisplayName("Mutation Dice test")
+    class MutationDiceTest {
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Weapon Should Return The Weapon")
+        void getWeaponShouldReturnTheWeapon() {
+            RollAttackDice rollAttackDice = new RollAttackDice(Weapon.DAGGER);
+
+            assertThat(rollAttackDice.getWeapon()).isEqualTo(Weapon.DAGGER);
+        }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Roll Should Return Sum Of Dice Rolls And Set Last Roll")
+        void rollShouldReturnSumOfDiceRollsAndSetLastRoll() {
+            when(mockRandom.nextInt(anyInt())).thenReturn(2);
+
+            RollAttackDice rollAttackDice = new RollAttackDice(Weapon.AXE, mockRandom);
+            int expectedRolls = Weapon.AXE.getDice();
+            int expectedSides = Weapon.AXE.getSides();
+            int rollResult = rollAttackDice.roll();
+            int expectedTotal = expectedRolls * 3;
+
+            assertThat(rollResult).isEqualTo(expectedTotal);
+            assertThat(rollAttackDice.getLastRoll()).isEqualTo(expectedTotal);
+
+            verify(mockRandom, times(expectedRolls)).nextInt(expectedSides);
+        }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Last Roll Should Return LastRoll Value")
+        void getLastRollShouldReturnLastRollValue() {
+            RollAttackDice rollAttackDice = new RollAttackDice(Weapon.SWORD);
+
+            int lastRollBefore = rollAttackDice.getLastRoll();
+            assertThat(lastRollBefore).isEqualTo(0);
+            int roll = rollAttackDice.roll();
+
+            int lastRollAfter = rollAttackDice.getLastRoll();
+            assertThat(lastRollAfter).isEqualTo(roll);
+        }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Last Roll Should Return LastRoll After Roll")
+        void getLastRollShouldReturnLastRollValueAfterRoll() {
+            RollHitDice rollHitDice = new RollHitDice();
+
+            int lastBefore = rollHitDice.getLastRoll();
+            assertThat(lastBefore).isEqualTo(0);
+
+            int roll = rollHitDice.roll();
+
+            int lastAfter = rollHitDice.getLastRoll();
+            assertThat(lastAfter).isEqualTo(roll);
+        }
+    }
+
 
 }

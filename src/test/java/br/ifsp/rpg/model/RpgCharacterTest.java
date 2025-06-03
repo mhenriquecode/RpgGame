@@ -2,20 +2,14 @@ package br.ifsp.rpg.model;
 
 import br.ifsp.web.interfaces.SpecialEffect;
 import br.ifsp.web.model.RpgCharacter;
-import br.ifsp.web.model.actions.AttackAction;
 import br.ifsp.web.model.dice.RollAttackDice;
 import br.ifsp.web.model.dice.RollHitDice;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
-import br.ifsp.web.model.specialEffects.SpecialEffectBerserk;
 import br.ifsp.web.model.specialEffects.SpecialEffectPaladin;
-import br.ifsp.web.model.specialEffects.SpecialEffectWarrior;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import java.util.Random;
 
@@ -516,6 +510,49 @@ public class RpgCharacterTest {
 
                 assertThat(character.getHealth()).isEqualTo(115);
                 assertThat(returned).isEqualTo(15);
+            }
+            @Test
+            @Tag("Mutation")
+            @DisplayName("Was Last Special Effect UsedShould Return True When Special Effect Applied")
+            void wasLastSpecialEffectUsedShouldReturnTrueWhenSpecialEffectApplied() {
+                RollHitDice hitDiceMock = mock(RollHitDice.class);
+                RollAttackDice attackDiceMock = mock(RollAttackDice.class);
+
+                when(hitDiceMock.roll()).thenReturn(20);
+                when(attackDiceMock.roll()).thenReturn(10);
+
+                RpgCharacter attacker = new RpgCharacter("Atacante", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER, hitDiceMock, attackDiceMock);
+
+
+                when(mockRandom.nextInt(100)).thenReturn(5);
+                attacker.setRandom(mockRandom);
+                int damage = attacker.attack();
+
+                assertThat(attacker.wasLastSpecialEffectUsed()).isTrue();
+                assertThat(damage).isGreaterThanOrEqualTo(attacker.getStrength());
+
+                verify(attackDiceMock, atLeastOnce()).roll();
+            }
+            @Test
+            @Tag("Mutation")
+            @DisplayName("Was Last Special Effect UsedShould Return False When Special Effect Not Applied")
+            void wasLastSpecialEffectUsedShouldReturnFalseWhenSpecialEffectNotApplied() {
+                RollHitDice hitDiceMock = mock(RollHitDice.class);
+                RollAttackDice attackDiceMock = mock(RollAttackDice.class);
+
+                when(hitDiceMock.roll()).thenReturn(20);
+                when(attackDiceMock.roll()).thenReturn(10);
+
+                RpgCharacter attacker = new RpgCharacter("Atacante", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER, hitDiceMock, attackDiceMock);
+
+                when(mockRandom.nextInt(100)).thenReturn(50);
+                attacker.setRandom(mockRandom);
+                int damage = attacker.attack();
+
+                assertThat(attacker.wasLastSpecialEffectUsed()).isFalse();
+                assertThat(damage).isEqualTo(attacker.getStrength() + 10);
+
+                verify(attackDiceMock, atLeastOnce()).roll();
             }
         }
     }
