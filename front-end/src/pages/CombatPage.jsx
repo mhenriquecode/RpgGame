@@ -1,9 +1,10 @@
+// src/pages/CombatPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { getAllCharacters } from '../services/characterApiService';
 import { startFullCombat } from '../services/combatApiService';
 import { useAuth } from '../contexts/AuthContext';
-
+import '../styles/CombatPage.css';
 
 const playerActions = [
     { value: 1, label: 'Atacar' }
@@ -20,12 +21,12 @@ function CombatPage() {
     const [selectedPlayer2Id, setSelectedPlayer2Id] = useState('');
     const [strategyPlayer2, setStrategyPlayer2] = useState(playerActions[0]?.value || 1);
 
-    const [isStartingCombat, setIsStartingCombat] = useState(false); // Para o loading do botão de iniciar
-    const [combatData, setCombatData] = useState(null); // Armazenará o CombatResultDTO completo
+    const [isStartingCombat, setIsStartingCombat] = useState(false);
+    const [combatData, setCombatData] = useState(null);
 
-    const [displayedLogLines, setDisplayedLogLines] = useState([]); // Linhas de log a serem exibidas na tela
-    const [currentLogLineIndex, setCurrentLogLineIndex] = useState(0); // Índice para o "replay"
-    const [isReplaying, setIsReplaying] = useState(false); // Controla se o replay está ativo
+    const [displayedLogLines, setDisplayedLogLines] = useState([]);
+    const [currentLogLineIndex, setCurrentLogLineIndex] = useState(0);
+    const [isReplaying, setIsReplaying] = useState(false);
 
     const fetchCharactersForCombat = useCallback(async () => {
         setIsLoadingCharacters(true);
@@ -34,9 +35,12 @@ function CombatPage() {
             const data = await getAllCharacters();
             setCharacters(data);
             if (data.length > 0) {
-                setSelectedPlayer1Id(data[0].id);
+                const p1Id = data[0].id;
+                setSelectedPlayer1Id(p1Id);
                 if (data.length > 1) {
-                    setSelectedPlayer2Id(data[1].id);
+                    // Garante que p2 não seja igual a p1 inicialmente
+                    const p2Option = data.find(char => char.id !== p1Id);
+                    setSelectedPlayer2Id(p2Option ? p2Option.id : '');
                 } else {
                     setSelectedPlayer2Id('');
                 }
@@ -55,6 +59,28 @@ function CombatPage() {
         fetchCharactersForCombat();
     }, [fetchCharactersForCombat]);
 
+    const handlePlayer1Change = (newPlayer1Id) => {
+        setSelectedPlayer1Id(newPlayer1Id);
+        setCombatData(null);
+        setError(null);
+        setDisplayedLogLines([]);
+        setIsReplaying(false);
+
+        if (newPlayer1Id === selectedPlayer2Id && characters.length > 1) {
+            const otherOptions = characters.filter(char => char.id !== newPlayer1Id);
+            setSelectedPlayer2Id(otherOptions.length > 0 ? otherOptions[0].id : '');
+        }
+    };
+
+    const handlePlayer2Change = (newPlayer2Id) => {
+        setSelectedPlayer2Id(newPlayer2Id);
+        setCombatData(null);
+        setError(null);
+        setDisplayedLogLines([]);
+        setIsReplaying(false);
+    };
+    
+    // ... (handleStartCombat e useEffect para replay como antes) ...
     const handleStartCombat = async (event) => {
         event.preventDefault();
         setError(null);
@@ -81,10 +107,10 @@ function CombatPage() {
 
         setIsStartingCombat(true);
         try {
-            const result = await startFullCombat(combatRequest); // result é CombatResultDTO
+            const result = await startFullCombat(combatRequest);
             setCombatData(result);
             if (result && result.turnLogs && Array.isArray(result.turnLogs) && result.turnLogs.length > 0) {
-                setIsReplaying(true); // Inicia o processo de replay
+                setIsReplaying(true);
             } else {
                 setError(result ? 'O combate não retornou logs de turno para exibir.' : 'O combate não retornou um resultado válido.');
             }
@@ -113,10 +139,15 @@ function CombatPage() {
         }
     }, [isReplaying, combatData, currentLogLineIndex]);
 
+
     const getCharacterDetailsById = (id) => characters.find(char => char.id === id);
     const player1Details = selectedPlayer1Id ? getCharacterDetailsById(selectedPlayer1Id) : null;
     const player2Details = selectedPlayer2Id ? getCharacterDetailsById(selectedPlayer2Id) : null;
-    const availablePlayer2Options = characters.filter(char => char.id !== selectedPlayer1Id);
+    
+    // Recalcula availablePlayer2Options dentro do render ou useMemo se 'characters' ou 'selectedPlayer1Id' mudarem
+    const availablePlayer2Options = React.useMemo(() => {
+        return characters.filter(char => char.id !== selectedPlayer1Id);
+    }, [characters, selectedPlayer1Id]);
 
     const renderCharacterAttributes = (character, playerLabel) => {
         if (!character) {
@@ -170,7 +201,7 @@ function CombatPage() {
                                 <div className="combatant-selector">
                                     <label htmlFor="player1">Selecionar Jogador 1:</label>
                                     <select id="player1" value={selectedPlayer1Id} 
-                                            onChange={(e) => { setSelectedPlayer1Id(e.target.value); setCombatData(null); setError(null); setDisplayedLogLines([]); setIsReplaying(false);}} 
+                                            onChange={(e) => handlePlayer1Change(e.target.value)} 
                                             disabled={isLoadingCharacters || isStartingCombat}>
                                         <option value="" disabled>Escolha...</option>
                                         {characters.map(char => (<option key={char.id} value={char.id}>{char.name} ({char.classType})</option>))}
@@ -183,7 +214,7 @@ function CombatPage() {
                                 <div className="combatant-selector">
                                     <label htmlFor="player2">Selecionar Jogador 2:</label>
                                     <select id="player2" value={selectedPlayer2Id} 
-                                            onChange={(e) => { setSelectedPlayer2Id(e.target.value); setCombatData(null); setError(null); setDisplayedLogLines([]); setIsReplaying(false);}} 
+                                            onChange={(e) => handlePlayer2Change(e.target.value)} 
                                             disabled={isLoadingCharacters || isStartingCombat || (characters.length > 1 && !selectedPlayer1Id) || availablePlayer2Options.length === 0}>
                                         <option value="" disabled>Escolha...</option>
                                         {availablePlayer2Options.map(char => (<option key={char.id} value={char.id}>{char.name} ({char.classType})</option>))}

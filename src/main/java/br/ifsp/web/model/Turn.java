@@ -37,7 +37,7 @@ public class Turn {
 
             // Verifica se o efeito especial foi aplicado
             if (current.wasLastSpecialEffectUsed()) {
-                log.append("  ✦ Efeito especial ").append(current.getSpecialEffect().getClass().getSimpleName()).append(" ativado!\n");
+                log.append("✦ Efeito especial ").append(current.getClassType()).append(" ativado!\n");
             }
 
 
