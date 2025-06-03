@@ -382,5 +382,29 @@ public class TurnTest {
 
             assertThat(log).contains("Acertou o ataque! Dano causado: 5");
         }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Turn Log Should Log Attack Miss When Hit Roll Just Below Threshold")
+        void getTurnLogShouldLogAttackMissWhenHitRollJustBelowThreshold() {
+            when(current.getName()).thenReturn("Atacante");
+            when(opponent.getName()).thenReturn("Defensor");
+
+            when(current.getHitDice()).thenReturn(hitDice);
+            when(current.getAttackDice()).thenReturn(attackDice);
+
+            int hitThreshold = 10;
+            when(opponent.getArmor()).thenReturn(hitThreshold);
+
+            // Caso hitRoll um ponto abaixo do hitThreshold
+            when(hitDice.getLastRoll()).thenReturn(hitThreshold - 1);
+
+            Turn turn = new Turn(current, opponent, (c, o) -> mock(PlayerAction.class));
+
+            TurnLogDTO logDTO = turn.getTurnLog();
+            String log = logDTO.actionDescription();
+
+            assertThat(log).contains("Errou o ataque");
+        }
     }
 }
