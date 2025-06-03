@@ -354,5 +354,33 @@ public class TurnTest {
             assertThat(log).contains("Acertou o ataque! Dano causado: 7");
             assertThat(log).contains("Efeito especial");
         }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Turn Log Should Log Attack Hit When Hit Roll Equals Threshold")
+        void getTurnLogShouldLogAttackHitWhenHitRollEqualsThreshold() {
+            when(current.getName()).thenReturn("Atacante");
+            when(opponent.getName()).thenReturn("Defensor");
+
+            when(current.getHitDice()).thenReturn(hitDice);
+            when(current.getAttackDice()).thenReturn(attackDice);
+
+            int hitThreshold = 10;
+            when(opponent.getArmor()).thenReturn(hitThreshold);
+
+            // Caso hitRoll exatamente igual ao hitThreshold
+            when(hitDice.getLastRoll()).thenReturn(hitThreshold);
+            when(attackDice.getLastRoll()).thenReturn(5);
+
+            when(current.wasLastSpecialEffectUsed()).thenReturn(false);
+            when(current.getSpecialEffect()).thenReturn(new SpecialEffectBerserk());
+
+            Turn turn = new Turn(current, opponent, (c, o) -> mock(PlayerAction.class));
+
+            TurnLogDTO logDTO = turn.getTurnLog();
+            String log = logDTO.actionDescription();
+
+            assertThat(log).contains("Acertou o ataque! Dano causado: 5");
+        }
     }
 }
