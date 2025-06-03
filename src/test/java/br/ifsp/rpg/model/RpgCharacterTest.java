@@ -7,7 +7,10 @@ import br.ifsp.web.model.dice.RollHitDice;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
+import br.ifsp.web.model.specialEffects.SpecialEffectBerserk;
+import br.ifsp.web.model.specialEffects.SpecialEffectDuelist;
 import br.ifsp.web.model.specialEffects.SpecialEffectPaladin;
+import br.ifsp.web.model.specialEffects.SpecialEffectWarrior;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 
@@ -16,6 +19,7 @@ import java.util.Random;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.*;
 
 public class RpgCharacterTest {
@@ -512,6 +516,7 @@ public class RpgCharacterTest {
                 assertThat(returned).isEqualTo(15);
             }
             @Test
+            @Tag("Unit-test")
             @Tag("Mutation")
             @DisplayName("Was Last Special Effect UsedShould Return True When Special Effect Applied")
             void wasLastSpecialEffectUsedShouldReturnTrueWhenSpecialEffectApplied() {
@@ -534,6 +539,7 @@ public class RpgCharacterTest {
                 verify(attackDiceMock, atLeastOnce()).roll();
             }
             @Test
+            @Tag("Unit-test")
             @Tag("Mutation")
             @DisplayName("Was Last Special Effect UsedShould Return False When Special Effect Not Applied")
             void wasLastSpecialEffectUsedShouldReturnFalseWhenSpecialEffectNotApplied() {
@@ -554,6 +560,24 @@ public class RpgCharacterTest {
 
                 verify(attackDiceMock, atLeastOnce()).roll();
             }
+            @Test
+            @Tag("Unit-test")
+            @Tag("Mutation")
+            @DisplayName("Should Return The Correct Instance Based On ClassType")
+            void shouldReturnTheCorrectInstanceBasedOnClassType() {
+                RpgCharacter berserk = new RpgCharacter("Berserk", ClassType.BERSERK, Race.ORC, Weapon.AXE);
+                assertInstanceOf(SpecialEffectBerserk.class, berserk.getSpecialEffect());
+
+                RpgCharacter duelist = new RpgCharacter("Duelist", ClassType.DUELIST, Race.ELF, Weapon.DAGGER);
+                assertInstanceOf(SpecialEffectDuelist.class, duelist.getSpecialEffect());
+
+                RpgCharacter paladin = new RpgCharacter("Paladin", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
+                assertInstanceOf(SpecialEffectPaladin.class, paladin.getSpecialEffect());
+
+                RpgCharacter warrior = new RpgCharacter("Warrior", ClassType.WARRIOR, Race.DWARF, Weapon.HAMMER);
+                assertInstanceOf(SpecialEffectWarrior.class, warrior.getSpecialEffect());
+            }
+
         }
     }
 }
