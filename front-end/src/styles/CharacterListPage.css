@@ -112,9 +112,6 @@
     padding-top: 25px;
     border-top: 1px solid #e0e6ed;
     width: 100%; 
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
 }
 
 .nav-button {

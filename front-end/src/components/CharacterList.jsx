@@ -44,16 +44,16 @@ function CharacterList({ characters, isLoading, error, onCharacterDeleted }) {
             <ul>
                 {characters.map((char) => (
                     <li key={char.id} className="character-item">
-                        <div className="character-details"> {/* Wrapper para info principal e atributos */}
+                        <div className="character-details">
                             <div className="character-main-info">
                                 <strong>{char.name}</strong> ({char.race}, {char.classType}) - Arma: {char.weapon}
                             </div>
                             <div className="character-attributes">
-                                <span>HP: {char.maxHealth ?? 'N/A'}</span>
-                                <span>Força: {char.strength ?? 'N/A'}</span>
-                                <span>Defesa: {char.defense ?? 'N/A'}</span>
-                                <span>Vel: {char.speed ?? 'N/A'}</span>
-                                <span>Arm: {char.armor ?? 'N/A'}</span>
+                                <span className='character-hp'>HP: {char.maxHealth ?? 'N/A'}</span>
+                                <span className='character-strenght'>Força: {char.strength ?? 'N/A'}</span>
+                                <span className='character-defense'>Defesa: {char.defense ?? 'N/A'}</span>
+                                <span className='character-speed'>Vel: {char.speed ?? 'N/A'}</span>
+                                <span className='character-armor'>Arm: {char.armor ?? 'N/A'}</span>
                             </div>
                         </div>
                         <button
