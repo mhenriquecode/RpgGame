@@ -163,6 +163,21 @@ public class DiceTest {
 
             verify(mockRandom, times(expectedRolls)).nextInt(expectedSides);
         }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Last Roll Should Return LastRoll Value")
+        void getLastRollShouldReturnLastRollValue() {
+            RollAttackDice rollAttackDice = new RollAttackDice(Weapon.SWORD);
+
+            int lastRollBefore = rollAttackDice.getLastRoll();
+            assertThat(lastRollBefore).isEqualTo(0);
+            int roll = rollAttackDice.roll();
+
+            int lastRollAfter = rollAttackDice.getLastRoll();
+            assertThat(lastRollAfter).isEqualTo(roll);
+        }
+
     }
 
 
