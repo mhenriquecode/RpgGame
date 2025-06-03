@@ -41,7 +41,6 @@ function AppContent() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/personagens/criar" element={<CharacterCreatePage />} />
                 <Route path="/personagens/lista" element={<CharacterListPage />} />
-                {/* Redireciona /personagens para a lista como padrão, se alguém usar o link antigo */}
                 <Route path="/personagens" element={<Navigate to="/personagens/lista" replace />} />
                 <Route path="/combate" element={<CombatPage />} />
                 <Route path="/historico-combates" element={<CombatHistoryPage />} />
