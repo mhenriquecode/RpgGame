@@ -1,7 +1,10 @@
 package br.ifsp.web.model;
 
+import br.ifsp.web.dto.TurnLogDTO;
 import br.ifsp.web.interfaces.ChooseAction;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -16,7 +19,7 @@ public class Combat {
 
     private RpgCharacter finalClone1;
     private RpgCharacter finalClone2;
-
+    List<TurnLogDTO> turnLogs = new ArrayList<>();
     private Random random;
 
     // Construtor padrão (usado em produção)
@@ -65,6 +68,9 @@ public class Combat {
             Turn turn = new Turn(current, opponent, currentStrategy);
             turn.execute();
 
+            TurnLogDTO log = turn.getTurnLog();
+            turnLogs.add(log);
+
             if (opponent.getHealth() <= 0) {
                 return current;
             }
@@ -106,6 +112,10 @@ public class Combat {
     public void setWinner(RpgCharacter winner) {
         if (winner == null) throw new NullPointerException("winner cannot be null");
         this.winner = winner;
+    }
+
+    public List<TurnLogDTO> getTurnLogs() {
+        return turnLogs;
     }
 
     public RpgCharacter getFinalClone1() {
