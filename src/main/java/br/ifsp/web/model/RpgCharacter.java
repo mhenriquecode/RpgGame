@@ -35,6 +35,7 @@ public class RpgCharacter {
     private RollHitDice hitDice;
     private Random random;
     private SpecialEffect specialEffect;
+    private boolean lastSpecialEffectUsed = false;
 
     public RpgCharacter(String name, ClassType classType, Race race, Weapon weapon) {
         this.id = UUID.randomUUID();
@@ -86,9 +87,11 @@ public class RpgCharacter {
 
     public int attack() {
         int attackDamage = strength + attackDice.roll();
+        lastSpecialEffectUsed = false;
 
         if(random.nextInt(100) + 1 <= 10) {
             attackDamage = specialEffect.applyEffect(this, attackDamage);
+            lastSpecialEffectUsed = true;
         }
 
         return attackDamage;
@@ -119,6 +122,9 @@ public class RpgCharacter {
         health -= finalDamage;
         defending = false;
     }
+    public boolean wasLastSpecialEffectUsed() {
+        return lastSpecialEffectUsed;
+    }
 
     public UUID getId() {
         return id;
@@ -132,6 +138,19 @@ public class RpgCharacter {
         if(name == null) throw new NullPointerException("Name cannot be null");
         this.name = name;
     }
+
+    public SpecialEffect getSpecialEffect() {
+        return specialEffect;
+    }
+
+    public RollAttackDice getAttackDice() {
+        return attackDice;
+    }
+
+    public RollHitDice getHitDice() {
+        return hitDice;
+    }
+
 
     public ClassType getClassType() {
         return classType;
