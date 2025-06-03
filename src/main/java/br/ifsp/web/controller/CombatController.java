@@ -3,6 +3,7 @@ package br.ifsp.web.controller;
 import br.ifsp.web.dto.CombatHistoryDTO;
 import br.ifsp.web.dto.CombatRequestDTO;
 import br.ifsp.web.dto.CombatResultDTO;
+import br.ifsp.web.dto.TurnLogDTO;
 import br.ifsp.web.interfaces.ChooseAction;
 import br.ifsp.web.model.Combat;
 import br.ifsp.web.model.RpgCharacter;
@@ -46,7 +47,7 @@ public class CombatController {
         combatService.saveCombatLog(combat);
 
         RpgCharacter winner = combat.getWinner();
-        CombatResultDTO dto = new CombatResultDTO(winner.getId(), winner.getName());
+        CombatResultDTO dto = new CombatResultDTO(winner.getId(), winner.getName(), combat.getTurnLogs());
         return ResponseEntity.ok(dto);
     }
 

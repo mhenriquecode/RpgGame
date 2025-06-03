@@ -6,8 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 
-public record CombatResultDTO(UUID winnerId, String winnerName) {
+public record CombatResultDTO(UUID winnerId, String winnerName, List<TurnLogDTO> turnLogs) {
 }
