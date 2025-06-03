@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class RollHitDice implements DiceRoll {
     private final Random random;
+    private int lastRoll;
 
     public RollHitDice() {
         this.random = new Random();
@@ -18,7 +19,10 @@ public class RollHitDice implements DiceRoll {
 
     @Override
     public int roll() {
-        int total = random.nextInt(20) + 1;
-        return total;
+        lastRoll = random.nextInt(20) + 1;
+        return lastRoll;
+    }
+    public int getLastRoll() {
+        return lastRoll;
     }
 }

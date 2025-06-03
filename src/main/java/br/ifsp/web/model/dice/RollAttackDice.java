@@ -8,6 +8,7 @@ import java.util.Random;
 public class RollAttackDice implements DiceRoll {
     private final Random random;
     protected final Weapon weapon;
+    private int lastRoll;
 
     public RollAttackDice(Weapon weapon) {
         this.random = new Random();
@@ -27,6 +28,14 @@ public class RollAttackDice implements DiceRoll {
             int result = random.nextInt(this.weapon.getSides()) + 1;
             totalDamage += result;
         }
+        this.lastRoll = totalDamage;
         return totalDamage;
+    }
+    public int getLastRoll() {
+        return lastRoll;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
     }
 }
