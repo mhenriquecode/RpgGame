@@ -177,7 +177,21 @@ public class DiceTest {
             int lastRollAfter = rollAttackDice.getLastRoll();
             assertThat(lastRollAfter).isEqualTo(roll);
         }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Last Roll Should Return LastRoll After Roll")
+        void getLastRollShouldReturnLastRollValueAfterRoll() {
+            RollHitDice rollHitDice = new RollHitDice();
 
+            int lastBefore = rollHitDice.getLastRoll();
+            assertThat(lastBefore).isEqualTo(0);
+
+            int roll = rollHitDice.roll();
+
+            int lastAfter = rollHitDice.getLastRoll();
+            assertThat(lastAfter).isEqualTo(roll);
+        }
     }
 
 
