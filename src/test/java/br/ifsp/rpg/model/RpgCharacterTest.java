@@ -533,6 +533,27 @@ public class RpgCharacterTest {
 
                 verify(attackDiceMock, atLeastOnce()).roll();
             }
+            @Test
+            @Tag("Mutation")
+            @DisplayName("Was Last Special Effect UsedShould Return False When Special Effect Not Applied")
+            void wasLastSpecialEffectUsedShouldReturnFalseWhenSpecialEffectNotApplied() {
+                RollHitDice hitDiceMock = mock(RollHitDice.class);
+                RollAttackDice attackDiceMock = mock(RollAttackDice.class);
+
+                when(hitDiceMock.roll()).thenReturn(20);
+                when(attackDiceMock.roll()).thenReturn(10);
+
+                RpgCharacter attacker = new RpgCharacter("Atacante", ClassType.PALADIN, Race.HUMAN, Weapon.HAMMER, hitDiceMock, attackDiceMock);
+
+                when(mockRandom.nextInt(100)).thenReturn(50);
+                attacker.setRandom(mockRandom);
+                int damage = attacker.attack();
+
+                assertThat(attacker.wasLastSpecialEffectUsed()).isFalse();
+                assertThat(damage).isEqualTo(attacker.getStrength() + 10);
+
+                verify(attackDiceMock, atLeastOnce()).roll();
+            }
         }
     }
 }
