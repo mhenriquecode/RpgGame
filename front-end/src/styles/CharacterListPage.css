@@ -142,3 +142,148 @@
 .nav-button.secondary:hover {
     background-color: #5a6268;
 }
+
+.search-controls-charlist {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    margin-bottom: 25px; 
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: 1px solid #e0e6ed; 
+}
+
+.search-input-charlist {
+    flex-grow: 1; 
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input-charlist:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    outline: none;
+}
+
+.search-input-charlist:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+.clear-search-button-charlist {
+    background-color: #6c757d; 
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    white-space: nowrap; 
+}
+
+.clear-search-button-charlist:hover {
+    background-color: #5a6268;
+}
+
+.character-item {
+    background-color: #f8f9fa;
+    padding: 15px 20px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    border-left: 5px solid #007bff; /* Ou a cor de destaque que preferir */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Alinha itens no topo se os atributos fizerem o conteúdo crescer */
+    transition: background-color 0.2s ease-in-out, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.character-item:hover {
+    background-color: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.character-details { /* Novo container para info principal e atributos */
+    flex-grow: 1; /* Permite que esta seção ocupe o espaço disponível */
+    margin-right: 15px; /* Espaço antes do botão de deletar */
+}
+
+.character-main-info {
+    font-weight: 500;
+    color: #212529;
+    font-size: 1em;
+    line-height: 1.5;
+    margin-bottom: 8px; /* Espaço entre a info principal e os atributos */
+}
+
+.character-main-info strong {
+    color: #0056b3; /* Cor para o nome do personagem */
+    font-weight: 600;
+}
+
+.character-attributes {
+    font-size: 0.88em;
+    color: #495057; /* Cinza um pouco mais escuro para os atributos */
+    display: flex;
+    flex-wrap: wrap; /* Permite que os atributos quebrem para a próxima linha se necessário */
+    gap: 6px 12px;   /* Espaçamento entre os spans de atributos (vertical e horizontal) */
+    margin-top: 5px; /* Pequena margem acima dos atributos */
+}
+
+.character-attributes span {
+    background-color: #e9ecef; /* Fundo leve para cada atributo */
+    padding: 3px 8px; /* Padding dentro de cada span de atributo */
+    border-radius: 4px;
+    border: 1px solid #ced4da; /* Borda sutil */
+    white-space: nowrap; /* Evita que "HP: 100" quebre linha */
+}
+
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+    flex-shrink: 0; /* Impede que o botão encolha se o nome do personagem for muito grande */
+}
+
+.delete-button:hover:not(:disabled) {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+.delete-button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.delete-button:disabled {
+    background-color: #f1b0b7;
+    color: #721c24;
+    cursor: not-allowed;
+}
+
+.loading-message,
+.error-message,
+.info-message {
+    text-align: center;
+    padding: 18px 20px;
+    margin: 25px auto;
+    border-radius: 6px;
+    font-size: 1.05em;
+    max-width: 600px;
+    border-left-width: 5px;
+    border-left-style: solid;
+}
