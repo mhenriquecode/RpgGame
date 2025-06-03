@@ -1,6 +1,7 @@
 package br.ifsp.rpg.model;
 
 import br.ifsp.rpg.stubs.AttackStub;
+import br.ifsp.web.dto.TurnLogDTO;
 import br.ifsp.web.interfaces.ChooseAction;
 import br.ifsp.web.interfaces.PlayerAction;
 import br.ifsp.web.log.CombatLog;
@@ -10,6 +11,8 @@ import br.ifsp.web.model.actions.AttackAction;
 import br.ifsp.web.model.actions.ChooseUserAction;
 import br.ifsp.web.model.actions.DefendingAction;
 import br.ifsp.web.model.actions.DodgeAction;
+import br.ifsp.web.model.dice.RollAttackDice;
+import br.ifsp.web.model.dice.RollHitDice;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
@@ -21,6 +24,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,7 +45,8 @@ public class CombatTest {
     ChooseAction strategy2;
     PlayerAction action1;
     PlayerAction action2;
-
+    RollHitDice mockHitDice;
+    RollAttackDice mockAttackDice;
     @BeforeEach
     void setUp() {
          player1 = mock(RpgCharacter.class);
@@ -54,6 +59,8 @@ public class CombatTest {
         attackAction = new AttackStub();
          mockPlayer = mock(RpgCharacter.class);
          mockAction = mock(ChooseAction.class);
+        mockAttackDice = mock(RollAttackDice.class);
+        mockHitDice = mock(RollHitDice.class);
         player = new RpgCharacter("Character1", ClassType.PALADIN, Race.HUMAN, Weapon.SWORD);
     }
 
@@ -496,6 +503,15 @@ public class CombatTest {
                 return null;
             }).when(attackAction).execute(eq(player2), eq(player1));
 
+            when(mockHitDice.getLastRoll()).thenReturn(15);
+            when(mockAttackDice.getLastRoll()).thenReturn(20);
+            when(mockAttackDice.getWeapon()).thenReturn(Weapon.SWORD);
+
+            when(player1.getHitDice()).thenReturn(mockHitDice);
+            when(player1.getAttackDice()).thenReturn(mockAttackDice);
+            when(player2.getHitDice()).thenReturn(mockHitDice);
+            when(player2.getAttackDice()).thenReturn(mockAttackDice);
+
             Combat combat = new Combat(player1, strategy1, player2, strategy2);
             combat.startCombat(player1, strategy1, player2, strategy2);
             assertEquals(player2, combat.getWinner());
@@ -562,6 +578,14 @@ public class CombatTest {
                 when(player2.getHealth()).thenReturn(0);
                 return null;
             }).when(attackAction).execute(eq(player1), eq(player2));
+            when(mockHitDice.getLastRoll()).thenReturn(15);
+            when(mockAttackDice.getLastRoll()).thenReturn(20);
+            when(mockAttackDice.getWeapon()).thenReturn(Weapon.SWORD);
+
+            when(player1.getHitDice()).thenReturn(mockHitDice);
+            when(player1.getAttackDice()).thenReturn(mockAttackDice);
+            when(player2.getHitDice()).thenReturn(mockHitDice);
+            when(player2.getAttackDice()).thenReturn(mockAttackDice);
 
             Combat combat = new Combat(player1, strategy1, player2, strategy2);
             combat.startCombat(player1, strategy1, player2, strategy2);
@@ -574,6 +598,7 @@ public class CombatTest {
         @Tag("Unit-Test")
         @DisplayName("Each Player Uses Their Own Strategy")
         void eachPlayerUsesTheirOwnStrategy() {
+            // Simula a troca de turnos e a vitória do player2
             when(player1.getHealth()).thenReturn(10, 10, 0);
             when(player2.getHealth()).thenReturn(10, 10);
 
@@ -586,11 +611,21 @@ public class CombatTest {
             when(strategy1.choose(any(), any())).thenReturn(action1);
             when(strategy2.choose(any(), any())).thenReturn(action2);
 
+            // Simula execução de ações
             doNothing().when(action1).execute(eq(player1), eq(player2));
             doAnswer(inv -> {
                 when(player1.getHealth()).thenReturn(0);
                 return null;
             }).when(action2).execute(eq(player2), eq(player1));
+
+            when(mockHitDice.getLastRoll()).thenReturn(15);
+            when(mockAttackDice.getLastRoll()).thenReturn(20);
+            when(mockAttackDice.getWeapon()).thenReturn(Weapon.SWORD);
+
+            when(player1.getHitDice()).thenReturn(mockHitDice);
+            when(player1.getAttackDice()).thenReturn(mockAttackDice);
+            when(player2.getHitDice()).thenReturn(mockHitDice);
+            when(player2.getAttackDice()).thenReturn(mockAttackDice);
 
             Combat combat = new Combat(player1, strategy1, player2, strategy2);
             combat.startCombat(player1, strategy1, player2, strategy2);
@@ -603,6 +638,7 @@ public class CombatTest {
 
             assertEquals(player2, combat.getWinner());
         }
+
 
         @Test
         @Tag("Mutation")
@@ -621,6 +657,15 @@ public class CombatTest {
             when(strategy1.choose(player1, player2)).thenReturn(action1);
 
             doNothing().when(action1).execute(player1, player2);
+
+            when(mockHitDice.getLastRoll()).thenReturn(15);
+            when(mockAttackDice.getLastRoll()).thenReturn(20);
+            when(mockAttackDice.getWeapon()).thenReturn(Weapon.SWORD);
+
+            when(player1.getHitDice()).thenReturn(mockHitDice);
+            when(player1.getAttackDice()).thenReturn(mockAttackDice);
+            when(player2.getHitDice()).thenReturn(mockHitDice);
+            when(player2.getAttackDice()).thenReturn(mockAttackDice);
 
             Combat combat = new Combat(player1, strategy1, player2, strategy2);
             combat.startCombat(player1, strategy1, player2, strategy2);
