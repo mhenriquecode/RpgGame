@@ -1,6 +1,9 @@
 package br.ifsp.rpg.model;
 
+import br.ifsp.web.dto.TurnLogDTO;
 import br.ifsp.web.interfaces.ChooseAction;
+import br.ifsp.web.interfaces.PlayerAction;
+import br.ifsp.web.interfaces.SpecialEffect;
 import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.Turn;
 import br.ifsp.web.model.dice.RollAttackDice;
@@ -11,18 +14,27 @@ import br.ifsp.web.model.enums.Weapon;
 import br.ifsp.rpg.stubs.DodgeStub;
 import br.ifsp.rpg.stubs.AttackStub;
 import br.ifsp.rpg.stubs.DefendingStub;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import br.ifsp.web.model.specialEffects.SpecialEffectBerserk;
+import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TurnTest {
 
+    RpgCharacter current;
+    RpgCharacter opponent;
+    RollHitDice hitDice;
+    RollAttackDice attackDice;
+
+    @BeforeEach
+    void setup() {
+        current = mock(RpgCharacter.class);
+        opponent = mock(RpgCharacter.class);
+        hitDice = mock(RollHitDice.class);
+        attackDice = mock(RollAttackDice.class);
+    }
     @Nested
     @DisplayName("TDD turn tests")
     class TddTurnTests {
@@ -250,5 +262,27 @@ public class TurnTest {
 
             assertEquals(18, character.getArmor());
         }
+    }
+    @Nested
+    @DisplayName("Mutation Turn test")
+    class MutationTurn {
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Execute Should Call On New Turn Start And Action Execute")
+        void executeShouldCallOnNewTurnStartAndActionExecute() {
+            ChooseAction chooseAction = mock(ChooseAction.class);
+            PlayerAction action = mock(PlayerAction.class);
+
+            when(chooseAction.choose(current, opponent)).thenReturn(action);
+
+            Turn turn = new Turn(current, opponent, chooseAction);
+
+            turn.execute();
+
+            verify(current, times(1)).onNewTurnStart();
+            verify(action, times(1)).execute(current, opponent);
+        }
+
     }
 }
