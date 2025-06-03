@@ -325,5 +325,34 @@ public class TurnTest {
             assertThat(logDTO).isNotNull();
             assertThat(logDTO.actionDescription()).isNotNull();
         }
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Turn Log Should Log Attack Hit With Special Effect")
+        void getTurnLogShouldLogAttackHitWithSpecialEffect() {
+            when(current.getName()).thenReturn("Atacante");
+            when(opponent.getName()).thenReturn("Defensor");
+
+            when(current.getHitDice()).thenReturn(hitDice);
+            when(current.getAttackDice()).thenReturn(attackDice);
+
+            when(hitDice.getLastRoll()).thenReturn(15);
+            when(opponent.getArmor()).thenReturn(10);
+            when(attackDice.getLastRoll()).thenReturn(7);
+
+            when(current.wasLastSpecialEffectUsed()).thenReturn(true);
+
+            SpecialEffectBerserk specialEffect = new SpecialEffectBerserk();
+            when(current.getSpecialEffect()).thenReturn(specialEffect);
+
+            Turn turn = new Turn(current, opponent, (c, o) -> mock(PlayerAction.class));
+
+            TurnLogDTO logDTO = turn.getTurnLog();
+            String log = logDTO.actionDescription();
+
+            assertThat(log).contains("Turno de Atacante contra Defensor");
+            assertThat(log).contains("Acertou o ataque! Dano causado: 7");
+            assertThat(log).contains("Efeito especial");
+        }
     }
 }
