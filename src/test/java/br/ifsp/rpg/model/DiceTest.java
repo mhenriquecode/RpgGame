@@ -133,5 +133,19 @@ public class DiceTest {
             verifyNoInteractions(mockRandom);
         }
     }
+    @Nested
+    @DisplayName("Mutation Dice test")
+    class MutationDiceTest {
+        @Test
+        @Tag("Unit-test")
+        @Tag("Mutation")
+        @DisplayName("Get Weapon Should Return The Weapon")
+        void getWeaponShouldReturnTheWeapon() {
+            RollAttackDice rollAttackDice = new RollAttackDice(Weapon.DAGGER);
+
+            assertThat(rollAttackDice.getWeapon()).isEqualTo(Weapon.DAGGER);
+        }
+    }
+
 
 }
