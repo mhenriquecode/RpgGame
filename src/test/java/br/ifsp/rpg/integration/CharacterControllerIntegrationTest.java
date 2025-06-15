@@ -168,4 +168,14 @@ class CharacterControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(atualizado)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @WithMockUser
+    void deveRetornar404AoAtualizarPersonagemInexistente() throws Exception {
+        CharacterDTO atualizado = novoPersonagem();
+        mockMvc.perform(put("/api/characters/{id}", UUID.randomUUID())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(atualizado)))
+                .andExpect(status().isNotFound());
+    }
 }
