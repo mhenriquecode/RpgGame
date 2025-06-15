@@ -210,4 +210,9 @@ class CharacterControllerIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Arthas"));
     }
 
+    @Test
+    void deveRetornar401QuandoNaoAutenticado() throws Exception {
+        mockMvc.perform(get("/api/characters"))
+                .andExpect(status().isUnauthorized());
+    }
 }
