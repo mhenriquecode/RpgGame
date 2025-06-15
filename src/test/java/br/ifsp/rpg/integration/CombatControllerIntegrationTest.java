@@ -117,4 +117,10 @@ class CombatControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(combatRequest)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void deveRetornar401QuandoNaoAutenticado() throws Exception {
+        mockMvc.perform(get("/api/combat/history"))
+                .andExpect(status().isUnauthorized());
+    }
 }
