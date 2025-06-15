@@ -193,4 +193,21 @@ class CharacterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
     }
+
+    @Test
+    @WithMockUser
+    void deveBuscarPersonagemExistentePorId() throws Exception {
+        CharacterDTO dto = novoPersonagem();
+        String response = mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andReturn().getResponse().getContentAsString();
+        CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
+
+        mockMvc.perform(get("/api/characters/{id}", created.id()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(created.id().toString()))
+                .andExpect(jsonPath("$.name").value("Arthas"));
+    }
+
 }
