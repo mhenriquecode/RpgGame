@@ -215,4 +215,14 @@ class CharacterControllerIntegrationTest {
         mockMvc.perform(get("/api/characters"))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    @WithMockUser
+    void deveRetornar415QuandoContentTypeInvalido() throws Exception {
+        String xml = "<character><name>Arthas</name></character>";
+        mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_XML)
+                        .content(xml))
+                .andExpect(status().isUnsupportedMediaType());
+    }
 }
