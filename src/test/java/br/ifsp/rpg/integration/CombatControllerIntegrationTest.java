@@ -67,4 +67,12 @@ class CombatControllerIntegrationTest {
                 .andExpect(jsonPath("$.winnerName").exists())
                 .andExpect(jsonPath("$.turnLogs").isArray());
     }
+
+    @Test
+    @WithMockUser
+    void deveRetornarHistoricoDeCombates() throws Exception {
+        mockMvc.perform(get("/api/combat/history"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
+    }
 }
