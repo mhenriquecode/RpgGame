@@ -139,4 +139,33 @@ class CharacterControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @WithMockUser
+    void deveRetornar400QuandoAtualizarPersonagemComDadosInvalidos() throws Exception {
+        CharacterDTO dto = novoPersonagem();
+        String response = mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andReturn().getResponse().getContentAsString();
+        CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
+
+        CharacterDTO atualizado = new CharacterDTO(
+                created.id(),
+                "",
+                created.classType(),
+                created.race(),
+                created.weapon(),
+                created.maxHealth(),
+                created.strength(),
+                created.defense(),
+                created.speed(),
+                created.armor()
+        );
+
+        mockMvc.perform(put("/api/characters/{id}", created.id())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(atualizado)))
+                .andExpect(status().isBadRequest());
+    }
 }
