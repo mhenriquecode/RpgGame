@@ -66,4 +66,12 @@ class CharacterControllerIntegrationTest {
         mockMvc.perform(get("/api/characters/{id}", UUID.randomUUID()))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    @WithMockUser
+    void deveListarTodosPersonagens() throws Exception {
+        mockMvc.perform(get("/api/characters"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
+    }
 }
