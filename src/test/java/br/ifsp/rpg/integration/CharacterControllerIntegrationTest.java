@@ -16,8 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -73,5 +72,35 @@ class CharacterControllerIntegrationTest {
         mockMvc.perform(get("/api/characters"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
+    }
+
+    @Test
+    @WithMockUser
+    void deveAtualizarPersonagem() throws Exception {
+        CharacterDTO dto = novoPersonagem();
+        String response = mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andReturn().getResponse().getContentAsString();
+        CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
+
+        CharacterDTO atualizado = new CharacterDTO(
+                created.id(),
+                "Novo Nome",
+                created.classType(),
+                created.race(),
+                created.weapon(),
+                created.maxHealth(),
+                created.strength(),
+                created.defense(),
+                created.speed(),
+                created.armor()
+        );
+
+        mockMvc.perform(put("/api/characters/{id}", created.id())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(atualizado)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Novo Nome"));
     }
 }
