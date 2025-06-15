@@ -17,8 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(classes = br.ifsp.web.DemoAuthAppApplication.class)
 @AutoConfigureMockMvc
@@ -34,16 +33,8 @@ class CharacterControllerIntegrationTest {
 
     private CharacterDTO novoPersonagem() {
         return new CharacterDTO(
-                null,
-                "Arthas",
-                ClassType.WARRIOR,
-                Race.HUMAN,
-                Weapon.SWORD,
-                100,
-                20,
-                15,
-                10,
-                5
+                null, "Arthas", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD,
+                100, 20, 15, 10, 5
         );
     }
 
@@ -51,7 +42,6 @@ class CharacterControllerIntegrationTest {
     @WithMockUser
     void deveCriarPersonagemComSucesso() throws Exception {
         CharacterDTO dto = novoPersonagem();
-
         mockMvc.perform(post("/api/characters")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
@@ -61,9 +51,18 @@ class CharacterControllerIntegrationTest {
 
     @Test
     @WithMockUser
-    void deveRetornar404QuandoPersonagemNaoExiste() throws Exception {
-        mockMvc.perform(get("/api/characters/{id}", UUID.randomUUID()))
-                .andExpect(status().isNotFound());
+    void deveBuscarPersonagemExistentePorId() throws Exception {
+        CharacterDTO dto = novoPersonagem();
+        String response = mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andReturn().getResponse().getContentAsString();
+        CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
+
+        mockMvc.perform(get("/api/characters/{id}", created.id()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(created.id().toString()))
+                .andExpect(jsonPath("$.name").value("Arthas"));
     }
 
     @Test
@@ -85,16 +84,9 @@ class CharacterControllerIntegrationTest {
         CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
 
         CharacterDTO atualizado = new CharacterDTO(
-                created.id(),
-                "Novo Nome",
-                created.classType(),
-                created.race(),
-                created.weapon(),
-                created.maxHealth(),
-                created.strength(),
-                created.defense(),
-                created.speed(),
-                created.armor()
+                created.id(), "Novo Nome", created.classType(), created.race(),
+                created.weapon(), created.maxHealth(), created.strength(),
+                created.defense(), created.speed(), created.armor()
         );
 
         mockMvc.perform(put("/api/characters/{id}", created.id())
@@ -120,20 +112,26 @@ class CharacterControllerIntegrationTest {
 
     @Test
     @WithMockUser
+    void deveRetornarListaVaziaQuandoNaoHaPersonagens() throws Exception {
+        mockMvc.perform(get("/api/characters"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    @WithMockUser
+    void deveRetornar404QuandoPersonagemNaoExiste() throws Exception {
+        mockMvc.perform(get("/api/characters/{id}", UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser
     void deveRetornar400QuandoCriarPersonagemComDadosInvalidos() throws Exception {
         CharacterDTO dto = new CharacterDTO(
-                null,
-                "",
-                ClassType.WARRIOR,
-                Race.HUMAN,
-                Weapon.SWORD,
-                100,
-                20,
-                15,
-                10,
-                5
+                null, "", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD,
+                100, 20, 15, 10, 5
         );
-
         mockMvc.perform(post("/api/characters")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
@@ -151,16 +149,9 @@ class CharacterControllerIntegrationTest {
         CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
 
         CharacterDTO atualizado = new CharacterDTO(
-                created.id(),
-                "",
-                created.classType(),
-                created.race(),
-                created.weapon(),
-                created.maxHealth(),
-                created.strength(),
-                created.defense(),
-                created.speed(),
-                created.armor()
+                created.id(), "", created.classType(), created.race(),
+                created.weapon(), created.maxHealth(), created.strength(),
+                created.defense(), created.speed(), created.armor()
         );
 
         mockMvc.perform(put("/api/characters/{id}", created.id())
@@ -184,30 +175,6 @@ class CharacterControllerIntegrationTest {
     void deveRetornar404AoRemoverPersonagemInexistente() throws Exception {
         mockMvc.perform(delete("/api/characters/{id}", UUID.randomUUID()))
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithMockUser
-    void deveRetornarListaVaziaQuandoNaoHaPersonagens() throws Exception {
-        mockMvc.perform(get("/api/characters"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
-    }
-
-    @Test
-    @WithMockUser
-    void deveBuscarPersonagemExistentePorId() throws Exception {
-        CharacterDTO dto = novoPersonagem();
-        String response = mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andReturn().getResponse().getContentAsString();
-        CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
-
-        mockMvc.perform(get("/api/characters/{id}", created.id()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(created.id().toString()))
-                .andExpect(jsonPath("$.name").value("Arthas"));
     }
 
     @Test
