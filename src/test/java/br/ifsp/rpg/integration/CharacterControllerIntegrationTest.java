@@ -103,4 +103,18 @@ class CharacterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Novo Nome"));
     }
+
+    @Test
+    @WithMockUser
+    void deveRemoverPersonagem() throws Exception {
+        CharacterDTO dto = novoPersonagem();
+        String response = mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andReturn().getResponse().getContentAsString();
+        CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
+
+        mockMvc.perform(delete("/api/characters/{id}", created.id()))
+                .andExpect(status().isNoContent());
+    }
 }
