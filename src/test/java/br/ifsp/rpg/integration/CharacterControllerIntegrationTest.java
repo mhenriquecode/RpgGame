@@ -14,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,5 +58,12 @@ class CharacterControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists());
+    }
+
+    @Test
+    @WithMockUser
+    void deveRetornar404QuandoPersonagemNaoExiste() throws Exception {
+        mockMvc.perform(get("/api/characters/{id}", UUID.randomUUID()))
+                .andExpect(status().isNotFound());
     }
 }
