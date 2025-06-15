@@ -21,8 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = br.ifsp.web.DemoAuthAppApplication.class)
 @AutoConfigureMockMvc
-@Tag("ApiTest")
-@Tag("IntegrationTest")
 class CombatControllerIntegrationTest {
 
     @Autowired
@@ -39,6 +37,8 @@ class CombatControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveIniciarCombateComSucesso() throws Exception {
         CharacterDTO p1 = novoPersonagem("Player1");
@@ -70,6 +70,8 @@ class CombatControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveRetornarHistoricoDeCombates() throws Exception {
         mockMvc.perform(get("/api/combat/history"))
@@ -78,6 +80,8 @@ class CombatControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveRetornar400QuandoIniciarCombateComPersonagemInvalido() throws Exception {
         CombatRequestDTO combatRequest = new CombatRequestDTO(
@@ -91,6 +95,8 @@ class CombatControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveRetornar400QuandoIniciarCombateComStrategyInvalida() throws Exception {
         CharacterDTO p1 = novoPersonagem("Player1");
@@ -119,6 +125,8 @@ class CombatControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     void deveRetornar401QuandoNaoAutenticado() throws Exception {
         mockMvc.perform(get("/api/combat/history"))
                 .andExpect(status().isUnauthorized());

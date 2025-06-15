@@ -21,8 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = br.ifsp.web.DemoAuthAppApplication.class)
 @AutoConfigureMockMvc
-@Tag("ApiTest")
-@Tag("IntegrationTest")
 class CharacterControllerIntegrationTest {
 
     @Autowired
@@ -39,6 +37,8 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveCriarPersonagemComSucesso() throws Exception {
         CharacterDTO dto = novoPersonagem();
@@ -50,6 +50,8 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveBuscarPersonagemExistentePorId() throws Exception {
         CharacterDTO dto = novoPersonagem();
@@ -66,6 +68,8 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveListarTodosPersonagens() throws Exception {
         mockMvc.perform(get("/api/characters"))
@@ -74,6 +78,8 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveAtualizarPersonagem() throws Exception {
         CharacterDTO dto = novoPersonagem();
@@ -97,6 +103,8 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveRemoverPersonagem() throws Exception {
         CharacterDTO dto = novoPersonagem();
@@ -111,6 +119,8 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveRetornarListaVaziaQuandoNaoHaPersonagens() throws Exception {
         mockMvc.perform(get("/api/characters"))
@@ -119,6 +129,8 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveRetornar404QuandoPersonagemNaoExiste() throws Exception {
         mockMvc.perform(get("/api/characters/{id}", UUID.randomUUID()))
@@ -126,6 +138,8 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveRetornar400QuandoCriarPersonagemComDadosInvalidos() throws Exception {
         CharacterDTO dto = new CharacterDTO(
@@ -139,6 +153,8 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveRetornar400QuandoAtualizarPersonagemComDadosInvalidos() throws Exception {
         CharacterDTO dto = novoPersonagem();
@@ -161,6 +177,8 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveRetornar404AoAtualizarPersonagemInexistente() throws Exception {
         CharacterDTO atualizado = novoPersonagem();
@@ -171,6 +189,8 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveRetornar404AoRemoverPersonagemInexistente() throws Exception {
         mockMvc.perform(delete("/api/characters/{id}", UUID.randomUUID()))
@@ -178,12 +198,16 @@ class CharacterControllerIntegrationTest {
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     void deveRetornar401QuandoNaoAutenticado() throws Exception {
         mockMvc.perform(get("/api/characters"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveRetornar415QuandoContentTypeInvalido() throws Exception {
         String xml = "<character><name>Arthas</name></character>";
