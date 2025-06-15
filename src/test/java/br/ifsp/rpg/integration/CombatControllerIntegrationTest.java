@@ -89,4 +89,32 @@ class CombatControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(combatRequest)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @WithMockUser
+    void deveRetornar400QuandoIniciarCombateComStrategyInvalida() throws Exception {
+        CharacterDTO p1 = novoPersonagem("Player1");
+        CharacterDTO p2 = novoPersonagem("Player2");
+
+        String resp1 = mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(p1)))
+                .andReturn().getResponse().getContentAsString();
+        CharacterDTO created1 = objectMapper.readValue(resp1, CharacterDTO.class);
+
+        String resp2 = mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(p2)))
+                .andReturn().getResponse().getContentAsString();
+        CharacterDTO created2 = objectMapper.readValue(resp2, CharacterDTO.class);
+
+        CombatRequestDTO combatRequest = new CombatRequestDTO(
+                created1.id(), 99, created2.id(), -1
+        );
+
+        mockMvc.perform(post("/api/combat")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(combatRequest)))
+                .andExpect(status().isBadRequest());
+    }
 }
