@@ -178,4 +178,11 @@ class CharacterControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(atualizado)))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    @WithMockUser
+    void deveRetornar404AoRemoverPersonagemInexistente() throws Exception {
+        mockMvc.perform(delete("/api/characters/{id}", UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
 }
