@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -74,5 +75,18 @@ class CombatControllerIntegrationTest {
         mockMvc.perform(get("/api/combat/history"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
+    }
+
+    @Test
+    @WithMockUser
+    void deveRetornar400QuandoIniciarCombateComPersonagemInvalido() throws Exception {
+        CombatRequestDTO combatRequest = new CombatRequestDTO(
+                UUID.randomUUID(), 1, UUID.randomUUID(), 2
+        );
+
+        mockMvc.perform(post("/api/combat")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(combatRequest)))
+                .andExpect(status().isBadRequest());
     }
 }
