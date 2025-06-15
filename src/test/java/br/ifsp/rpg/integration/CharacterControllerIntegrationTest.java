@@ -117,4 +117,26 @@ class CharacterControllerIntegrationTest {
         mockMvc.perform(delete("/api/characters/{id}", created.id()))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    @WithMockUser
+    void deveRetornar400QuandoCriarPersonagemComDadosInvalidos() throws Exception {
+        CharacterDTO dto = new CharacterDTO(
+                null,
+                "",
+                ClassType.WARRIOR,
+                Race.HUMAN,
+                Weapon.SWORD,
+                100,
+                20,
+                15,
+                10,
+                5
+        );
+
+        mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest());
+    }
 }
