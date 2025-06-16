@@ -1,21 +1,26 @@
 package br.ifsp.rpg.integration;
 
 import br.ifsp.web.dto.CharacterDTO;
+import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
+import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.port;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -215,5 +220,23 @@ class CharacterControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_XML)
                         .content(xml))
                 .andExpect(status().isUnsupportedMediaType());
+    }
+
+    @Test
+    @DisplayName("Deve tratar nomes com aspas simples sem causar erro de SQL")
+    @WithMockUser
+    void deveTratarNomesComAspasSimplesSemCausarErroDeSQL() throws Exception {
+        RpgCharacter characterModel = new RpgCharacter(
+                "D'gok, the Unbroken",
+                ClassType.BERSERK,
+                Race.ORC,
+                Weapon.AXE
+        );
+        CharacterDTO characterWithSingleQuote = CharacterDTO.from(characterModel);
+
+        mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(characterWithSingleQuote)))
+                .andExpect(status().isCreated());
     }
 }
