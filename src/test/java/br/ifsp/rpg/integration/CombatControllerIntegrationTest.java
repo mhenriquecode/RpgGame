@@ -5,7 +5,10 @@ import br.ifsp.web.dto.CombatRequestDTO;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
+import br.ifsp.web.service.CharacterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,5 +133,26 @@ class CombatControllerIntegrationTest {
     void deveRetornar401QuandoNaoAutenticado() throws Exception {
         mockMvc.perform(get("/api/combat/history"))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Deve retornar 400 ao iniciar combate com o mesmo personagem")
+    @WithMockUser
+    void shouldReturnBadRequestWhenStartingCombatWithSameCharacter() throws Exception {
+        CharacterDTO p1Dto = novoPersonagem("Lancelot");
+        String response = mockMvc.perform(post("/api/characters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(p1Dto)))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        CharacterDTO createdCharacter = objectMapper.readValue(response, CharacterDTO.class);
+
+        CombatRequestDTO request = new CombatRequestDTO(createdCharacter.id(), 1, createdCharacter.id(), 2);
+
+        mockMvc.perform(post("/api/combat")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
     }
 }

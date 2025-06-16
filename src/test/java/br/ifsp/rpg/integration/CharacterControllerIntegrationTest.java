@@ -239,4 +239,6 @@ class CharacterControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(characterWithSingleQuote)))
                 .andExpect(status().isCreated());
     }
+
+
 }
