@@ -136,8 +136,10 @@ class CombatControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Deve retornar 400 ao iniciar combate com o mesmo personagem")
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
+    @DisplayName("Deve retornar 400 ao iniciar combate com o mesmo personagem")
     void shouldReturnBadRequestWhenStartingCombatWithSameCharacter() throws Exception {
         CharacterDTO p1Dto = novoPersonagem("Lancelot");
         String response = mockMvc.perform(post("/api/characters")
