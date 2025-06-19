@@ -271,4 +271,31 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
                 .body("$", hasSize(initialSize + 1));
     }
 
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 400 Bad Request para tipos de dados inválidos no corpo")
+    void shouldReturn400ForInvalidDataTypesInTheBody() {
+        String malformedJsonBody = String.format(
+                """
+                {
+                    "player1Id": "%s",
+                    "player1Strategy": "ESTRATEGIA_INVALIDA",
+                    "player2Id": "%s",
+                    "player2Strategy": 1
+                }
+                """,
+                player1.id(), player2.id()
+        );
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(malformedJsonBody)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(400);
+    }
+
 }
