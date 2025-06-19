@@ -7,6 +7,7 @@ import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -18,11 +19,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import pitest.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.port;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -73,19 +76,27 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @WithMockUser
-    void deveBuscarPersonagemExistentePorId() throws Exception {
-        CharacterDTO dto = novoPersonagem();
-        String response = mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andReturn().getResponse().getContentAsString();
-        CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
+    void deveBuscarPersonagemExistentePorId() {
+        String token = getAuthToken();
+        CharacterDTO criado;
 
-        mockMvc.perform(get("/api/characters/{id}", created.id()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(created.id().toString()))
-                .andExpect(jsonPath("$.name").value("Arthas"));
+        try {
+            criado = createCharacterViaApi(token, novoPersonagem());
+        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+            Assertions.fail("Falha ao criar personagem: " + e.getMessage());
+            return;
+        }
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", criado.id())
+                .when()
+                .get("/api/characters/{id}")
+                .then()
+                .statusCode(200)
+                .body("id", equalTo(criado.id().toString()))
+                .body("name", equalTo("Arthas"));
     }
 
     @Test
