@@ -6,12 +6,14 @@ import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -21,37 +23,51 @@ import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.port;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(classes = br.ifsp.web.DemoAuthAppApplication.class)
-@AutoConfigureMockMvc
-class CharacterControllerIntegrationTest {
+@SpringBootTest(
+        classes = br.ifsp.web.DemoAuthAppApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
+@Tag("ApiTest")
+@Tag("IntegrationTest")
+class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    @LocalServerPort
+    private int port;
 
     private CharacterDTO novoPersonagem() {
         return new CharacterDTO(
-                null, "Arthas", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD,
-                100, 20, 15, 10, 5
+                null,
+                "Arthas",
+                ClassType.WARRIOR,
+                Race.HUMAN,
+                Weapon.SWORD,
+                100,
+                20,
+                15,
+                10,
+                5
         );
     }
 
     @Test
-    @Tag("ApiTest")
-    @Tag("IntegrationTest")
-    @WithMockUser
-    void deveCriarPersonagemComSucesso() throws Exception {
+    void deveCriarPersonagemComSucesso() {
+        String token = getAuthToken();
         CharacterDTO dto = novoPersonagem();
-        mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").exists());
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when()
+                .post("/api/characters")
+                .then()
+                .statusCode(201)
+                .body("id", notNullValue());
     }
 
     @Test
