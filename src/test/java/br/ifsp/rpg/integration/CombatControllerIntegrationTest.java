@@ -200,4 +200,21 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
                 .time(lessThan(10L), SECONDS);
 
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 400 Bad Request se o corpo da requisição estiver vazio")
+    void shoulReturnBadRequestIfRequestHasEmptyBody() {
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body("")
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(401);
+    }
+
+
 }
