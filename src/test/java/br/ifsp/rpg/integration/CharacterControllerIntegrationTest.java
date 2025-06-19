@@ -159,46 +159,29 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .statusCode(200)
                 .body("name", equalTo("Novo Nome"));
     }
-    @Test
-    @Tag("ApiTest")
-    @Tag("IntegrationTest")
-    @WithMockUser
-    void deveAtualizarPersonagem() throws Exception {
-        CharacterDTO dto = novoPersonagem();
-        String response = mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andReturn().getResponse().getContentAsString();
-        CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
-
-        CharacterDTO atualizado = new CharacterDTO(
-                created.id(), "Novo Nome", created.classType(), created.race(),
-                created.weapon(), created.maxHealth(), created.strength(),
-                created.defense(), created.speed(), created.armor()
-        );
-
-        mockMvc.perform(put("/api/characters/{id}", created.id())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(atualizado)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Novo Nome"));
-    }
 
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @WithMockUser
-    void deveRemoverPersonagem() throws Exception {
-        CharacterDTO dto = novoPersonagem();
-        String response = mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andReturn().getResponse().getContentAsString();
-        CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
+    void deveRemoverPersonagem() {
+        String token = getAuthToken();
+        CharacterDTO criado = null;
+        try {
+            criado = createCharacterViaApi(token, novoPersonagem());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
-        mockMvc.perform(delete("/api/characters/{id}", created.id()))
-                .andExpect(status().isNoContent());
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", criado.id())
+                .when()
+                .delete("/api/characters/{id}")
+                .then()
+                .statusCode(204);
     }
+
 
     @Test
     @Tag("ApiTest")
