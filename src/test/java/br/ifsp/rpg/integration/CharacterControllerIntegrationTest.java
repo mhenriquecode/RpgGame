@@ -5,9 +5,12 @@ import br.ifsp.web.model.RpgCharacter;
 import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Assertions;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.empty;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -19,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import pitest.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.UUID;
 
@@ -102,11 +104,22 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @WithMockUser
-    void deveListarTodosPersonagens() throws Exception {
-        mockMvc.perform(get("/api/characters"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+    void deveListarTodosPersonagens() {
+        String token = getAuthToken();
+        try {
+            createCharacterViaApi(token, novoPersonagem());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get("/api/characters")
+                .then()
+                .statusCode(200)
+                .body("$", not(empty()));
     }
 
     @Test
