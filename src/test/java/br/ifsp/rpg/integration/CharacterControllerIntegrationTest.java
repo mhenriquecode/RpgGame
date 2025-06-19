@@ -45,8 +45,8 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @AfterAll
-    void limparBanco() {
+    @BeforeEach
+    void limparBancoAntesDeCadaTeste() {
         jdbcTemplate.execute("PRAGMA foreign_keys = OFF");
         jdbcTemplate.execute("DELETE FROM characters");
         jdbcTemplate.execute("DELETE FROM app_user");
