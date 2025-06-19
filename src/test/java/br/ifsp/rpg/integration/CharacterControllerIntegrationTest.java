@@ -229,16 +229,28 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @WithMockUser
-    void deveRetornar400QuandoCriarPersonagemComDadosInvalidos() throws Exception {
+    void deveRetornar400QuandoCriarPersonagemComDadosInvalidos() {
         CharacterDTO dto = new CharacterDTO(
-                null, "", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD,
-                100, 20, 15, 10, 5
+                null,
+                "",
+                ClassType.WARRIOR,
+                Race.HUMAN,
+                Weapon.SWORD,
+                100,
+                20,
+                15,
+                10,
+                5
         );
-        mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isBadRequest());
+
+        given()
+                .port(port)
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when()
+                .post("/api/characters")
+                .then()
+                .statusCode(400);
     }
 
     @Test
