@@ -1,5 +1,6 @@
 package br.ifsp.rpg.integration;
 
+import br.ifsp.web.dto.CharacterDTO;
 import br.ifsp.web.security.auth.AuthRequest;
 import br.ifsp.web.security.auth.AuthResponse;
 import br.ifsp.web.security.auth.RegisterUserRequest;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import static io.restassured.RestAssured.given;
 
@@ -50,6 +53,17 @@ public abstract class BaseApiIntegrationTest {
 
     }
 
+    protected CharacterDTO createCharacterViaApi(String token, CharacterDTO character) throws JsonProcessingException {
+        String responseBody = given()
+                .header("Authorization", "Bearer" + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(character)
+                .post("/api/characters")
+                .then()
+                .statusCode(201)
+                .extract().body().asString();
 
+        return objectMapper.readValue(responseBody, CharacterDTO.class);
+    }
 
 }
