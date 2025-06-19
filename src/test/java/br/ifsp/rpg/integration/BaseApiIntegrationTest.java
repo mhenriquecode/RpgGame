@@ -16,7 +16,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import static io.restassured.RestAssured.given;
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        classes = br.ifsp.web.DemoAuthAppApplication.class
+)
 public abstract class BaseApiIntegrationTest {
 
     @LocalServerPort
@@ -42,7 +45,7 @@ public abstract class BaseApiIntegrationTest {
                 .statusCode(201);
 
         AuthRequest authRequest = new AuthRequest(registerRequest.email(), registerRequest.password());
-        return given()
+        String token =  given()
                 .contentType(ContentType.JSON)
                 .body(authRequest)
                 .when()
@@ -50,12 +53,13 @@ public abstract class BaseApiIntegrationTest {
                 .then()
                 .statusCode(200)
                 .extract().body().as(AuthResponse.class).token();
+        return token;
 
     }
 
     protected CharacterDTO createCharacterViaApi(String token, CharacterDTO character) throws JsonProcessingException {
         String responseBody = given()
-                .header("Authorization", "Bearer" + token)
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(character)
                 .post("/api/characters")
