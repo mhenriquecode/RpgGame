@@ -196,11 +196,17 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @WithMockUser
-    void deveRetornarListaVaziaQuandoNaoHaPersonagens() throws Exception {
-        mockMvc.perform(get("/api/characters"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
+    void deveRetornarListaVaziaQuandoNaoHaPersonagens() {
+        String token = getAuthToken();
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get("/api/characters")
+                .then()
+                .statusCode(200)
+                .body("$", empty());
     }
 
     @Test
