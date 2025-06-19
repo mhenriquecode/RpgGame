@@ -8,18 +8,18 @@ import br.ifsp.web.model.enums.Weapon;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.Assertions;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.junit.jupiter.api.*;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.empty;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -36,12 +36,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = br.ifsp.web.DemoAuthAppApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-@Tag("ApiTest")
-@Tag("IntegrationTest")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
 
     @LocalServerPort
     private int port;
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @AfterAll
+    void limparBanco() {
+        jdbcTemplate.execute("PRAGMA foreign_keys = OFF");
+        jdbcTemplate.execute("DELETE FROM characters");
+        jdbcTemplate.execute("DELETE FROM app_user");
+        jdbcTemplate.execute("PRAGMA foreign_keys = ON");
+    }
 
     private CharacterDTO novoPersonagem() {
         return new CharacterDTO(
