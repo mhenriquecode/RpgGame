@@ -125,6 +125,43 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
+    void deveAtualizarPersonagem() {
+        String token = getAuthToken();
+        CharacterDTO criado = null;
+        try {
+            criado = createCharacterViaApi(token, novoPersonagem());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        CharacterDTO atualizacao = new CharacterDTO(
+                criado.id(),
+                "Novo Nome",
+                criado.classType(),
+                criado.race(),
+                criado.weapon(),
+                criado.maxHealth(),
+                criado.strength(),
+                criado.defense(),
+                criado.speed(),
+                criado.armor()
+        );
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .pathParam("id", criado.id())
+                .body(atualizacao)
+                .when()
+                .put("/api/characters/{id}")
+                .then()
+                .statusCode(200)
+                .body("name", equalTo("Novo Nome"));
+    }
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
     @WithMockUser
     void deveAtualizarPersonagem() throws Exception {
         CharacterDTO dto = novoPersonagem();
