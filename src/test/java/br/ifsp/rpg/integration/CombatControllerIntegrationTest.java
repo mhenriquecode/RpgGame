@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.lessThan;
 
 
@@ -237,6 +238,37 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
 
     }
 
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve adicionar um registro ao histórico após um combate bem-sucedido")
+    void shouldAddARecordToHistoryAfterASuccessfulCombat() {
+        int initialSize = given()
+                .header("Authorization", "Bearer " + authToken)
+                .when()
+                .get("api/combat/history")
+                .then()
+                .statusCode(200)
+                .extract().body().path("size()");
 
+        CombatRequestDTO combatRequest = new CombatRequestDTO(player1.id(), 1, player2.id(), 1);
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(combatRequest)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(200);
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .when()
+                .get("api/combat/history")
+                .then()
+                .statusCode(200)
+                .body("$", hasSize(initialSize + 1));
+    }
 
 }
