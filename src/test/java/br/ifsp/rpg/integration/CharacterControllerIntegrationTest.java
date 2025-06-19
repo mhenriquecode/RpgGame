@@ -229,40 +229,65 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @WithMockUser
-    void deveRetornar400QuandoCriarPersonagemComDadosInvalidos() throws Exception {
+    void deveRetornar400QuandoCriarPersonagemComDadosInvalidos() {
         CharacterDTO dto = new CharacterDTO(
-                null, "", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD,
-                100, 20, 15, 10, 5
+                null,
+                "",
+                ClassType.WARRIOR,
+                Race.HUMAN,
+                Weapon.SWORD,
+                100,
+                20,
+                15,
+                10,
+                5
         );
-        mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isBadRequest());
+
+        given()
+                .port(port)
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when()
+                .post("/api/characters")
+                .then()
+                .statusCode(400);
     }
 
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @WithMockUser
-    void deveRetornar400QuandoAtualizarPersonagemComDadosInvalidos() throws Exception {
-        CharacterDTO dto = novoPersonagem();
-        String response = mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andReturn().getResponse().getContentAsString();
-        CharacterDTO created = objectMapper.readValue(response, CharacterDTO.class);
+    void deveRetornar400QuandoAtualizarPersonagemComDadosInvalidos() {
+        String token = getAuthToken();
+        CharacterDTO criado = null;
+        try {
+            criado = createCharacterViaApi(token, novoPersonagem());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
-        CharacterDTO atualizado = new CharacterDTO(
-                created.id(), "", created.classType(), created.race(),
-                created.weapon(), created.maxHealth(), created.strength(),
-                created.defense(), created.speed(), created.armor()
+        CharacterDTO atualizacao = new CharacterDTO(
+                criado.id(),
+                "",
+                criado.classType(),
+                criado.race(),
+                criado.weapon(),
+                criado.maxHealth(),
+                criado.strength(),
+                criado.defense(),
+                criado.speed(),
+                criado.armor()
         );
 
-        mockMvc.perform(put("/api/characters/{id}", created.id())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(atualizado)))
-                .andExpect(status().isBadRequest());
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .pathParam("id", criado.id())
+                .body(atualizacao)
+                .when()
+                .put("/api/characters/{id}")
+                .then()
+                .statusCode(400);
     }
 
     @Test
