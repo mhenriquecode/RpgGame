@@ -34,7 +34,7 @@ public abstract class BaseApiIntegrationTest {
 
     protected String getAuthToken() {
 
-        RegisterUserRequest registerRequest = new RegisterUserRequest("Test", "User", "auth@test.com", "password");
+        RegisterUserRequest registerRequest = new RegisterUserRequest("Test", "User", "auth" + System.nanoTime() + "@test.com", "password");
 
         given()
                 .contentType(ContentType.JSON)

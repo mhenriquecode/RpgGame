@@ -11,9 +11,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 
 import static io.restassured.RestAssured.given;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.hamcrest.Matchers.lessThan;
 
 
 class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
@@ -145,5 +149,28 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
                 .post("/api/combat")
                 .then()
                 .statusCode(400);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1, 1",
+            "1, 2",
+            "2, 1",
+            "1, 3",
+            "3, 1"
+    })
+    @DisplayName("Deve executar o combate com sucesso quando há pelo menos um atacante")
+    void shouldExecuteSuccessfullyCombatWithAtLeastOneAttacking(int player1Strategy, int player2Strategy) {
+        CombatRequestDTO combatRequest = new CombatRequestDTO(player1.id(), player1Strategy, player2.id(), player2Strategy);
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(combatRequest)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(200)
+                .time(lessThan(10L), SECONDS);
     }
 }
