@@ -293,13 +293,17 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @WithMockUser
-    void deveRetornar404AoAtualizarPersonagemInexistente() throws Exception {
-        CharacterDTO atualizado = novoPersonagem();
-        mockMvc.perform(put("/api/characters/{id}", UUID.randomUUID())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(atualizado)))
-                .andExpect(status().isNotFound());
+    void deveRetornar404AoRemoverPersonagemInexistente() {
+        String token = getAuthToken();
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", UUID.randomUUID())
+                .when()
+                .delete("/api/characters/{id}")
+                .then()
+                .statusCode(404);
     }
 
     @Test
