@@ -204,8 +204,9 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @DisplayName("Deve retornar 400 Bad Request se o corpo da requisição estiver vazio")
-    void shoulReturnBadRequestIfRequestHasEmptyBody() {
+    @DisplayName("Deve retornar 400 se o corpo da requisição estiver vazio")
+    void shoulReturn401IfRequestHasEmptyBody() {
+
         given()
                 .header("Authorization", "Bearer " + authToken)
                 .contentType("application/json")
@@ -213,8 +214,29 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
                 .when()
                 .post("/api/combat")
                 .then()
-                .statusCode(401);
+                .statusCode(400);
+
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 400 Bad Request se o ID do personagem for nulo")
+    void shouldReturn400IfCharacterIdIsNull() {
+
+        CombatRequestDTO combatRequest = new CombatRequestDTO(player1.id(), 1, null, 1);
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(combatRequest)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(400);
+
+    }
+
 
 
 }
