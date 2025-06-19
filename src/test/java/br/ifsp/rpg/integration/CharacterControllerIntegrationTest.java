@@ -212,10 +212,18 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @WithMockUser
-    void deveRetornar404QuandoPersonagemNaoExiste() throws Exception {
-        mockMvc.perform(get("/api/characters/{id}", UUID.randomUUID()))
-                .andExpect(status().isNotFound());
+    void deveRetornar404QuandoPersonagemNaoExiste() {
+        String token = getAuthToken();
+        UUID idInexistente = UUID.randomUUID();
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", idInexistente)
+                .when()
+                .get("/api/characters/{id}")
+                .then()
+                .statusCode(404);
     }
 
     @Test
