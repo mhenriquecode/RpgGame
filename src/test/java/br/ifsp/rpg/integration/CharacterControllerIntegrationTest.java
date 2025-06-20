@@ -321,13 +321,19 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @WithMockUser
-    void deveRetornar415QuandoContentTypeInvalido() throws Exception {
+    void deveRetornar415QuandoContentTypeInvalido() {
+        String token = getAuthToken();
         String xml = "<character><name>Arthas</name></character>";
-        mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_XML)
-                        .content(xml))
-                .andExpect(status().isUnsupportedMediaType());
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.XML)
+                .body(xml)
+                .when()
+                .post("/api/characters")
+                .then()
+                .statusCode(415);
     }
 
     @Test
