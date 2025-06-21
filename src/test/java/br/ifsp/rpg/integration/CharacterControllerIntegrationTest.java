@@ -69,7 +69,10 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     }
 
     @Test
-    void deveCriarPersonagemComSucesso() {
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve criar personagem com sucesso")
+    void shouldCreateCharacterSuccessfully() {
         String token = getAuthToken();
         CharacterDTO dto = novoPersonagem();
 
@@ -88,7 +91,8 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    void deveBuscarPersonagemExistentePorId() {
+    @DisplayName("Deve buscar personagem existente por ID")
+    void shouldRetrieveExistingCharacterById() {
         String token = getAuthToken();
         CharacterDTO criado;
 
@@ -114,7 +118,8 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    void deveListarTodosPersonagens() {
+    @DisplayName("Deve listar todos personagens")
+    void shouldListAllCharacters() {
         String token = getAuthToken();
         try {
             createCharacterViaApi(token, novoPersonagem());
@@ -135,7 +140,8 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    void deveAtualizarPersonagem() {
+    @DisplayName("Deve atualizar personagem")
+    void shouldUpdateCharacter() {
         String token = getAuthToken();
         CharacterDTO criado = null;
         try {
@@ -173,7 +179,8 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    void deveRemoverPersonagem() {
+    @DisplayName("Deve remover personagem")
+    void shouldDeleteCharacter() {
         String token = getAuthToken();
         CharacterDTO criado = null;
         try {
@@ -192,11 +199,11 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .statusCode(204);
     }
 
-
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    void deveRetornarListaVaziaQuandoNaoHaPersonagens() {
+    @DisplayName("Deve retornar lista vazia quando não há personagens")
+    void shouldReturnEmptyListWhenNoCharacters() {
         String token = getAuthToken();
 
         given()
@@ -212,7 +219,8 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    void deveRetornar404QuandoPersonagemNaoExiste() {
+    @DisplayName("Deve retornar 404 quando personagem não existe")
+    void shouldReturn404WhenCharacterDoesNotExist() {
         String token = getAuthToken();
         UUID idInexistente = UUID.randomUUID();
 
@@ -229,7 +237,8 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    void deveRetornar400QuandoCriarPersonagemComDadosInvalidos() {
+    @DisplayName("Deve retornar 400 quando criar personagem com dados inválidos")
+    void shouldReturn400WhenCreatingCharacterWithInvalidData() {
         CharacterDTO dto = new CharacterDTO(
                 null,
                 "",
@@ -256,7 +265,8 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    void deveRetornar400QuandoAtualizarPersonagemComDadosInvalidos() {
+    @DisplayName("Deve retornar 400 quando atualizar personagem com dados inválidos")
+    void shouldReturn400WhenUpdatingCharacterWithInvalidData() {
         String token = getAuthToken();
         CharacterDTO criado = null;
         try {
@@ -293,7 +303,8 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    void deveRetornar404AoRemoverPersonagemInexistente() {
+    @DisplayName("Deve retornar 404 ao remover personagem inexistente")
+    void shouldReturn404WhenDeletingNonexistentCharacter() {
         String token = getAuthToken();
 
         given()
@@ -309,7 +320,8 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    void deveRetornar401QuandoNaoAutenticado() {
+    @DisplayName("Deve retornar 401 quando não autenticado")
+    void shouldReturn401WhenNotAuthenticated() {
         given()
                 .port(port)
                 .when()
@@ -321,7 +333,8 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    void deveRetornar415QuandoContentTypeInvalido() {
+    @DisplayName("Deve retornar 415 quando Content-Type inválido")
+    void shouldReturn415WhenContentTypeIsInvalid() {
         String token = getAuthToken();
         String xml = "<character><name>Arthas</name></character>";
 
