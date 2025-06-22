@@ -481,4 +481,43 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .body("race",       equalTo(created.race().toString()))
                 .body("weapon",     equalTo(created.weapon().toString()));
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve listar múltiplos personagens e retornar payload completo")
+    void shouldListAllCharactersAndReturnCompletePayload() throws JsonProcessingException {
+        String token = getAuthToken();
+        CharacterDTO first  = createCharacterViaApi(token, novoPersonagem());
+        CharacterDTO second = createCharacterViaApi(token,
+                new CharacterDTO(
+                        null,
+                        "Hatsune Miku",
+                        ClassType.PALADIN,
+                        Race.ELF,
+                        Weapon.DAGGER,
+                        69, 17, 6, 9, 690
+                )
+        );
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get("/api/characters")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("size()",    equalTo(2))
+                .body("[0].id",    equalTo(first.id().toString()))
+                .body("[0].name",       equalTo(first.name()))
+                .body("[0].classType",  equalTo(first.classType().toString()))
+                .body("[0].race",       equalTo(first.race().toString()))
+                .body("[0].weapon",     equalTo(first.weapon().toString()))
+                .body("[1].id",    equalTo(second.id().toString()))
+                .body("[1].name",       equalTo("Hatsune Miku"))
+                .body("[1].classType",  equalTo(second.classType().toString()))
+                .body("[1].race",       equalTo(second.race().toString()))
+                .body("[1].weapon",     equalTo(second.weapon().toString()));
+    }
 }
