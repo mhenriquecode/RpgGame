@@ -423,18 +423,7 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
         RpgCharacter originalCharModel = new RpgCharacter("UpdateMe", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD);
         CharacterDTO originalChar = createCharacterViaApi(authToken, CharacterDTO.from(originalCharModel));
 
-        CharacterDTO updatedDto = new CharacterDTO(
-                originalChar.id(),
-                "Updated",
-                originalChar.classType(),
-                originalChar.race(),
-                originalChar.weapon(),
-                originalChar.maxHealth(),
-                originalChar.strength(),
-                originalChar.defense(),
-                originalChar.speed(),
-                originalChar.armor()
-        );
+        CharacterDTO updatedDto = createUpdatedCharacterDTO(originalChar, "Updated");
 
         given()
                 .header("Authorization", "Bearer " + authToken)
@@ -447,5 +436,39 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
                 .body("name", equalTo("Updated"));
     }
 
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Não deve permitir que um usuário atualize o personagem de outro usuário")
+    void shouldNotAllowAUserToUpdateAnotherUsersCharacter() {
 
+        String newAuthToken = getAuthToken();
+
+        CharacterDTO updatedDto = createUpdatedCharacterDTO(player1, "Hacked O_o");
+
+        given()
+                .header("Authorization", "Bearer " + newAuthToken)
+                .contentType("application/json")
+                .body(updatedDto)
+                .when()
+                .put("/api/characters/{id}", player1.id())
+                .then()
+                .statusCode(anyOf(is(403), is(404)));
+
+    }
+
+    private CharacterDTO createUpdatedCharacterDTO(CharacterDTO original, String newName) {
+        return new CharacterDTO(
+                original.id(),
+                newName,
+                original.classType(),
+                original.race(),
+                original.weapon(),
+                original.maxHealth(),
+                original.strength(),
+                original.defense(),
+                original.speed(),
+                original.armor()
+        );
+    }
 }
