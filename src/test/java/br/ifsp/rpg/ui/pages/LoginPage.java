@@ -2,6 +2,7 @@ package br.ifsp.rpg.ui.pages;
 
 import lombok.Getter;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -28,11 +29,10 @@ public class LoginPage extends BasePage {
         wait.until(ExpectedConditions.visibilityOf(emailInput));
     }
 
-    public HomePage login(String email, String password) {
+    public void login(String email, String password) {
         emailInput.sendKeys(email);
         passwordInput.sendKeys(password);
         loginButton.click();
-        return new HomePage(driver, wait);
     }
 
     public RegisterPage navigateToRegisterPage() {
@@ -41,10 +41,14 @@ public class LoginPage extends BasePage {
     }
 
     public String getErrorMessage() {
-        WebElement messageElement = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.className("error-message"))
-        );
-        return messageElement.getText();
+        wait.until(driver -> {
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            String text = (String) js.executeScript(
+                    "const el = document.querySelector('.error-message'); return el ? el.textContent : '';"
+            );
+            return text != null && !text.isEmpty();
+        });
+        return driver.findElement(By.className("error-message")).getText();
     }
 
 }

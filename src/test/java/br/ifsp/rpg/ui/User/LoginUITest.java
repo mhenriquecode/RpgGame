@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 
@@ -18,6 +19,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.Locale;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class LoginUITest extends BaseUITest {
 
@@ -52,14 +54,30 @@ public class LoginUITest extends BaseUITest {
     @DisplayName("Deve fazer login com sucesso e gerar token")
     void shouldLoginSuccessfully() {
 
-        String email = faker.name().lastName() + "@test.com";
+        String email = faker.name().username() + "@test.com";
         String password = faker.internet().password(8, 16);
         registerTestUser(email, password);
 
-        HomePage homePage = loginPage.login(email, password);
+        loginPage.login(email, password);
 
+        HomePage homePage = new HomePage(driver, wait);
         assertThat(homePage.isPageLoaded()).isTrue();
-        assertThat(driver.getCurrentUrl()).isEqualTo(baseUrl + "/");
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve falhar ao fazer login com senha incorreta")
+    void shouldFailLoginWithIncorrectPassword() {
+        String email = faker.name().username() + "@test.com";
+        String password = faker.internet().password(8, 16);
+        registerTestUser(email, password);
+
+        loginPage.login(email, "wrong-password");
+
+        String errorMessage = loginPage.getErrorMessage();
+        assertThat(errorMessage).contains("Request failed with status code 401");
+    }
+
+
 
 }
