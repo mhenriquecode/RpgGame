@@ -1,5 +1,6 @@
 package br.ifsp.rpg.ui.pages;
 
+import lombok.Getter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -14,6 +15,7 @@ public class LoginPage extends BasePage {
     @FindBy(id = "login-password")
     private WebElement passwordInput;
 
+    @Getter
     @FindBy(css = "form button[type='submit']")
     private WebElement loginButton;
 
@@ -36,4 +38,5 @@ public class LoginPage extends BasePage {
         registerLinkButton.click();
         return new RegisterPage(driver, wait);
     }
+
 }

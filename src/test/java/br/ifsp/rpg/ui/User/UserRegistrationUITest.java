@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Locale;
 
@@ -175,6 +176,20 @@ public class UserRegistrationUITest extends BaseUITest {
 
         wait.until(ExpectedConditions.visibilityOf(registerPage.getNameInput()));
         assertThat(registerPage.getNameInput().isDisplayed()).isTrue();
+
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve permitir a navegação da página de registro de volta para a de login")
+    void shouldNavigateFromRegisterToLoginPage() {
+
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+        wait.until(ExpectedConditions.visibilityOf(registerPage.getNameInput()));
+
+        LoginPage newLoginPage = registerPage.navigateToLoginPage();
+        wait.until(ExpectedConditions.visibilityOf(newLoginPage.getLoginButton()));
+        assertThat(newLoginPage.getLoginButton().isDisplayed()).isTrue();
 
     }
 
