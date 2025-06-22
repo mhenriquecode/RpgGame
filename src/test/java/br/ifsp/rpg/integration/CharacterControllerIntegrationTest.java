@@ -418,4 +418,18 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .then()
                 .statusCode(401);
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 401 ao remover personagem sem autenticação")
+    void shouldReturn401WhenDeletingCharacterWithoutAuth() {
+        given()
+                .port(port)
+                .pathParam("id", UUID.randomUUID())
+                .when()
+                .delete("/api/characters/{id}")
+                .then()
+                .statusCode(401);
+    }
 }
