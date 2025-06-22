@@ -37,7 +37,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@AutoConfigureMockMvc
 class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
+    @Autowired
+    private MockMvc mockMvc;
 
     @LocalServerPort
     private int port;
