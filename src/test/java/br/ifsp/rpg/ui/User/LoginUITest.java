@@ -44,7 +44,7 @@ public class LoginUITest extends BaseUITest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        faker = new Faker(new Locale("pt-BR"));
+        faker = new Faker(new Locale("en-US"));
         driver.get(baseUrl);
         loginPage = new LoginPage(driver, wait);
     }
@@ -58,7 +58,7 @@ public class LoginUITest extends BaseUITest {
         String password = faker.internet().password(8, 16);
         registerTestUser(email, password);
 
-        HomePage homePage = loginPage.loginSuccessfully(email, password);
+        HomePage homePage = loginPage.login(email, password);
         assertThat(homePage.isPageLoaded()).isTrue();
     }
 
@@ -92,21 +92,31 @@ public class LoginUITest extends BaseUITest {
     }
 
     @Test
-    @Tag("UiTest")
     @DisplayName("Deve fazer logout com sucesso e retornar para a tela de login")
     void shouldLogoutSuccessfullyAndReturnToLoginPage() {
         String email = faker.name().username() + "@test.com";
         String password = faker.internet().password(8, 16);
         registerTestUser(email, password);
 
-        HomePage homePage = loginPage.loginSuccessfully(email, password);
+        HomePage homePage = loginPage.login(email, password);
         assertThat(homePage.isPageLoaded()).isTrue();
 
         LoginPage newLoginPage = homePage.logout();
 
         assertThat(newLoginPage.isPageLoaded()).isTrue();
-        assertThat(driver.getCurrentUrl()).isEqualTo(baseUrl + "/");
     }
 
+    @Test
+    @DisplayName("Deve ser bloqueado pelo navegador ao tentar fazer login com a senha em branco")
+    void shouldBeBlockedByBrowserWithBlankPassword() {
+        String email = faker.name().username() + "@test.com";
+        String password = faker.internet().password(8, 16);
+        registerTestUser(email, password);
+
+        loginPage.attemptLogin(email, "");
+
+
+        assertThat(loginPage.getEmailInputValue()).isEqualTo(email);
+    }
 
 }

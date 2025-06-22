@@ -60,4 +60,7 @@ public class LoginPage extends BasePage {
         return loginButton.isDisplayed();
     }
 
+    public String getEmailInputValue() {
+        return emailInput.getAttribute("value");
+    }
 }
