@@ -16,10 +16,12 @@ import org.springframework.orm.jpa.JpaSystemException;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(
         classes = br.ifsp.web.DemoAuthAppApplication.class,
@@ -164,5 +166,33 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
         assertEquals(1.5, avgCount);
         assertEquals(2, maxCount);
     }
+
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve lidar com atualizações concorrentes sem perder dados")
+    void shouldHandleConcurrentUpdatesWithoutDataLoss() throws InterruptedException {
+        RpgCharacterEntity entity = createAndPersist("Concurrent", ClassType.WARRIOR, Race.HUMAN);
+        UUID id = entity.getId();
+
+        Runnable updater = () -> {
+            RpgCharacterEntity e = repository.findById(id).orElseThrow();
+            e.setName("Updated_" + Thread.currentThread().getId());
+            repository.save(e);
+        };
+
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+        for (int i = 0; i < 5; i++) {
+            executor.execute(updater);
+        }
+        executor.shutdown();
+        executor.awaitTermination(5, TimeUnit.SECONDS);
+
+        RpgCharacterEntity finalEntity = repository.findById(id).orElseThrow();
+        assertNotNull(finalEntity.getName());
+        assertTrue(finalEntity.getName().startsWith("Updated_"));
+    }
+
+
 
 }
