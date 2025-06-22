@@ -511,4 +511,31 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
 
     }
 
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 400 ao tentar iniciar combate com um personagem deletado")
+    void shouldReturn400WhenStartingCombatWithDeletedCharacter() throws Exception {
+        RpgCharacter charToDeleteModel = new RpgCharacter("ToDelete", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD);
+        CharacterDTO charToDelete = createCharacterViaApi(authToken, CharacterDTO.from(charToDeleteModel));
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .when()
+                .delete("/api/characters/{id}", charToDelete.id())
+                .then()
+                .statusCode(204);
+
+        CombatRequestDTO combatRequest = new CombatRequestDTO(player1.id(), 1, charToDelete.id(), 1);
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(combatRequest)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(400);
+    }
+
 }
