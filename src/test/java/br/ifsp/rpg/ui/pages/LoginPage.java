@@ -28,11 +28,11 @@ public class LoginPage extends BasePage {
         wait.until(ExpectedConditions.visibilityOf(emailInput));
     }
 
-    public CharacterListPage login(String email, String password) {
+    public HomePage login(String email, String password) {
         emailInput.sendKeys(email);
         passwordInput.sendKeys(password);
         loginButton.click();
-        return new CharacterListPage(driver, wait);
+        return new HomePage(driver, wait);
     }
 
     public RegisterPage navigateToRegisterPage() {
