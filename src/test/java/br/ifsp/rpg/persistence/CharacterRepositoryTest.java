@@ -134,4 +134,35 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
         RpgCharacterEntity updated = repository.findById(id).orElseThrow();
         assertEquals("NewName", updated.getName());
     }
+
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve calcular estatísticas de personagens por raça")
+    void shouldComputeCharacterStatisticsByRace() {
+        createAndPersist("C1", ClassType.WARRIOR, Race.HUMAN);
+        createAndPersist("C2", ClassType.BERSERK, Race.ORC);
+        createAndPersist("C3", ClassType.PALADIN, Race.HUMAN);
+        repository.flush();
+
+        Map<Race, Long> countByRace = repository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        RpgCharacterEntity::getRace,
+                        Collectors.counting()
+                ));
+
+        double avgCount = countByRace.values().stream()
+                .mapToLong(Long::longValue)
+                .average()
+                .orElse(0);
+
+        long maxCount = countByRace.values().stream()
+                .mapToLong(Long::longValue)
+                .max()
+                .orElse(0);
+
+        assertEquals(1.5, avgCount);
+        assertEquals(2, maxCount);
+    }
+
 }
