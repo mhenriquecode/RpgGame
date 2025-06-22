@@ -45,5 +45,32 @@ public class UserRegistrationUITest extends BaseUITest {
         assertThat(driver.getCurrentUrl()).isEqualTo(expectedUrl);
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve falhar ao registrar com senhas que não coincidem e permanecer na página")
+    void shouldFailToRegisterWithMismatchedPasswordsAndStayOnPage() {
+        LoginPage loginPage = new LoginPage(driver, wait);
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+        String initialUrl = registerPage.getCurrentUrl();
+
+        String password = faker.internet().password(8, 16);
+        String differentPassword = faker.internet().password(8, 16);
+
+        registerPage.registerUser(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                faker.internet().emailAddress(),
+                password,
+                differentPassword
+        );
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertThat(driver.getCurrentUrl()).isEqualTo(initialUrl);
+    }
+
 
 }
