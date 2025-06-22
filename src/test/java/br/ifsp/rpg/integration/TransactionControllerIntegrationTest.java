@@ -45,4 +45,14 @@ public class TransactionControllerIntegrationTest extends BaseApiIntegrationTest
         mockMvc.perform(get("/api/v1/hello"))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("hello endpoint should return hello unauthorized when invalid token")
+    @Test
+    public void helloEndpointShouldReturnUnauthorizedWhenInvalidToken() throws Exception {
+        mockMvc.perform(get("/api/v1/hello")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer Ado is the best"))
+                .andExpect(status().isUnauthorized());
+    }
 }
