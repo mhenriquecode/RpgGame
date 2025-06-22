@@ -370,5 +370,20 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .andExpect(status().isCreated());
     }
 
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 401 ao criar personagem sem autenticação")
+    void shouldReturn401WhenCreatingCharacterWithoutAuth(){
+        CharacterDTO dto = novoPersonagem();
 
+        given()
+                .port(port)
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when()
+                .post("/api/characters")
+                .then()
+                .statusCode(401);
+    }
 }
