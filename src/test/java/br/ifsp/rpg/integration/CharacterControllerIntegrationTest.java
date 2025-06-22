@@ -432,4 +432,31 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .then()
                 .statusCode(401);
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve criar personagem e retornar payload completo")
+    void shouldCreateCharacterAndReturnCompletePayload() throws JsonProcessingException {
+        String token = getAuthToken();
+        CharacterDTO dto = novoPersonagem();
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when()
+                .post("/api/characters")
+                .then()
+                .statusCode(201)
+                .contentType(ContentType.JSON)
+                .body("id",         notNullValue())
+                .body("name",       equalTo(dto.name()))
+                .body("classType",  equalTo(dto.classType().toString()))
+                .body("race",       equalTo(dto.race().toString()))
+                .body("weapon",     equalTo(dto.weapon().toString()));
+    }
+
+
 }
