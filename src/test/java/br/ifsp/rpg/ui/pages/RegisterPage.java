@@ -1,6 +1,8 @@
 package br.ifsp.rpg.ui.pages;
 
+import lombok.Getter;
 import org.jspecify.annotations.Nullable;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class RegisterPage extends BasePage {
 
+    @Getter
     @FindBy(id = "register-name")
     private WebElement nameInput;
 
@@ -43,11 +46,14 @@ public class RegisterPage extends BasePage {
         registerButton.click();
     }
 
-    public WebElement getNameInput() {
-        return nameInput;
-    }
-
     public String getNameInputValue() {
         return nameInput.getAttribute("value");
+    }
+
+    public String getErrorMessage() {
+        WebElement messageElement = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.className("error-message"))
+        );
+        return messageElement.getText();
     }
 }

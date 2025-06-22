@@ -97,4 +97,24 @@ public class UserRegistrationUITest extends BaseUITest {
         }
         assertThat(driver.getCurrentUrl()).isEqualTo(initialUrl);
     }
+
+    @Test
+    @DisplayName("Deve falhar ao tentar registrar com nome e sobrenome contendo apenas espaços")
+    void shouldFailToRegisterWithWhitespaceNameAndLastname() {
+        LoginPage loginPage = new LoginPage(driver, wait);
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+        String password = faker.internet().password(8, 16, true, true);
+
+        registerPage.registerUser(
+                "          ",
+                "          ",
+                faker.internet().emailAddress(),
+                password,
+                password
+        );
+
+        String errorMessage = registerPage.getErrorMessage();
+
+        assertThat(errorMessage).isNotEmpty();
+    }
 }
