@@ -37,11 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@AutoConfigureMockMvc
 class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
-    @Autowired
-    private MockMvc mockMvc;
-
     @LocalServerPort
     private int port;
     
@@ -356,18 +352,26 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
     @DisplayName("Deve tratar nomes com aspas simples sem causar erro de SQL")
     @WithMockUser
     void deveTratarNomesComAspasSimplesSemCausarErroDeSQL() throws Exception {
+        String token = getAuthToken();
+
         RpgCharacter characterModel = new RpgCharacter(
                 "D'gok, the Unbroken",
                 ClassType.BERSERK,
                 Race.ORC,
                 Weapon.AXE
         );
-        CharacterDTO characterWithSingleQuote = CharacterDTO.from(characterModel);
+        CharacterDTO dto = CharacterDTO.from(characterModel);
 
-        mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(characterWithSingleQuote)))
-                .andExpect(status().isCreated());
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when()
+                .post("/api/characters")
+                .then()
+                .statusCode(201)
+                .body("name", equalTo("D'gok, the Unbroken"));
     }
 
     @Test
