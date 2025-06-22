@@ -107,4 +107,18 @@ public class CharacterUITest extends BaseUITest {
         form.submit();
         assertThat(form.getErrorMessage()).isNotEmpty();
     }
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve permitir criar personagem com caracteres especiais no nome")
+    void shouldAllowSpecialCharactersInName() {
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                "!@#$%¨&*()_+{}:<>?|",
+                "ELF",
+                "DUELIST",
+                "DAGGER"
+        );
+        form.submit();
+        assertThat(driver.getCurrentUrl()).contains("/personagens/criar");
+    }
 }
