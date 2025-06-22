@@ -10,6 +10,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -107,6 +112,7 @@ public class CharacterUITest extends BaseUITest {
         form.submit();
         assertThat(form.getErrorMessage()).isNotEmpty();
     }
+
     @Test
     @Tag("UiTest")
     @DisplayName("Deve permitir criar personagem com caracteres especiais no nome")
@@ -120,5 +126,29 @@ public class CharacterUITest extends BaseUITest {
         );
         form.submit();
         assertThat(driver.getCurrentUrl()).contains("/personagens/criar");
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve aceitar nome com SQL Injection e mostrar personagem criado na lista")
+    void shouldShowSqlInjectionNameInCharacterList() {
+        String sqlInjection = "'; DROP TABLE characters; --";
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                sqlInjection,
+                "ELF",
+                "DUELIST",
+                "DAGGER"
+        );
+        form.submit();
+
+        driver.get(baseUrl + "/personagens/lista");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".character-list-container")));
+
+        List<WebElement> nomes = driver.findElements(By.xpath("//*[contains(text(),\"'; DROP TABLE characters; --\")]"));
+        assertThat(nomes).isNotEmpty();
+
+        List<WebElement> erros = driver.findElements(By.className("error-message"));
+        assertThat(erros).isEmpty();
     }
 }
