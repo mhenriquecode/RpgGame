@@ -40,6 +40,13 @@ public class LoginPage extends BasePage {
         return new HomePage(driver, wait);
     }
 
+    public CharacterListPage loginAsCharacter(String email, String password) {
+        emailInput.sendKeys(email);
+        passwordInput.sendKeys(password);
+        loginButton.click();
+        return new CharacterListPage(driver, wait);
+    }
+
     public RegisterPage navigateToRegisterPage() {
         registerLinkButton.click();
         return new RegisterPage(driver, wait);

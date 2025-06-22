@@ -40,8 +40,8 @@ public class CharacterUITest extends BaseUITest {
         );
 
         driver.get(baseUrl);
-        loginPage = new LoginPage(driver, wait);
-        CharacterListPage listPage = loginPage.login(email, password);
+        CharacterListPage listPage = loginPage.loginAsCharacter(email, password);
+        listPage.clicarCriarNovoPersonagem();
 
         driver.get(baseUrl + "/characters");
         listPage.clicarCriarNovoPersonagem();
