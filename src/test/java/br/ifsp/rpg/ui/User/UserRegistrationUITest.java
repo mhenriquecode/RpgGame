@@ -246,7 +246,7 @@ public class UserRegistrationUITest extends BaseUITest {
     @DisplayName("Deve falhar ao registrar com email excedendo o limite de caracteres do banco")
     void shouldFailToRegisterWithOverlyLongEmail() {
         RegisterPage registerPage = loginPage.navigateToRegisterPage();
-        String longEmail = "a".repeat(247) + "@test.com";
+        String longEmail = "a".repeat(260) + "@test.com";
         String password = faker.internet().password(8, 16, true, true);
 
         registerPage.registerUser(
@@ -260,4 +260,23 @@ public class UserRegistrationUITest extends BaseUITest {
         String errorMessage = registerPage.getErrorMessage();
         assertThat(errorMessage).isNotEmpty();
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve falhar ao registrar com senhas que diferem apenas em maiúsculas/minúsculas")
+    void shouldFailWithCaseSensitivePasswordMismatch() {
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+
+        registerPage.registerUser(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                faker.name().username() + "@test.com",
+                "Password123",
+                "password123"
+        );
+
+        String errorMessage = registerPage.getErrorMessage();
+        assertThat(errorMessage).contains("As senhas não coincidem");
+    }
+
 }
