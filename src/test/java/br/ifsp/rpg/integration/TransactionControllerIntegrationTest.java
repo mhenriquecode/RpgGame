@@ -31,4 +31,10 @@ public class TransactionControllerIntegrationTest extends BaseApiIntegrationTest
                 .andExpect(content().string(startsWith("Hello: ")))
                 .andExpect(content().string(matchesRegex("Hello: [0-9a-f\\-]{36}")));
     }
+
+    @Test
+    public void helloEndpointShouldReturnUnauthorizedWhenNoToken() throws Exception {
+        mockMvc.perform(get("/api/v1/hello"))
+                .andExpect(status().isUnauthorized());
+    }
 }
