@@ -520,4 +520,38 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .body("[1].race",       equalTo(second.race().toString()))
                 .body("[1].weapon",     equalTo(second.weapon().toString()));
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve atualizar personagem e retornar payload completo")
+    void shouldUpdateCharacterAndReturnCompletePayload() throws JsonProcessingException {
+        String token = getAuthToken();
+        CharacterDTO created = createCharacterViaApi(token, novoPersonagem());
+        CharacterDTO updateDto = new CharacterDTO(
+                created.id(),
+                "Hatsune Miku",
+                ClassType.PALADIN,
+                Race.DWARF,
+                Weapon.AXE,
+                120, 25, 18, 12, 7
+        );
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .pathParam("id", created.id())
+                .body(updateDto)
+                .when()
+                .put("/api/characters/{id}")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("id",         equalTo(created.id().toString()))
+                .body("name",       equalTo("Hatsune Miku"))
+                .body("classType",  equalTo("PALADIN"))
+                .body("race",       equalTo("DWARF"))
+                .body("weapon",     equalTo("AXE"));
+    }
 }
