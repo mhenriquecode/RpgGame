@@ -413,4 +413,39 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
                 .body("name", hasItems("Ana", "Candidorr", "Alan"))
                 .body("name", not(hasItem("Fefeu")));
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve atualizar um personagem com sucesso")
+    void shouldUpdateACharacter() throws Exception {
+
+        RpgCharacter originalCharModel = new RpgCharacter("UpdateMe", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD);
+        CharacterDTO originalChar = createCharacterViaApi(authToken, CharacterDTO.from(originalCharModel));
+
+        CharacterDTO updatedDto = new CharacterDTO(
+                originalChar.id(),
+                "Updated",
+                originalChar.classType(),
+                originalChar.race(),
+                originalChar.weapon(),
+                originalChar.maxHealth(),
+                originalChar.strength(),
+                originalChar.defense(),
+                originalChar.speed(),
+                originalChar.armor()
+        );
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(updatedDto)
+                .when()
+                .put("/api/characters/{id}", originalChar.id())
+                .then()
+                .statusCode(200)
+                .body("name", equalTo("Updated"));
+    }
+
+
 }
