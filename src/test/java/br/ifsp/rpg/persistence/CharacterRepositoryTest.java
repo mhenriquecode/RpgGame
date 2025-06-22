@@ -329,4 +329,24 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
                 "Entidade válida não deveria existir após rollback"
         );
     }
+
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve calcular estatísticas de personagens por raça")
+    void shouldComputeAggregatedStatsByRace() {
+        createAndPersist("X1", ClassType.WARRIOR, Race.HUMAN);
+        createAndPersist("X2", ClassType.BERSERK, Race.ORC);
+        createAndPersist("X3", ClassType.PALADIN, Race.HUMAN);
+        repository.flush();
+        Map<Race, Long> m = repository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        RpgCharacterEntity::getRace,
+                        Collectors.counting()
+                ));
+        double avg = m.values().stream().mapToLong(Long::longValue).average().orElse(0);
+        long mx = m.values().stream().mapToLong(Long::longValue).max().orElse(0);
+        assertEquals(1.5, avg);
+        assertEquals(2, mx);
+    }
 }
