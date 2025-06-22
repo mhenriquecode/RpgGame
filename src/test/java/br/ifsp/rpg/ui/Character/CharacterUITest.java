@@ -175,4 +175,23 @@ public class CharacterUITest extends BaseUITest {
         List<WebElement> nomes = driver.findElements(By.xpath("//*[contains(text(),'" + name + "')]"));
         assertThat(nomes.size()).isEqualTo(1);
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve remover espaços extras no início e fim do nome")
+    void shouldTrimWhitespaceInName() {
+        String name = "   " + faker.name().firstName() + "   ";
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                name,
+                "ORC",
+                "BERSERK",
+                "AXE"
+        );
+        form.submit();
+        driver.get(baseUrl + "/personagens/lista");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".character-list-container")));
+        List<WebElement> nomes = driver.findElements(By.xpath("//*[contains(text(),'" + name.trim() + "')]"));
+        assertThat(nomes).isNotEmpty();
+    }
 }
