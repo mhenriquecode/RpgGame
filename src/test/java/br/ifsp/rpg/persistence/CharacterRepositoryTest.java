@@ -252,4 +252,31 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
         });
     }
 
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve evitar deadlock em deleções concorrentes")
+    void shouldPreventDeadlockOnConcurrentDeletes() throws InterruptedException {
+        RpgCharacterEntity char1 = createAndPersist("Deadlock_1", ClassType.WARRIOR, Race.ORC);
+        RpgCharacterEntity char2 = createAndPersist("Deadlock_2", ClassType.BERSERK, Race.ELF);
+
+        Runnable thread1 = () -> {
+            repository.deleteById(char1.getId());
+            repository.deleteById(char2.getId());
+        };
+
+        Runnable thread2 = () -> {
+            repository.deleteById(char2.getId());
+            repository.deleteById(char1.getId());
+        };
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        executor.execute(thread1);
+        executor.execute(thread2);
+
+        executor.shutdown();
+        boolean completed = executor.awaitTermination(5, TimeUnit.SECONDS);
+
+        assertTrue(completed, "Potential deadlock detected");
+    }
 }
