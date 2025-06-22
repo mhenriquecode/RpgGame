@@ -104,4 +104,17 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
         assertEquals(2, countByRace.get(Race.HUMAN));
         assertEquals(1, countByRace.get(Race.ORC));
     }
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve deletar personagem existente por ID")
+    void shouldDeleteCharacterById() {
+        RpgCharacterEntity entity = createAndPersist("Temp", ClassType.PALADIN, Race.HUMAN);
+        UUID id = entity.getId();
+
+        repository.deleteById(id);
+        repository.flush();
+
+        assertFalse(repository.existsById(id));
+    }
 }
