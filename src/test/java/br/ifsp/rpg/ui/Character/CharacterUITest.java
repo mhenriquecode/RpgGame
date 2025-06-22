@@ -76,4 +76,19 @@ public class CharacterUITest extends BaseUITest {
         form.submit();
         assertThat(form.getErrorMessage()).isNotEmpty();
     }
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve exibir erro ao tentar criar personagem com nome muito longo")
+    void shouldShowErrorWhenNameIsTooLong() {
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        String longName = "A".repeat(101); 
+        form.fillCharacterForm(
+                longName,
+                "ORC",
+                "BERSERK",
+                "AXE"
+        );
+        form.submit();
+        assertThat(form.getErrorMessage()).isNotEmpty();
+    }
 }
