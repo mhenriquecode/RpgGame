@@ -64,4 +64,8 @@ public class RegisterPage extends BasePage {
         );
         return messageElement.getText();
     }
+
+    public String getEmailInputValue() {
+        return emailInput.getAttribute("value");
+    }
 }

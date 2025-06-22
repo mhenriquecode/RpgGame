@@ -27,7 +27,7 @@ public class UserRegistrationUITest extends BaseUITest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        faker = new Faker(new Locale("pt-BR"));
+        faker = new Faker(new Locale("en-US"));
         driver.get(baseUrl);
         loginPage = new LoginPage(driver, wait);
     }
@@ -191,6 +191,18 @@ public class UserRegistrationUITest extends BaseUITest {
         wait.until(ExpectedConditions.visibilityOf(newLoginPage.getLoginButton()));
         assertThat(newLoginPage.getLoginButton().isDisplayed()).isTrue();
 
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve ser bloqueado pelo navegador ao tentar registrar com e-mail sem '@'")
+    void shouldBeBlockedByBrowserForEmailWithoutAtSymbol() {
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+        String invalidEmail = "emailinvalido.com";
+
+        registerPage.registerUser("Nome", "Valido", invalidEmail, "pass123", "pass123");
+
+        assertThat(registerPage.getEmailInputValue()).isEqualTo(invalidEmail);
     }
 
 }
