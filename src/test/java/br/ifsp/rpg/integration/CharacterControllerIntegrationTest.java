@@ -554,4 +554,31 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .body("race",       equalTo("DWARF"))
                 .body("weapon",     equalTo("AXE"));
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve remover personagem e não encontrá-lo depois")
+    void shouldNotFindCharacterAfterDeletion() throws JsonProcessingException {
+        String token = getAuthToken();
+        CharacterDTO created = createCharacterViaApi(token, novoPersonagem());
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", created.id())
+                .when()
+                .delete("/api/characters/{id}")
+                .then()
+                .statusCode(204);
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", created.id())
+                .when()
+                .get("/api/characters/{id}")
+                .then()
+                .statusCode(404);
+    }
 }
