@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class UserRegistrationUITest extends BaseUITest {
 
     private Faker faker;
+    private LoginPage loginPage;
 
     @Override
     @BeforeEach
@@ -27,6 +28,7 @@ public class UserRegistrationUITest extends BaseUITest {
         super.setUp();
         faker = new Faker(new Locale("pt-BR"));
         driver.get(baseUrl);
+        loginPage = new LoginPage(driver, wait);
     }
 
     @Test
@@ -54,24 +56,18 @@ public class UserRegistrationUITest extends BaseUITest {
     @Tag("UiTest")
     @DisplayName("Deve falhar ao registrar com senhas que não coincidem e permanecer na página")
     void shouldFailToRegisterWithMismatchedPasswordsAndStayOnPage() {
-        LoginPage loginPage = new LoginPage(driver, wait);
         RegisterPage registerPage = loginPage.navigateToRegisterPage();
-        String initialUrl = registerPage.getCurrentUrl();
 
         registerPage.registerUser(
                 faker.name().firstName(),
                 faker.name().lastName(),
                 faker.internet().emailAddress(),
                 "password123",
-                "differentPassword123"
+                "differentPassword"
         );
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assertThat(driver.getCurrentUrl()).isEqualTo(initialUrl);
+        String errorMessage = registerPage.getErrorMessage();
+        assertThat(errorMessage).contains("As senhas não coincidem");
     }
 
     @Test

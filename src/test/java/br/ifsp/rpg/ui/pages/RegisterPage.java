@@ -30,6 +30,9 @@ public class RegisterPage extends BasePage {
     @FindBy(css = "form button[type='submit']")
     private WebElement registerButton;
 
+    @FindBy(css = ".switch-form-text .link-button")
+    private WebElement loginLinkButton;
+
     public RegisterPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
         wait.until(ExpectedConditions.visibilityOf(nameInput));
@@ -48,6 +51,11 @@ public class RegisterPage extends BasePage {
 
     public String getNameInputValue() {
         return nameInput.getAttribute("value");
+    }
+
+    public LoginPage navigateToLoginPage() {
+        loginLinkButton.click();
+        return new LoginPage(driver, wait);
     }
 
     public String getErrorMessage() {
