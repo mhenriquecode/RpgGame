@@ -370,5 +370,188 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .andExpect(status().isCreated());
     }
 
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 401 ao criar personagem sem autenticação")
+    void shouldReturn401WhenCreatingCharacterWithoutAuth(){
+        CharacterDTO dto = novoPersonagem();
 
+        given()
+                .port(port)
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when()
+                .post("/api/characters")
+                .then()
+                .statusCode(401);
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 401 ao buscar personagem por ID sem autenticação")
+    void shouldReturn401WhenGettingCharacterByIdWithoutAuth() {
+        given()
+                .port(port)
+                .pathParam("id", UUID.randomUUID())
+                .when()
+                .get("/api/characters/{id}")
+                .then()
+                .statusCode(401);
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 401 ao atualizar personagem sem autenticação")
+    void shouldReturn401WhenUpdatingCharacterWithoutAuth() {
+        CharacterDTO updateDto = novoPersonagem();
+
+        given()
+                .port(port)
+                .contentType(ContentType.JSON)
+                .pathParam("id", UUID.randomUUID())
+                .body(updateDto)
+                .when()
+                .put("/api/characters/{id}")
+                .then()
+                .statusCode(401);
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 401 ao remover personagem sem autenticação")
+    void shouldReturn401WhenDeletingCharacterWithoutAuth() {
+        given()
+                .port(port)
+                .pathParam("id", UUID.randomUUID())
+                .when()
+                .delete("/api/characters/{id}")
+                .then()
+                .statusCode(401);
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve criar personagem e retornar payload completo")
+    void shouldCreateCharacterAndReturnCompletePayload() throws JsonProcessingException {
+        String token = getAuthToken();
+        CharacterDTO dto = novoPersonagem();
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when()
+                .post("/api/characters")
+                .then()
+                .statusCode(201)
+                .contentType(ContentType.JSON)
+                .body("id",         notNullValue())
+                .body("name",       equalTo(dto.name()))
+                .body("classType",  equalTo(dto.classType().toString()))
+                .body("race",       equalTo(dto.race().toString()))
+                .body("weapon",     equalTo(dto.weapon().toString()));
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve buscar personagem e retornar payload completo")
+    void shouldRetrieveCharacterAndReturnCompletePayload() throws JsonProcessingException {
+        String token = getAuthToken();
+        CharacterDTO created = createCharacterViaApi(token, novoPersonagem());
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", created.id())
+                .when()
+                .get("/api/characters/{id}")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("id",         equalTo(created.id().toString()))
+                .body("name",       equalTo(created.name()))
+                .body("classType",  equalTo(created.classType().toString()))
+                .body("race",       equalTo(created.race().toString()))
+                .body("weapon",     equalTo(created.weapon().toString()));
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve listar múltiplos personagens e retornar payload completo")
+    void shouldListAllCharactersAndReturnCompletePayload() throws JsonProcessingException {
+        String token = getAuthToken();
+        CharacterDTO first  = createCharacterViaApi(token, novoPersonagem());
+        CharacterDTO second = createCharacterViaApi(token,
+                new CharacterDTO(
+                        null,
+                        "Hatsune Miku",
+                        ClassType.PALADIN,
+                        Race.ELF,
+                        Weapon.DAGGER,
+                        69, 17, 6, 9, 690
+                )
+        );
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get("/api/characters")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("size()",    equalTo(2))
+                .body("[0].id",    equalTo(first.id().toString()))
+                .body("[0].name",       equalTo(first.name()))
+                .body("[0].classType",  equalTo(first.classType().toString()))
+                .body("[0].race",       equalTo(first.race().toString()))
+                .body("[0].weapon",     equalTo(first.weapon().toString()))
+                .body("[1].id",    equalTo(second.id().toString()))
+                .body("[1].name",       equalTo("Hatsune Miku"))
+                .body("[1].classType",  equalTo(second.classType().toString()))
+                .body("[1].race",       equalTo(second.race().toString()))
+                .body("[1].weapon",     equalTo(second.weapon().toString()));
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve atualizar personagem e retornar payload completo")
+    void shouldUpdateCharacterAndReturnCompletePayload() throws JsonProcessingException {
+        String token = getAuthToken();
+        CharacterDTO created = createCharacterViaApi(token, novoPersonagem());
+        CharacterDTO updateDto = new CharacterDTO(
+                created.id(),
+                "Hatsune Miku",
+                ClassType.PALADIN,
+                Race.DWARF,
+                Weapon.AXE,
+                120, 25, 18, 12, 7
+        );
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .pathParam("id", created.id())
+                .body(updateDto)
+                .when()
+                .put("/api/characters/{id}")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("id",         equalTo(created.id().toString()))
+                .body("name",       equalTo("Hatsune Miku"))
+                .body("classType",  equalTo("PALADIN"))
+                .body("race",       equalTo("DWARF"))
+                .body("weapon",     equalTo("AXE"));
+    }
 }
