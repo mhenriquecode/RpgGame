@@ -13,6 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionSystemException;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +43,17 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
 
     @Autowired
     private CharacterRepository repository;
+
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+
+    private TransactionTemplate transactionTemplate;
+
+    @BeforeEach
+    void setupTransactionTemplate() {
+        transactionTemplate = new TransactionTemplate(transactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+    }
 
     @BeforeEach
     void clearDatabase() {
@@ -278,5 +293,40 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
         boolean completed = executor.awaitTermination(5, TimeUnit.SECONDS);
 
         assertTrue(completed, "Potential deadlock detected");
+    }
+
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve garantir rollback completo em falhas de transação")
+    void shouldRollbackEntireTransactionOnError() {
+        final UUID[] idHolder = new UUID[1];
+
+        assertThrows(JpaSystemException.class, () -> {
+            transactionTemplate.execute(status -> {
+                RpgCharacterEntity ok = new RpgCharacterEntity(
+                        "Valido", ClassType.PALADIN, Race.ELF, Weapon.SWORD
+                );
+                ok.setId(UUID.randomUUID());
+                repository.save(ok);
+                idHolder[0] = ok.getId();
+
+                RpgCharacterEntity bad = new RpgCharacterEntity(
+                        null,
+                        ClassType.BERSERK,
+                        Race.DWARF,
+                        Weapon.HAMMER
+                );
+                bad.setId(UUID.randomUUID());
+                repository.save(bad);
+
+                return null;
+            });
+        });
+
+        assertFalse(
+                repository.existsById(idHolder[0]),
+                "Entidade válida não deveria existir após rollback"
+        );
     }
 }
