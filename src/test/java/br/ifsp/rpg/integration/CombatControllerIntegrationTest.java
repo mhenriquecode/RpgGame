@@ -7,6 +7,8 @@ import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.zaxxer.hikari.SQLExceptionOverride;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -324,10 +326,10 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
     @DisplayName("Deve retornar um histórico de combate vazio para um usuário novo")
     void shouldReturnAnEmptyCombatHistoryForANewUser() {
 
-        String novoAuthToken = getAuthToken();
+        String newAuthToken = getAuthToken();
 
         given()
-                .header("Authorization", "Bearer " + novoAuthToken)
+                .header("Authorization", "Bearer " + newAuthToken)
                 .when()
                 .get("/api/combat/history")
                 .then()
@@ -364,4 +366,27 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
 
     }
 
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Não deve permitir que um usuário inicie um combate usando o personagem de outro usuário")
+    void shouldNotAllowAUserToInitiateCombatUsingAnotherUsersCharacter() throws Exception {
+
+        String secondAuthToken = getAuthToken();
+
+        RpgCharacter playerUser2 = new RpgCharacter("Maligno", ClassType.BERSERK, Race.ORC, Weapon.AXE);
+        CharacterDTO playerUser2DTO = createCharacterViaApi(secondAuthToken, CharacterDTO.from(playerUser2));
+
+        CombatRequestDTO combatRequest = new CombatRequestDTO(player1.id(), 1, playerUser2DTO.id(), 1);
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(combatRequest)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(anyOf(is(403), is(404)));
+
+    }
 }
