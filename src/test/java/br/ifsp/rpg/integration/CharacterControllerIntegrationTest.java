@@ -582,25 +582,25 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .statusCode(404);
     }
 
-//    @Test
-//    @Tag("ApiTest")
-//    @Tag("IntegrationTest")
-//    @DisplayName("Deve retornar 415 ao atualizar com Content-Type inválido")
-//    void shouldReturn415WhenUpdatingWithInvalidContentType() {
-//        String token = getAuthToken();
-//        String xml = "<character><name>Arthas</name></character>";
-//
-//        given()
-//                .port(port)
-//                .header("Authorization", "Bearer " + token)
-//                .contentType(ContentType.XML)
-//                .body(xml)
-//                .pathParam("id", UUID.randomUUID())
-//                .when()
-//                .put("/api/characters/{id}")
-//                .then()
-//                .statusCode(415);
-//    }
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 415 ao atualizar com Content-Type inválido")
+    void shouldReturn415WhenUpdatingWithInvalidContentType() {
+        String token = getAuthToken();
+        String xml = "<character><name>Arthas</name></character>";
+
+        given()
+                .port(port)
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.XML)
+                .body(xml)
+                .pathParam("id", UUID.randomUUID())
+                .when()
+                .put("/api/characters/{id}")
+                .then()
+                .statusCode(415);
+    }
 
     @Test
     @Tag("ApiTest")
