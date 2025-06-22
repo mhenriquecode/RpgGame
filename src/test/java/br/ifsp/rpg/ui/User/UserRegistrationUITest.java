@@ -218,6 +218,7 @@ public class UserRegistrationUITest extends BaseUITest {
     }
 
     @Test
+    @Tag("UiTest")
     @DisplayName("Deve falhar ao tentar registrar com '#' no e-mail")
     void shouldFailButCurrentlySucceedsToRegisterWithHashesInEmail() {
         RegisterPage registerPage = loginPage.navigateToRegisterPage();
@@ -238,5 +239,25 @@ public class UserRegistrationUITest extends BaseUITest {
         } catch (Exception e) {
 
         }
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve falhar ao registrar com email excedendo o limite de caracteres do banco")
+    void shouldFailToRegisterWithOverlyLongEmail() {
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+        String longEmail = "a".repeat(247) + "@test.com";
+        String password = faker.internet().password(8, 16, true, true);
+
+        registerPage.registerUser(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                longEmail,
+                password,
+                password
+        );
+
+        String errorMessage = registerPage.getErrorMessage();
+        assertThat(errorMessage).isNotEmpty();
     }
 }
