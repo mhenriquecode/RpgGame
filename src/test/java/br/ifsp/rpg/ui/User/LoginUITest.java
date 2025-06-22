@@ -78,6 +78,20 @@ public class LoginUITest extends BaseUITest {
         assertThat(errorMessage).contains("Request failed with status code 401");
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve falhar ao fazer login com usuário não existente")
+    void shouldFailLoginWithNonExistentUser() {
+
+        String email = faker.name().username() + "@test.com";
+        String password = faker.internet().password(8, 16);
+
+        loginPage.login(email, password);
+
+        String errorMessage = loginPage.getErrorMessage();
+        assertThat(errorMessage).contains("Request failed with status code 401");
+
+    }
 
 
 }
