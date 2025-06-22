@@ -1,5 +1,6 @@
 package br.ifsp.rpg.ui.pages;
 
+import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -26,7 +27,6 @@ public class RegisterPage extends BasePage {
     @FindBy(css = "form button[type='submit']")
     private WebElement registerButton;
 
-
     public RegisterPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
         wait.until(ExpectedConditions.visibilityOf(nameInput));
@@ -41,5 +41,13 @@ public class RegisterPage extends BasePage {
 
         wait.until(ExpectedConditions.elementToBeClickable(registerButton));
         registerButton.click();
+    }
+
+    public WebElement getNameInput() {
+        return nameInput;
+    }
+
+    public String getNameInputValue() {
+        return nameInput.getAttribute("value");
     }
 }

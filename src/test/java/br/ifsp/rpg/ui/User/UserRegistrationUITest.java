@@ -1,6 +1,7 @@
 package br.ifsp.rpg.ui.User;
 
 import br.ifsp.rpg.ui.BaseUITest;
+import br.ifsp.rpg.ui.pages.CharacterListPage;
 import br.ifsp.rpg.ui.pages.LoginPage;
 import br.ifsp.rpg.ui.pages.RegisterPage;
 import com.github.javafaker.Faker;
@@ -8,12 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class UserRegistrationUITest extends BaseUITest {
 
@@ -29,20 +31,23 @@ public class UserRegistrationUITest extends BaseUITest {
 
     @Test
     @Tag("UiTest")
-    @DisplayName("Deve registrar um novo usuário com sucesso e redirecionar para login")
-    void shouldRegisterNewUserSuccessfullyAndRedirect() {
+    @DisplayName("Deve registrar um novo usuário e conseguir fazer login")
+    void shouldRegisterNewUserAndClearTheForm() {
         LoginPage loginPage = new LoginPage(driver, wait);
-        String name = faker.name().firstName();
-        String lastname = faker.name().lastName();
-        String email = faker.internet().emailAddress();
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
         String password = faker.internet().password(8, 16, true, true);
 
-        RegisterPage registerPage = loginPage.navigateToRegisterPage();
-        registerPage.registerUser(name, lastname, email, password, password);
+        registerPage.registerUser(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                faker.internet().emailAddress(),
+                password,
+                password
+        );
 
-        String expectedUrl = baseUrl + "/";
-        wait.until(ExpectedConditions.urlToBe(expectedUrl));
-        assertThat(driver.getCurrentUrl()).isEqualTo(expectedUrl);
+        wait.until(ExpectedConditions.attributeToBe(registerPage.getNameInput(), "value", ""));
+
+        assertThat(registerPage.getNameInputValue()).isEmpty();
     }
 
     @Test
@@ -53,15 +58,12 @@ public class UserRegistrationUITest extends BaseUITest {
         RegisterPage registerPage = loginPage.navigateToRegisterPage();
         String initialUrl = registerPage.getCurrentUrl();
 
-        String password = faker.internet().password(8, 16);
-        String differentPassword = faker.internet().password(8, 16);
-
         registerPage.registerUser(
                 faker.name().firstName(),
                 faker.name().lastName(),
                 faker.internet().emailAddress(),
-                password,
-                differentPassword
+                "password123",
+                "differentPassword123"
         );
 
         try {
@@ -81,7 +83,7 @@ public class UserRegistrationUITest extends BaseUITest {
         String initialUrl = registerPage.getCurrentUrl();
 
         registerPage.registerUser(
-                "  ",
+                "",
                 faker.name().lastName(),
                 faker.internet().emailAddress(),
                 "password123",

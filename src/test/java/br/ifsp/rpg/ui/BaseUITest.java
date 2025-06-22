@@ -19,10 +19,11 @@ public class BaseUITest {
     public void setUp() {
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
         options.addArguments("--window-size=1920,1080");
+        options.addArguments("start-maximized");
 
         driver = new ChromeDriver(options);
+
         wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
     }
