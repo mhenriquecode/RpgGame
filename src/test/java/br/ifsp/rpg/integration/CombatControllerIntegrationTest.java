@@ -336,4 +336,32 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
 
     }
 
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 400 se faltar um campo obrigatório no corpo de requisição")
+    void shouldReturn400IfARequiredFieldIsMissingFromTheRequestBody() {
+
+        String jsonWithMissingField = String.format(
+                """
+                {
+                    "player1Id": "%s",
+                    "player1Strategy": 1,
+                    "player2Id": "%s"
+                }
+                """,
+                player1.id(), player2.id()
+        );
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(jsonWithMissingField)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(400);
+
+    }
+
 }
