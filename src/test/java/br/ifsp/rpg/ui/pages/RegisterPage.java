@@ -68,4 +68,8 @@ public class RegisterPage extends BasePage {
     public String getEmailInputValue() {
         return emailInput.getAttribute("value");
     }
+
+    public WebElement getLoginButtonFromRegisterPage() {
+        return loginLinkButton;
+    }
 }

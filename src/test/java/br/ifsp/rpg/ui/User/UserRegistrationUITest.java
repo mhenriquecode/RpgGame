@@ -279,4 +279,16 @@ public class UserRegistrationUITest extends BaseUITest {
         assertThat(errorMessage).contains("As senhas não coincidem");
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve manter os elementos do formulário visíveis em uma tela de celular")
+    void shouldKeepFormElementsVisibleOnMobileViewport() {
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+
+        driver.manage().window().setSize(new org.openqa.selenium.Dimension(375, 812));
+
+        assertThat(registerPage.getNameInput().isDisplayed()).isTrue();
+        assertThat(registerPage.getLoginButtonFromRegisterPage().isDisplayed()).isTrue();
+    }
+
 }
