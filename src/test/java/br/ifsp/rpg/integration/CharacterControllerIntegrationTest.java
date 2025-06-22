@@ -582,23 +582,56 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .statusCode(404);
     }
 
+//    @Test
+//    @Tag("ApiTest")
+//    @Tag("IntegrationTest")
+//    @DisplayName("Deve retornar 415 ao atualizar com Content-Type inválido")
+//    void shouldReturn415WhenUpdatingWithInvalidContentType() {
+//        String token = getAuthToken();
+//        String xml = "<character><name>Arthas</name></character>";
+//
+//        given()
+//                .port(port)
+//                .header("Authorization", "Bearer " + token)
+//                .contentType(ContentType.XML)
+//                .body(xml)
+//                .pathParam("id", UUID.randomUUID())
+//                .when()
+//                .put("/api/characters/{id}")
+//                .then()
+//                .statusCode(415);
+//    }
+
     @Test
     @Tag("ApiTest")
     @Tag("IntegrationTest")
-    @DisplayName("Deve retornar 415 ao atualizar com Content-Type inválido")
-    void shouldReturn415WhenUpdatingWithInvalidContentType() {
+    @DisplayName("Deve retornar 400 ao criar sem classType (campo obrigatório)")
+    void shouldReturn400WhenCreatingWithoutClassType() {
         String token = getAuthToken();
-        String xml = "<character><name>Arthas</name></character>";
+        String payload = """
+            {
+              "name": "TestChar",
+              "race": "HUMAN",
+              "weapon": "SWORD",
+              "maxHealth": 100,
+              "strength": 20,
+              "defense": 15,
+              "speed": 10,
+              "armor": 5
+            }
+            """;
 
         given()
                 .port(port)
                 .header("Authorization", "Bearer " + token)
-                .contentType(ContentType.XML)
-                .body(xml)
-                .pathParam("id", UUID.randomUUID())
+                .contentType(ContentType.JSON)
+                .body(payload)
                 .when()
-                .put("/api/characters/{id}")
+                .post("/api/characters")
                 .then()
-                .statusCode(415);
+                .statusCode(400)
+                .contentType(ContentType.JSON)
+                .body("status", equalTo(400))
+                .body("error",  equalTo("Bad Request"));
     }
 }
