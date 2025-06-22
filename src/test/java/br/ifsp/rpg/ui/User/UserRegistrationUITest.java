@@ -217,5 +217,26 @@ public class UserRegistrationUITest extends BaseUITest {
         assertThat(registerPage.getEmailInputValue()).isEqualTo(invalidEmail);
     }
 
+    @Test
+    @DisplayName("Deve falhar ao tentar registrar com '#' no e-mail")
+    void shouldFailButCurrentlySucceedsToRegisterWithHashesInEmail() {
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+        String buggyEmail = "ana######@tste.com";
+        String password = faker.internet().password(8, 16, true, true);
 
+        registerPage.registerUser(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                buggyEmail,
+                password,
+                password
+        );
+
+        try {
+            wait.until(ExpectedConditions.attributeToBe(registerPage.getNameInput(), "value", ""));
+            fail("Bug encontrado");
+        } catch (Exception e) {
+
+        }
+    }
 }
