@@ -318,4 +318,22 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
 
     }
 
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar um histórico de combate vazio para um usuário novo")
+    void shouldReturnAnEmptyCombatHistoryForANewUser() {
+
+        String novoAuthToken = getAuthToken();
+
+        given()
+                .header("Authorization", "Bearer " + novoAuthToken)
+                .when()
+                .get("/api/combat/history")
+                .then()
+                .statusCode(200)
+                .body("size()", is(0));
+
+    }
+
 }
