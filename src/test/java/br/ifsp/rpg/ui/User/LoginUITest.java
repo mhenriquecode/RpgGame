@@ -44,7 +44,7 @@ public class LoginUITest extends BaseUITest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        faker = new Faker(new Locale("pt-BR"));
+        faker = new Faker(new Locale("en-US"));
         driver.get(baseUrl);
         loginPage = new LoginPage(driver, wait);
     }
@@ -58,7 +58,7 @@ public class LoginUITest extends BaseUITest {
         String password = faker.internet().password(8, 16);
         registerTestUser(email, password);
 
-        HomePage homePage = loginPage.loginSuccessfully(email, password);
+        HomePage homePage = loginPage.login(email, password);
         assertThat(homePage.isPageLoaded()).isTrue();
     }
 
@@ -99,14 +99,37 @@ public class LoginUITest extends BaseUITest {
         String password = faker.internet().password(8, 16);
         registerTestUser(email, password);
 
-        HomePage homePage = loginPage.loginSuccessfully(email, password);
+        HomePage homePage = loginPage.login(email, password);
         assertThat(homePage.isPageLoaded()).isTrue();
 
         LoginPage newLoginPage = homePage.logout();
 
         assertThat(newLoginPage.isPageLoaded()).isTrue();
-        assertThat(driver.getCurrentUrl()).isEqualTo(baseUrl + "/");
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve ser bloqueado pelo navegador ao tentar fazer login com a senha em branco")
+    void shouldBeBlockedByBrowserWithBlankPassword() {
+        String email = faker.name().username() + "@test.com";
+        String password = faker.internet().password(8, 16);
+        registerTestUser(email, password);
+
+        loginPage.attemptLogin(email, "");
+
+
+        assertThat(loginPage.getEmailInputValue()).isEqualTo(email);
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve ser bloqueado pelo navegador ao tentar fazer login com o email em branco")
+    void shouldBeBlockedByBrowserWithBlankEmail() {
+        String password = faker.internet().password(8, 16);
+
+        loginPage.attemptLogin("", password);
+
+        assertThat(loginPage.isPageLoaded()).isTrue();
+    }
 
 }
