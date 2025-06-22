@@ -135,4 +135,35 @@ public class UserRegistrationUITest extends BaseUITest {
 
         assertThat(errorMessage).isNotEmpty();
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve falhar ao tentar registrar email já existente")
+    void shouldFailToRegisterWithEmailAlreadyExist() {
+
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+        String existingEmail = faker.internet().emailAddress();
+        String password = faker.internet().password(8, 16, true, true);
+
+        registerPage.registerUser(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                existingEmail,
+                password, password
+        );
+
+        wait.until(ExpectedConditions.attributeToBe(registerPage.getNameInput(), "value", ""));
+
+        registerPage.registerUser(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                existingEmail,
+                password, password
+        );
+
+        String errorMessage = registerPage.getErrorMessage();
+        assertThat(errorMessage).contains("Email already registered: " + existingEmail);
+
+    }
+
 }
