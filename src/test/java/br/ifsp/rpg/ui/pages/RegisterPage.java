@@ -72,4 +72,12 @@ public class RegisterPage extends BasePage {
     public WebElement getLoginButtonFromRegisterPage() {
         return loginLinkButton;
     }
+
+    public String getPasswordInputType() {
+        return passwordInput.getAttribute("type");
+    }
+
+    public String getConfirmPasswordInputType() {
+        return confirmPasswordInput.getAttribute("type");
+    }
 }

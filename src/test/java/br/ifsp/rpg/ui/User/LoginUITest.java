@@ -51,16 +51,14 @@ public class LoginUITest extends BaseUITest {
 
     @Test
     @Tag("UiTest")
-    @DisplayName("Deve fazer login com sucesso e gerar token")
+    @DisplayName("Deve fazer login com sucesso")
     void shouldLoginSuccessfully() {
 
         String email = faker.name().username() + "@test.com";
         String password = faker.internet().password(8, 16);
         registerTestUser(email, password);
 
-        loginPage.login(email, password);
-
-        HomePage homePage = new HomePage(driver, wait);
+        HomePage homePage = loginPage.loginSuccessfully(email, password);
         assertThat(homePage.isPageLoaded()).isTrue();
     }
 
@@ -72,7 +70,7 @@ public class LoginUITest extends BaseUITest {
         String password = faker.internet().password(8, 16);
         registerTestUser(email, password);
 
-        loginPage.login(email, "wrong-password");
+        loginPage.attemptLogin(email, "swrong-password");
 
         String errorMessage = loginPage.getErrorMessage();
         assertThat(errorMessage).contains("Request failed with status code 401");
@@ -86,11 +84,28 @@ public class LoginUITest extends BaseUITest {
         String email = faker.name().username() + "@test.com";
         String password = faker.internet().password(8, 16);
 
-        loginPage.login(email, password);
+        loginPage.attemptLogin(email, password);
 
         String errorMessage = loginPage.getErrorMessage();
         assertThat(errorMessage).contains("Request failed with status code 401");
 
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve fazer logout com sucesso e retornar para a tela de login")
+    void shouldLogoutSuccessfullyAndReturnToLoginPage() {
+        String email = faker.name().username() + "@test.com";
+        String password = faker.internet().password(8, 16);
+        registerTestUser(email, password);
+
+        HomePage homePage = loginPage.loginSuccessfully(email, password);
+        assertThat(homePage.isPageLoaded()).isTrue();
+
+        LoginPage newLoginPage = homePage.logout();
+
+        assertThat(newLoginPage.isPageLoaded()).isTrue();
+        assertThat(driver.getCurrentUrl()).isEqualTo(baseUrl + "/");
     }
 
 

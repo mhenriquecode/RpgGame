@@ -29,10 +29,15 @@ public class LoginPage extends BasePage {
         wait.until(ExpectedConditions.visibilityOf(emailInput));
     }
 
-    public void login(String email, String password) {
+    public void attemptLogin(String email, String password) {
         emailInput.sendKeys(email);
         passwordInput.sendKeys(password);
         loginButton.click();
+    }
+
+    public HomePage login(String email, String password) {
+        attemptLogin(email, password);
+        return new HomePage(driver, wait);
     }
 
     public RegisterPage navigateToRegisterPage() {
@@ -49,6 +54,10 @@ public class LoginPage extends BasePage {
             return text != null && !text.isEmpty();
         });
         return driver.findElement(By.className("error-message")).getText();
+    }
+
+    public boolean isPageLoaded() {
+        return loginButton.isDisplayed();
     }
 
 }
