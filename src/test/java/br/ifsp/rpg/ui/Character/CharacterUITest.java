@@ -62,4 +62,18 @@ public class CharacterUITest extends BaseUITest {
         assertThat(driver.getCurrentUrl()).contains("/personagens/criar");
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve exibir erro ao tentar criar personagem sem nome")
+    void shouldShowErrorWhenNameIsBlank() {
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                "",
+                "ORC",
+                "BERSERK",
+                "AXE"
+        );
+        form.submit();
+        assertThat(form.getErrorMessage()).isNotEmpty();
+    }
 }
