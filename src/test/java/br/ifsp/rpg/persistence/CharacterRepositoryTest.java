@@ -6,14 +6,16 @@ import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
 import br.ifsp.web.repository.CharacterRepository;
 import br.ifsp.web.repository.RpgCharacterEntity;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.hibernate.exception.DataException;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaSystemException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -33,7 +35,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class CharacterRepositoryTest extends BaseApiIntegrationTest {
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     private CharacterRepository repository;
+
+    @BeforeEach
+    void clearDatabase() {
+        jdbcTemplate.execute("DELETE FROM characters");
+    }
 
     private RpgCharacterEntity createAndPersist(String name, ClassType classType, Race race) {
         RpgCharacterEntity entity = new RpgCharacterEntity(name, classType, race, Weapon.SWORD);
@@ -193,6 +203,80 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
         assertTrue(finalEntity.getName().startsWith("Updated_"));
     }
 
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve suportar inserção em massa de 10k registros")
+    void shouldHandleBulkInsertOf10kRecords() {
+        List<RpgCharacterEntity> entities = new ArrayList<>();
 
+        for (int i = 0; i < 10_000; i++) {
+            RpgCharacterEntity entity = new RpgCharacterEntity(
+                    "Char_" + i,
+                    ClassType.values()[i % ClassType.values().length],
+                    Race.values()[i % Race.values().length],
+                    Weapon.values()[i % Weapon.values().length]
+            );
+            entity.setId(UUID.randomUUID());
+            entities.add(entity);
+        }
 
+        long startTime = System.currentTimeMillis();
+        repository.saveAll(entities);
+        repository.flush();
+        long duration = System.currentTimeMillis() - startTime;
+
+        assertEquals(10_000, repository.count());
+        assertTrue(duration < 10_000, "Insertion took too long: " + duration + "ms");
+
+        repository.deleteAll();
+    }
+
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve rejeitar valores extremos em campos")
+    void shouldRejectExtremeFieldValues() {
+        String longName = "A".repeat(300);
+        RpgCharacterEntity entity = new RpgCharacterEntity(
+                longName,
+                ClassType.WARRIOR,
+                Race.HUMAN,
+                Weapon.SWORD
+        );
+        entity.setId(UUID.randomUUID());
+
+        assertThrows(DataException.class, () -> {
+            repository.save(entity);
+            repository.flush();
+        });
+    }
+
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve evitar deadlock em deleções concorrentes")
+    void shouldPreventDeadlockOnConcurrentDeletes() throws InterruptedException {
+        RpgCharacterEntity char1 = createAndPersist("Deadlock_1", ClassType.WARRIOR, Race.ORC);
+        RpgCharacterEntity char2 = createAndPersist("Deadlock_2", ClassType.BERSERK, Race.ELF);
+
+        Runnable thread1 = () -> {
+            repository.deleteById(char1.getId());
+            repository.deleteById(char2.getId());
+        };
+
+        Runnable thread2 = () -> {
+            repository.deleteById(char2.getId());
+            repository.deleteById(char1.getId());
+        };
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        executor.execute(thread1);
+        executor.execute(thread2);
+
+        executor.shutdown();
+        boolean completed = executor.awaitTermination(5, TimeUnit.SECONDS);
+
+        assertTrue(completed, "Potential deadlock detected");
+    }
 }
