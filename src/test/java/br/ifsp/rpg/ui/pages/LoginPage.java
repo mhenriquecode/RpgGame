@@ -1,6 +1,7 @@
 package br.ifsp.rpg.ui.pages;
 
 import lombok.Getter;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -37,6 +38,13 @@ public class LoginPage extends BasePage {
     public RegisterPage navigateToRegisterPage() {
         registerLinkButton.click();
         return new RegisterPage(driver, wait);
+    }
+
+    public String getErrorMessage() {
+        WebElement messageElement = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.className("error-message"))
+        );
+        return messageElement.getText();
     }
 
 }
