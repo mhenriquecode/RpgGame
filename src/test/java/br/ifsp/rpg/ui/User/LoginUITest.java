@@ -92,6 +92,7 @@ public class LoginUITest extends BaseUITest {
     }
 
     @Test
+    @Tag("UiTest")
     @DisplayName("Deve fazer logout com sucesso e retornar para a tela de login")
     void shouldLogoutSuccessfullyAndReturnToLoginPage() {
         String email = faker.name().username() + "@test.com";
@@ -107,6 +108,7 @@ public class LoginUITest extends BaseUITest {
     }
 
     @Test
+    @Tag("UiTest")
     @DisplayName("Deve ser bloqueado pelo navegador ao tentar fazer login com a senha em branco")
     void shouldBeBlockedByBrowserWithBlankPassword() {
         String email = faker.name().username() + "@test.com";
@@ -117,6 +119,17 @@ public class LoginUITest extends BaseUITest {
 
 
         assertThat(loginPage.getEmailInputValue()).isEqualTo(email);
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve ser bloqueado pelo navegador ao tentar fazer login com o email em branco")
+    void shouldBeBlockedByBrowserWithBlankEmail() {
+        String password = faker.internet().password(8, 16);
+
+        loginPage.attemptLogin("", password);
+
+        assertThat(loginPage.isPageLoaded()).isTrue();
     }
 
 }
