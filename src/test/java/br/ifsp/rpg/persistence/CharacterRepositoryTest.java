@@ -33,6 +33,12 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
     @Autowired
     private CharacterRepository repository;
 
+    private RpgCharacterEntity createAndPersist(String name, ClassType classType, Race race) {
+        RpgCharacterEntity entity = new RpgCharacterEntity(name, classType, race, Weapon.SWORD);
+        entity.setId(UUID.randomUUID());
+        return repository.save(entity);
+    }
+
     @Test
     @DisplayName("Deve contar personagens por classe corretamente")
     @Tag("PersistenceTest")
@@ -79,4 +85,23 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
         });
     }
 
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve contar personagens por raça")
+    void shouldCountCharactersByRace() {
+        createAndPersist("A", ClassType.WARRIOR, Race.HUMAN);
+        createAndPersist("B", ClassType.BERSERK, Race.ORC);
+        createAndPersist("C", ClassType.PALADIN, Race.HUMAN);
+        repository.flush();
+
+        Map<Race, Long> countByRace = repository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        RpgCharacterEntity::getRace,
+                        Collectors.counting()
+                ));
+
+        assertEquals(2, countByRace.get(Race.HUMAN));
+        assertEquals(1, countByRace.get(Race.ORC));
+    }
 }
