@@ -16,8 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.*;
 
 
 class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
@@ -296,6 +295,27 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
                 .post("/api/combat")
                 .then()
                 .statusCode(400);
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve executar um combate com sucesso e declarar um dos participantes como vencedor")
+    void shouldSuccessfullyExecuteACombatAndDeclareOneOfTheParticipantsAsTheWinner() {
+
+        CombatRequestDTO combatRequest = new CombatRequestDTO(player1.id(), 1, player2.id(), 1);
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(combatRequest)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(200)
+                .body("winnerId", notNullValue())
+                .body("winnerName", anyOf(equalTo(player1.name()), equalTo(player2.name())));
+
     }
 
 }
