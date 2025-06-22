@@ -205,4 +205,15 @@ public class UserRegistrationUITest extends BaseUITest {
         assertThat(registerPage.getEmailInputValue()).isEqualTo(invalidEmail);
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve ser bloqueado pelo navegador ao tentar registrar com e-mail com acento")
+    void shouldBeBlockedByBrowserForAccentedEmail() {
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+        String invalidEmail = "usuário@inválido.com";
+
+        registerPage.registerUser("Nome", "Valido", invalidEmail, "pass123", "pass123");
+
+        assertThat(registerPage.getEmailInputValue()).isEqualTo(invalidEmail);
+    }
 }
