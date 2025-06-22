@@ -7,6 +7,8 @@ import br.ifsp.web.model.enums.ClassType;
 import br.ifsp.web.model.enums.Race;
 import br.ifsp.web.model.enums.Weapon;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.zaxxer.hikari.SQLExceptionOverride;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -16,8 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.*;
 
 
 class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
@@ -296,6 +297,218 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
                 .post("/api/combat")
                 .then()
                 .statusCode(400);
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve executar um combate com sucesso e declarar um dos participantes como vencedor")
+    void shouldSuccessfullyExecuteACombatAndDeclareOneOfTheParticipantsAsTheWinner() {
+
+        CombatRequestDTO combatRequest = new CombatRequestDTO(player1.id(), 1, player2.id(), 1);
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(combatRequest)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(200)
+                .body("winnerId", notNullValue())
+                .body("winnerName", anyOf(equalTo(player1.name()), equalTo(player2.name())));
+
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar um histórico de combate vazio para um usuário novo")
+    void shouldReturnAnEmptyCombatHistoryForANewUser() {
+
+        String newAuthToken = getAuthToken();
+
+        given()
+                .header("Authorization", "Bearer " + newAuthToken)
+                .when()
+                .get("/api/combat/history")
+                .then()
+                .statusCode(200)
+                .body("size()", is(0));
+
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 400 se faltar um campo obrigatório no corpo de requisição")
+    void shouldReturn400IfARequiredFieldIsMissingFromTheRequestBody() {
+
+        String jsonWithMissingField = String.format(
+                """
+                {
+                    "player1Id": "%s",
+                    "player1Strategy": 1,
+                    "player2Id": "%s"
+                }
+                """,
+                player1.id(), player2.id()
+        );
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(jsonWithMissingField)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(400);
+
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Não deve permitir que um usuário inicie um combate usando o personagem de outro usuário")
+    void shouldNotAllowAUserToInitiateCombatUsingAnotherUsersCharacter() throws Exception {
+
+        String secondAuthToken = getAuthToken();
+
+        RpgCharacter playerUser2 = new RpgCharacter("Maligno", ClassType.BERSERK, Race.ORC, Weapon.AXE);
+        CharacterDTO playerUser2DTO = createCharacterViaApi(secondAuthToken, CharacterDTO.from(playerUser2));
+
+        CombatRequestDTO combatRequest = new CombatRequestDTO(player1.id(), 1, playerUser2DTO.id(), 1);
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(combatRequest)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(anyOf(is(403), is(404)));
+
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve listar apenas os personagens do usuário autenticado")
+    void deveListarApenasPersonagensDoUsuarioAutenticado() throws Exception {
+
+        RpgCharacter charA2Model = new RpgCharacter("Candidorr", ClassType.WARRIOR, Race.DWARF, Weapon.AXE);
+        createCharacterViaApi(authToken, CharacterDTO.from(charA2Model));
+
+        String secondAuthToken = getAuthToken();
+
+        RpgCharacter charB1Model = new RpgCharacter("Fefeu", ClassType.PALADIN, Race.ORC, Weapon.HAMMER);
+        createCharacterViaApi(secondAuthToken, CharacterDTO.from(charB1Model));
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .get("/api/characters")
+                .then()
+                .statusCode(200)
+                .body("size()", is(3))
+                .body("name", hasItems("Ana", "Candidorr", "Alan"))
+                .body("name", not(hasItem("Fefeu")));
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve atualizar um personagem com sucesso")
+    void shouldUpdateACharacter() throws Exception {
+
+        RpgCharacter originalCharModel = new RpgCharacter("UpdateMe", ClassType.WARRIOR, Race.HUMAN, Weapon.SWORD);
+        CharacterDTO originalChar = createCharacterViaApi(authToken, CharacterDTO.from(originalCharModel));
+
+        CharacterDTO updatedDto = createUpdatedCharacterDTO(originalChar, "Updated");
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(updatedDto)
+                .when()
+                .put("/api/characters/{id}", originalChar.id())
+                .then()
+                .statusCode(200)
+                .body("name", equalTo("Updated"));
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Não deve permitir que um usuário atualize o personagem de outro usuário")
+    void shouldNotAllowAUserToUpdateAnotherUsersCharacter() {
+
+        String newAuthToken = getAuthToken();
+
+        CharacterDTO updatedDto = createUpdatedCharacterDTO(player1, "Hacked O_o");
+
+        given()
+                .header("Authorization", "Bearer " + newAuthToken)
+                .contentType("application/json")
+                .body(updatedDto)
+                .when()
+                .put("/api/characters/{id}", player1.id())
+                .then()
+                .statusCode(anyOf(is(403), is(404)));
+
+    }
+
+    private CharacterDTO createUpdatedCharacterDTO(CharacterDTO original, String newName) {
+        return new CharacterDTO(
+                original.id(),
+                newName,
+                original.classType(),
+                original.race(),
+                original.weapon(),
+                original.maxHealth(),
+                original.strength(),
+                original.defense(),
+                original.speed(),
+                original.armor()
+        );
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve deletar um personagem com sucesso")
+    void shouldDeleteACharacter() throws Exception {
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .when()
+                .delete("/api/characters/{id}", player1.id())
+                .then()
+                .statusCode(204);
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .when()
+                .delete("/api/characters/{id}", player1.id())
+                .then()
+                .statusCode(401);
+
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Não deve permitir que um usuário delete o personagem de outro usuário")
+    void shouldNotPermiteToDeleteAnotherUserCharacter() {
+
+        String newAuthToken = getAuthToken();
+
+        given()
+                .header("Authorization", "Bearer " + newAuthToken)
+                .when()
+                .delete("/api/characters/{id}", player1.id())
+                .then()
+                .statusCode(anyOf(is(403), is(404)));
+
     }
 
 }
