@@ -72,5 +72,27 @@ public class UserRegistrationUITest extends BaseUITest {
         assertThat(driver.getCurrentUrl()).isEqualTo(initialUrl);
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve falhar ao registrar com campo em branco e permanecer na página")
+    void shouldFailToRegisterWithBlankFieldAndStayOnPage() {
+        LoginPage loginPage = new LoginPage(driver, wait);
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+        String initialUrl = registerPage.getCurrentUrl();
 
+        registerPage.registerUser(
+                "  ",
+                faker.name().lastName(),
+                faker.internet().emailAddress(),
+                "password123",
+                "password123"
+        );
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertThat(driver.getCurrentUrl()).isEqualTo(initialUrl);
+    }
 }
