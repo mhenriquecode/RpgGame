@@ -76,6 +76,7 @@ public class CharacterUITest extends BaseUITest {
         form.submit();
         assertThat(form.getErrorMessage()).isNotEmpty();
     }
+
     @Test
     @Tag("UiTest")
     @DisplayName("Deve exibir erro ao tentar criar personagem com nome muito longo")
@@ -84,6 +85,21 @@ public class CharacterUITest extends BaseUITest {
         String longName = "A".repeat(101); 
         form.fillCharacterForm(
                 longName,
+                "ORC",
+                "BERSERK",
+                "AXE"
+        );
+        form.submit();
+        assertThat(form.getErrorMessage()).isNotEmpty();
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve exibir erro ao tentar criar personagem com nome apenas de espaços")
+    void shouldShowErrorWhenNameIsWhitespace() {
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                "     ",
                 "ORC",
                 "BERSERK",
                 "AXE"
