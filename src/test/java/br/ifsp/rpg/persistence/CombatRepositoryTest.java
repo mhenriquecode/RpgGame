@@ -62,5 +62,18 @@ class CombatRepositoryTest extends BaseApiIntegrationTest {
         assertThat(foundLog.getWinnerId()).isEqualTo(player1.getId());
     }
 
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve falhar ao salvar log com um jogador nulo")
+    void shouldFailWhenSavingLogWithNullPlayer() {
+        RpgCharacterEntity player1 = createAndPersistCharacter("Gimli", Race.DWARF);
+
+        assertThrows(NullPointerException.class, () -> {
+            CombatLog invalidLog = new CombatLog(player1, null, player1);
+            combatLogRepository.saveAndFlush(invalidLog);
+        });
+    }
+
 
 }
