@@ -104,6 +104,7 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
         assertEquals(2, countByRace.get(Race.HUMAN));
         assertEquals(1, countByRace.get(Race.ORC));
     }
+
     @Test
     @Tag("PersistenceTest")
     @Tag("IntegrationTest")
@@ -116,5 +117,21 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
         repository.flush();
 
         assertFalse(repository.existsById(id));
+    }
+
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve atualizar nome de personagem existente")
+    void shouldUpdateCharacterName() {
+        RpgCharacterEntity entity = createAndPersist("OldName", ClassType.WARRIOR, Race.ORC);
+        UUID id = entity.getId();
+
+        entity.setName("NewName");
+        repository.save(entity);
+        repository.flush();
+
+        RpgCharacterEntity updated = repository.findById(id).orElseThrow();
+        assertEquals("NewName", updated.getName());
     }
 }
