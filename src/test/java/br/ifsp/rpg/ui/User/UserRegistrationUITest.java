@@ -216,4 +216,6 @@ public class UserRegistrationUITest extends BaseUITest {
 
         assertThat(registerPage.getEmailInputValue()).isEqualTo(invalidEmail);
     }
+
+
 }
