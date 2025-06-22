@@ -471,4 +471,26 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
                 original.armor()
         );
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve deletar um personagem com sucesso")
+    void shouldDeleteACharacter() throws Exception {
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .when()
+                .delete("/api/characters/{id}", player1.id())
+                .then()
+                .statusCode(204);
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .when()
+                .delete("/api/characters/{id}", player1.id())
+                .then()
+                .statusCode(401);
+
+    }
 }
