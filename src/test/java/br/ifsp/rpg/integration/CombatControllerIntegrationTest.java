@@ -493,4 +493,22 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
                 .statusCode(401);
 
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Não deve permitir que um usuário delete o personagem de outro usuário")
+    void shouldNotPermiteToDeleteAnotherUserCharacter() {
+
+        String newAuthToken = getAuthToken();
+
+        given()
+                .header("Authorization", "Bearer " + newAuthToken)
+                .when()
+                .delete("/api/characters/{id}", player1.id())
+                .then()
+                .statusCode(anyOf(is(403), is(404)));
+
+    }
+
 }
