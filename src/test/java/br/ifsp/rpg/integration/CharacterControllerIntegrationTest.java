@@ -401,5 +401,21 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .statusCode(401);
     }
 
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 401 ao atualizar personagem sem autenticação")
+    void shouldReturn401WhenUpdatingCharacterWithoutAuth() {
+        CharacterDTO updateDto = novoPersonagem();
 
+        given()
+                .port(port)
+                .contentType(ContentType.JSON)
+                .pathParam("id", UUID.randomUUID())
+                .body(updateDto)
+                .when()
+                .put("/api/characters/{id}")
+                .then()
+                .statusCode(401);
+    }
 }
