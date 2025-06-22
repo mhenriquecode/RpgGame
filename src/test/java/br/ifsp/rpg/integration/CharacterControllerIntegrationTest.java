@@ -386,4 +386,20 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .then()
                 .statusCode(401);
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 401 ao buscar personagem por ID sem autenticação")
+    void shouldReturn401WhenGettingCharacterByIdWithoutAuth() {
+        given()
+                .port(port)
+                .pathParam("id", UUID.randomUUID())
+                .when()
+                .get("/api/characters/{id}")
+                .then()
+                .statusCode(401);
+    }
+
+
 }
