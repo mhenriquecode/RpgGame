@@ -166,4 +166,16 @@ public class UserRegistrationUITest extends BaseUITest {
 
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve permitir a navegação da página de login para a de registro")
+    void shouldNavigateFromLoginPageToRegisterPage() {
+
+        RegisterPage registerPage = loginPage.navigateToRegisterPage();
+
+        wait.until(ExpectedConditions.visibilityOf(registerPage.getNameInput()));
+        assertThat(registerPage.getNameInput().isDisplayed()).isTrue();
+
+    }
+
 }
