@@ -232,5 +232,24 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
         repository.deleteAll();
     }
 
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve rejeitar valores extremos em campos")
+    void shouldRejectExtremeFieldValues() {
+        String longName = "A".repeat(300);
+        RpgCharacterEntity entity = new RpgCharacterEntity(
+                longName,
+                ClassType.WARRIOR,
+                Race.HUMAN,
+                Weapon.SWORD
+        );
+        entity.setId(UUID.randomUUID());
+
+        assertThrows(DataException.class, () -> {
+            repository.save(entity);
+            repository.flush();
+        });
+    }
 
 }
