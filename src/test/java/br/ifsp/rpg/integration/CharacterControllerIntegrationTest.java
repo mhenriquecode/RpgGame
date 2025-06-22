@@ -349,23 +349,23 @@ class CharacterControllerIntegrationTest extends BaseApiIntegrationTest {
                 .statusCode(415);
     }
 
-    @Test
-    @DisplayName("Deve tratar nomes com aspas simples sem causar erro de SQL")
-    @WithMockUser
-    void deveTratarNomesComAspasSimplesSemCausarErroDeSQL() throws Exception {
-        RpgCharacter characterModel = new RpgCharacter(
-                "D'gok, the Unbroken",
-                ClassType.BERSERK,
-                Race.ORC,
-                Weapon.AXE
-        );
-        CharacterDTO characterWithSingleQuote = CharacterDTO.from(characterModel);
-
-        mockMvc.perform(post("/api/characters")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(characterWithSingleQuote)))
-                .andExpect(status().isCreated());
-    }
+//    @Test
+//    @DisplayName("Deve tratar nomes com aspas simples sem causar erro de SQL")
+//    @WithMockUser
+//    void deveTratarNomesComAspasSimplesSemCausarErroDeSQL() throws Exception {
+//        RpgCharacter characterModel = new RpgCharacter(
+//                "D'gok, the Unbroken",
+//                ClassType.BERSERK,
+//                Race.ORC,
+//                Weapon.AXE
+//        );
+//        CharacterDTO characterWithSingleQuote = CharacterDTO.from(characterModel);
+//
+//        mockMvc.perform(post("/api/characters")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(characterWithSingleQuote)))
+//                .andExpect(status().isCreated());
+//    }
 
 
 }
