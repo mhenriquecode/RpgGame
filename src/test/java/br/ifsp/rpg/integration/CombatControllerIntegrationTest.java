@@ -389,4 +389,28 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
                 .statusCode(anyOf(is(403), is(404)));
 
     }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve listar apenas os personagens do usuário autenticado")
+    void deveListarApenasPersonagensDoUsuarioAutenticado() throws Exception {
+
+        RpgCharacter charA2Model = new RpgCharacter("Candidorr", ClassType.WARRIOR, Race.DWARF, Weapon.AXE);
+        createCharacterViaApi(authToken, CharacterDTO.from(charA2Model));
+
+        String secondAuthToken = getAuthToken();
+
+        RpgCharacter charB1Model = new RpgCharacter("Fefeu", ClassType.PALADIN, Race.ORC, Weapon.HAMMER);
+        createCharacterViaApi(secondAuthToken, CharacterDTO.from(charB1Model));
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .get("/api/characters")
+                .then()
+                .statusCode(200)
+                .body("size()", is(3))
+                .body("name", hasItems("Ana", "Candidorr", "Alan"))
+                .body("name", not(hasItem("Fefeu")));
+    }
 }
