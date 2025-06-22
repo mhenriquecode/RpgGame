@@ -75,5 +75,22 @@ class CombatRepositoryTest extends BaseApiIntegrationTest {
         });
     }
 
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve encontrar todos os logs de combate")
+    void shouldFindAllCombatLogs() {
+        RpgCharacterEntity p1 = createAndPersistCharacter("P1", Race.HUMAN);
+        RpgCharacterEntity p2 = createAndPersistCharacter("P2", Race.ORC);
+        RpgCharacterEntity p3 = createAndPersistCharacter("P3", Race.ELF);
+        RpgCharacterEntity p4 = createAndPersistCharacter("P4", Race.DWARF);
+
+        combatLogRepository.save(new CombatLog(p1, p2, p1));
+        combatLogRepository.save(new CombatLog(p3, p4, p4));
+
+        List<CombatLog> allLogs = combatLogRepository.findAll();
+
+        assertThat(allLogs).hasSize(2);
+    }
 
 }
