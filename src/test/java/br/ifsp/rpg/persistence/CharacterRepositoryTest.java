@@ -12,12 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.orm.jpa.JpaSystemException;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(
         classes = br.ifsp.web.DemoAuthAppApplication.class,
@@ -57,4 +59,24 @@ class CharacterRepositoryTest extends BaseApiIntegrationTest {
         assertEquals(2, contagem.get(ClassType.WARRIOR));
         assertEquals(1, contagem.get(ClassType.BERSERK));
     }
+
+    @Test
+    @Tag("PersistenceTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve falhar ao salvar personagem sem nome")
+    void shouldFailWhenSavingCharacterWithoutName() {
+        RpgCharacterEntity entity = new RpgCharacterEntity(
+                null,
+                ClassType.WARRIOR,
+                Race.HUMAN,
+                Weapon.SWORD
+        );
+        entity.setId(UUID.randomUUID());
+
+        assertThrows(JpaSystemException.class, () -> {
+            repository.save(entity);
+            repository.flush();
+        });
+    }
+
 }
