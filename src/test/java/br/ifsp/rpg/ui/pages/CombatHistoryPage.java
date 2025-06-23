@@ -6,6 +6,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
+
 public class CombatHistoryPage extends BasePage {
 
     @FindBy(xpath = "//h2[contains(text(), 'Histórico de Combates')]")
@@ -21,7 +23,13 @@ public class CombatHistoryPage extends BasePage {
     private WebElement firstEntryPlayer2Element;
 
     @FindBy(xpath = "(//li[@class='combat-log-item'])[1]//div[@class='log-winner']")
-    private WebElement firstEntryWinnerElement;;
+    private WebElement firstEntryWinnerElement;
+
+    @FindBy(className = "search-input")
+    private WebElement searchInput;
+
+    @FindBy(className = "combat-log-item")
+    private List<WebElement> combatItems;
 
     public CombatHistoryPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
