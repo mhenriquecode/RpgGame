@@ -87,7 +87,7 @@ public class CharacterUITest extends BaseUITest {
     @DisplayName("Deve exibir erro ao tentar criar personagem com nome muito longo")
     void shouldShowErrorWhenNameIsTooLong() {
         CharacterFormPage form = new CharacterFormPage(driver, wait);
-        String longName = "A".repeat(101); 
+        String longName = "A".repeat(101);
         form.fillCharacterForm(
                 longName,
                 "ORC",
@@ -150,5 +150,85 @@ public class CharacterUITest extends BaseUITest {
 
         List<WebElement> erros = driver.findElements(By.className("error-message"));
         assertThat(erros).isEmpty();
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Não deve criar personagem duplicado ao clicar duas vezes rapidamente no botão de criar")
+    void shouldNotCreateDuplicateCharacterOnDoubleClick() {
+        String name = faker.name().firstName() + System.currentTimeMillis();
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                name,
+                "ORC",
+                "BERSERK",
+                "AXE"
+        );
+
+        WebElement submitButton = driver.findElement(By.cssSelector("button[type='submit']"));
+        submitButton.click();
+        submitButton.click();
+
+        driver.get(baseUrl + "/personagens/lista");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".character-list-container")));
+
+        List<WebElement> nomes = driver.findElements(By.xpath("//*[contains(text(),'" + name + "')]"));
+        assertThat(nomes.size()).isEqualTo(1);
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve remover espaços extras no início e fim do nome")
+    void shouldTrimWhitespaceInName() {
+        String name = "   " + faker.name().firstName() + "   ";
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                name,
+                "ORC",
+                "BERSERK",
+                "AXE"
+        );
+        form.submit();
+        driver.get(baseUrl + "/personagens/lista");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".character-list-container")));
+        List<WebElement> nomes = driver.findElements(By.xpath("//*[contains(text(),'" + name.trim() + "')]"));
+        assertThat(nomes).isNotEmpty();
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Não deve permitir criar personagem com nome apenas numérico")
+    void shouldNotAllowNumericOnlyName() {
+        String name = "1234567890";
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                name,
+                "ORC",
+                "BERSERK",
+                "AXE"
+        );
+        form.submit();
+        assertThat(form.getErrorMessage()).isNotEmpty();
+
+        driver.get(baseUrl + "/personagens/lista");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".character-list-container")));
+        List<WebElement> nomes = driver.findElements(By.xpath("//*[contains(text(),'" + name + "')]"));
+        assertThat(nomes).isEmpty();
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve impedir criação de personagem com nome contendo script HTML")
+    void shouldNotAllowHtmlScriptInName() {
+        String name = "<script>alert('xss')</script>";
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                name,
+                "ELF",
+                "DUELIST",
+                "DAGGER"
+        );
+        form.submit();
+        assertThat(form.getErrorMessage()).isNotEmpty();
     }
 }
