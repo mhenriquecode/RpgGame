@@ -72,4 +72,14 @@ public class CharacterCreateFormResponsiveness extends BaseUITest {
         WebElement formContainer = driver.findElement(By.cssSelector(".character-form-container"));
         assertThat(formContainer.isDisplayed()).isTrue();
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Formulário deve ser exibido corretamente em tela de celular")
+    void shouldDisplayFormCorrectlyOnMobile() {
+        driver.manage().window().setSize(new Dimension(375, 667));
+        driver.get(baseUrl + "/personagens/criar");
+        WebElement formContainer = driver.findElement(By.cssSelector(".character-form-container"));
+        assertThat(formContainer.isDisplayed()).isTrue();
+    }
 }
