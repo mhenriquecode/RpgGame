@@ -221,4 +221,28 @@ public class CharacterListUITest extends BaseUITest {
         List<WebElement> nomesApos = driver.findElements(By.xpath("//*[contains(text(),'" + name + "')]"));
         assertThat(nomesApos).isNotEmpty();
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve redirecionar para a Home ao clicar em Voltar para Home")
+    void shouldNavigateToHomeWhenClickingBackToHome() {
+        driver.get(baseUrl + "/personagens/lista");
+        WebElement voltarButton = driver.findElement(By.cssSelector("a.nav-button.secondary[href='/']"));
+        voltarButton.click();
+        wait.until(ExpectedConditions.urlToBe(baseUrl + "/"));
+        assertThat(driver.getCurrentUrl()).isEqualTo(baseUrl + "/");
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve realizar logout ao clicar no botão Sair e exibir tela de login")
+    void shouldLogoutAndShowLoginScreen() {
+        driver.get(baseUrl + "/personagens/lista");
+        WebElement logoutButton = driver.findElement(By.cssSelector("button.logout-button"));
+        logoutButton.click();
+
+        WebElement h2Login = driver.findElement(By.xpath("//h2[normalize-space(text())='Login']"));
+        assertThat(h2Login.isDisplayed()).isTrue();
+    }
+
 }
