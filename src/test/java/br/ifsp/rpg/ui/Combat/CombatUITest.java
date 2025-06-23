@@ -9,8 +9,11 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import java.time.Duration;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CombatUITest extends BaseUITest {
 
@@ -52,6 +55,7 @@ public class CombatUITest extends BaseUITest {
     }
 
     @Test
+    @Tag("UiTest")
     @DisplayName("Deve iniciar um combate com sucesso com entradas válidas")
     void shouldStartCombatSuccessfullyWithValidInputs() {
         combatPage.selectCharacter1ByName(character1Name);
@@ -62,6 +66,60 @@ public class CombatUITest extends BaseUITest {
 
         assertThat(winnerName).isNotBlank();
         assertThat(winnerName).isIn(character1Name, character2Name);
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve navegar de volta para a tela inicial após o combate")
+    void shouldNavigateBackToHomePageAfterCombat() {
+        combatPage.selectCharacter1ByName(character1Name);
+        combatPage.selectCharacter2ByName(character2Name);
+        combatPage.clickStartCombat();
+        combatPage.getWinnerName();
+
+        HomePage newHomePage = combatPage.navigateBackToHome();
+
+        assertThat(newHomePage.isPageLoaded()).isTrue();
+        assertThat(driver.getCurrentUrl()).isEqualTo(baseUrl + "/");
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve navegar para a tela de Histórico de Combate após o combate")
+    void shouldNavigateToCombatHistoryPageAfterCombat() {
+        combatPage.selectCharacter1ByName(character1Name);
+        combatPage.selectCharacter2ByName(character2Name);
+        combatPage.clickStartCombat();
+        combatPage.getWinnerName();
+
+        CombatHistoryPage historyPage = combatPage.navigateToCombatHistory();
+
+        assertThat(historyPage.isPageLoaded()).isTrue();
+        assertThat(driver.getCurrentUrl()).endsWith("/historico-combates");
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve registrar o resultado do combate corretamente no histórico")
+    void shouldCorrectlyLogCombatResultInHistory() {
+        combatPage.selectCharacter1ByName(character1Name);
+        combatPage.selectCharacter2ByName(character2Name);
+        combatPage.clickStartCombat();
+        String winnerNameFromCombat = combatPage.getWinnerName();
+
+        CombatHistoryPage historyPage = combatPage.navigateToCombatHistory();
+        assertThat(historyPage.isPageLoaded()).isTrue();
+
+        String winnerNameFromHistory = historyPage.getWinnerOfFirstEntry();
+        String player1FromHistory = historyPage.getPlayer1OfFirstEntry();
+        String player2FromHistory = historyPage.getPlayer2OfFirstEntry();
+
+
+        assertThat(winnerNameFromHistory).isEqualTo(winnerNameFromCombat);
+
+
+        assertThat(java.util.List.of(player1FromHistory, player2FromHistory))
+                .containsExactlyInAnyOrder(character1Name, character2Name);
     }
 
 }

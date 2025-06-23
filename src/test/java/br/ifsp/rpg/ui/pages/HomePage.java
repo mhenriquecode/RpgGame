@@ -22,6 +22,10 @@ public class HomePage extends BasePage {
 
     @FindBy(xpath = "//p[contains(text(), 'Bem-vindo')]")
     private WebElement welcomeMessage;
+
+    @FindBy(className = "combat-history-button")
+    private WebElement combatHistoryButton;
+
     public HomePage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
         wait.until(ExpectedConditions.visibilityOf(createCharacterButton));
@@ -53,6 +57,13 @@ public class HomePage extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(viewCharactersButton));
         viewCharactersButton.click();
         return new CharacterListPage(driver, wait);
+    }
+
+    public CombatHistoryPage navigateToCombatHistory() {
+        wait.until(ExpectedConditions.elementToBeClickable(combatHistoryButton));
+        combatHistoryButton.click();
+        wait.until(ExpectedConditions.urlContains("/historico-combates"));
+        return new CombatHistoryPage(driver, wait);
     }
 
 }
