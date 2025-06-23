@@ -1,6 +1,7 @@
 package br.ifsp.rpg.ui.Character;
 
 import br.ifsp.rpg.ui.BaseUITest;
+import br.ifsp.rpg.ui.pages.CharacterFormPage;
 import br.ifsp.rpg.ui.pages.CharacterListPage;
 import br.ifsp.rpg.ui.pages.LoginPage;
 import br.ifsp.rpg.ui.pages.RegisterPage;
