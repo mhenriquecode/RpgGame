@@ -92,4 +92,34 @@ public class CharacterCreateFormResponsiveness extends BaseUITest {
         assertThat(submitButton.isDisplayed()).isTrue();
         assertThat(submitButton.isEnabled()).isTrue();
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Mensagem de sucesso deve ser visível em mobile e desktop")
+    void shouldShowSuccessMessageOnAllScreenSizes() {
+        driver.manage().window().setSize(new Dimension(375, 667));
+        driver.get(baseUrl + "/personagens/criar");
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                "Responsivo" + System.currentTimeMillis(),
+                "ELF",
+                "DUELIST",
+                "DAGGER"
+        );
+        form.submit();
+        WebElement successMsg = driver.findElement(By.cssSelector(".success-message"));
+        assertThat(successMsg.isDisplayed()).isTrue();
+
+        driver.manage().window().setSize(new Dimension(1280, 800));
+        driver.navigate().refresh();
+        form.fillCharacterForm(
+                "ResponsivoDesktop" + System.currentTimeMillis(),
+                "ELF",
+                "DUELIST",
+                "DAGGER"
+        );
+        form.submit();
+        WebElement successMsgDesktop = driver.findElement(By.cssSelector(".success-message"));
+        assertThat(successMsgDesktop.isDisplayed()).isTrue();
+    }
 }
