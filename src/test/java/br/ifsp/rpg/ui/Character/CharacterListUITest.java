@@ -85,4 +85,33 @@ public class CharacterListUITest extends BaseUITest {
         assertThat(nomesApos).isEmpty();
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve filtrar personagens pelo nome no campo de busca")
+    void shouldFilterCharactersByName() {
+        String name = "PersonagemBusca" + System.currentTimeMillis();
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                name,
+                "ORC",
+                "BERSERK",
+                "AXE"
+        );
+        form.submit();
+
+        driver.get(baseUrl + "/personagens/lista");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".character-list-container")));
+
+        WebElement searchInput = driver.findElement(By.cssSelector(".search-input-charlist"));
+        searchInput.sendKeys(name);
+
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector(".character-list-container"), name));
+
+        List<WebElement> nomes = driver.findElements(By.xpath("//*[contains(text(),'" + name + "')]"));
+        assertThat(nomes).isNotEmpty();
+
+        WebElement clearButton = driver.findElement(By.cssSelector(".clear-search-button-charlist"));
+        clearButton.click();
+        wait.until(ExpectedConditions.attributeToBe(searchInput, "value", ""));
+    }
 }
