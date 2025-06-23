@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CombatUITest extends BaseUITest {
 
@@ -93,6 +92,30 @@ public class CombatUITest extends BaseUITest {
 
         assertThat(historyPage.isPageLoaded()).isTrue();
         assertThat(driver.getCurrentUrl()).endsWith("/historico-combates");
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve registrar o resultado do combate corretamente no histórico")
+    void shouldCorrectlyLogCombatResultInHistory() {
+        combatPage.selectCharacter1ByName(character1Name);
+        combatPage.selectCharacter2ByName(character2Name);
+        combatPage.clickStartCombat();
+        String winnerNameFromCombat = combatPage.getWinnerName();
+
+        CombatHistoryPage historyPage = combatPage.navigateToCombatHistory();
+        assertThat(historyPage.isPageLoaded()).isTrue();
+
+        String winnerNameFromHistory = historyPage.getWinnerOfFirstEntry();
+        String player1FromHistory = historyPage.getPlayer1OfFirstEntry();
+        String player2FromHistory = historyPage.getPlayer2OfFirstEntry();
+
+
+        assertThat(winnerNameFromHistory).isEqualTo(winnerNameFromCombat);
+
+
+        assertThat(java.util.List.of(player1FromHistory, player2FromHistory))
+                .containsExactlyInAnyOrder(character1Name, character2Name);
     }
 
 }

@@ -14,6 +14,15 @@ public class CombatHistoryPage extends BasePage {
     @FindBy(className = "history-list")
     private WebElement historyListContainer;
 
+    @FindBy(xpath = "(//li[@class='combat-log-item'])[1]//div[strong/text()='Jogador 1:']")
+    private WebElement firstEntryPlayer1Element;
+
+    @FindBy(xpath = "(//li[@class='combat-log-item'])[1]//div[strong/text()='Jogador 2:']")
+    private WebElement firstEntryPlayer2Element;
+
+    @FindBy(xpath = "(//li[@class='combat-log-item'])[1]//div[@class='log-winner']")
+    private WebElement firstEntryWinnerElement;;
+
     public CombatHistoryPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
         wait.until(ExpectedConditions.visibilityOf(pageTitle));
@@ -29,5 +38,29 @@ public class CombatHistoryPage extends BasePage {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public String getWinnerOfFirstEntry() {
+        wait.until(ExpectedConditions.visibilityOf(firstEntryWinnerElement));
+        String fullText = firstEntryWinnerElement.getText();
+
+        String textAfterLabel = fullText.substring(fullText.indexOf(":") + 1);
+        return textAfterLabel.split("\\(")[0].trim();
+    }
+
+    public String getPlayer1OfFirstEntry() {
+        wait.until(ExpectedConditions.visibilityOf(firstEntryPlayer1Element));
+        String fullText = firstEntryPlayer1Element.getText();
+
+        String textAfterLabel = fullText.substring(fullText.indexOf(":") + 1);
+        return textAfterLabel.split("\\(")[0].trim();
+    }
+
+    public String getPlayer2OfFirstEntry() {
+        wait.until(ExpectedConditions.visibilityOf(firstEntryPlayer2Element));
+        String fullText = firstEntryPlayer2Element.getText();
+
+        String textAfterLabel = fullText.substring(fullText.indexOf(":") + 1);
+        return textAfterLabel.split("\\(")[0].trim();
     }
 }
