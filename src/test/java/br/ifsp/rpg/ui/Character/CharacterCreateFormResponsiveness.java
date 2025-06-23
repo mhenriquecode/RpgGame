@@ -82,4 +82,14 @@ public class CharacterCreateFormResponsiveness extends BaseUITest {
         WebElement formContainer = driver.findElement(By.cssSelector(".character-form-container"));
         assertThat(formContainer.isDisplayed()).isTrue();
     }
+
+    @Tag("UiTest")
+    @DisplayName("Botões e campos devem permanecer visíveis em mobile")
+    void shouldKeepButtonsAndFieldsVisibleOnMobile() {
+        driver.manage().window().setSize(new Dimension(375, 667));
+        driver.get(baseUrl + "/personagens/criar");
+        WebElement submitButton = driver.findElement(By.cssSelector("button[type='submit']"));
+        assertThat(submitButton.isDisplayed()).isTrue();
+        assertThat(submitButton.isEnabled()).isTrue();
+    }
 }
