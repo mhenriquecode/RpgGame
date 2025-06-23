@@ -156,7 +156,7 @@ public class CharacterUITest extends BaseUITest {
     @Tag("UiTest")
     @DisplayName("Não deve criar personagem duplicado ao clicar duas vezes rapidamente no botão de criar")
     void shouldNotCreateDuplicateCharacterOnDoubleClick() {
-        String name = faker.name().firstName() + System.currentTimeMillis(); // Garantir unicidade no teste
+        String name = faker.name().firstName() + System.currentTimeMillis();
         CharacterFormPage form = new CharacterFormPage(driver, wait);
         form.fillCharacterForm(
                 name,
@@ -216,4 +216,19 @@ public class CharacterUITest extends BaseUITest {
         assertThat(nomes).isEmpty();
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve impedir criação de personagem com nome contendo script HTML")
+    void shouldNotAllowHtmlScriptInName() {
+        String name = "<script>alert('xss')</script>";
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                name,
+                "ELF",
+                "DUELIST",
+                "DAGGER"
+        );
+        form.submit();
+        assertThat(form.getErrorMessage()).isNotEmpty();
+    }
 }
