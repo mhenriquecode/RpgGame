@@ -159,4 +159,28 @@ public class CharacterListUITest extends BaseUITest {
         WebElement infoMsg = driver.findElement(By.cssSelector(".info-message"));
         assertThat(infoMsg.getText()).contains("Nenhum personagem encontrado");
     }
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve limpar busca e exibir todos os personagens novamente")
+    void shouldClearSearchAndShowAllCharacters() {
+        String name = "PersonagemBuscaClear" + System.currentTimeMillis();
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(name, "ORC", "BERSERK", "AXE");
+        form.submit();
+
+        driver.get(baseUrl + "/personagens/lista");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".character-list-container")));
+
+        WebElement searchInput = driver.findElement(By.cssSelector(".search-input-charlist"));
+        searchInput.sendKeys(name);
+
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector(".character-list-container"), name));
+
+        WebElement clearButton = driver.findElement(By.cssSelector(".clear-search-button-charlist"));
+        clearButton.click();
+        wait.until(ExpectedConditions.attributeToBe(searchInput, "value", ""));
+
+        List<WebElement> items = driver.findElements(By.cssSelector(".character-item"));
+        assertThat(items.size()).isGreaterThanOrEqualTo(1);
+    }
 }
