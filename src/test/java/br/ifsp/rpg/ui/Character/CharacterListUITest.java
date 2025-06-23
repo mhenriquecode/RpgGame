@@ -221,4 +221,15 @@ public class CharacterListUITest extends BaseUITest {
         List<WebElement> nomesApos = driver.findElements(By.xpath("//*[contains(text(),'" + name + "')]"));
         assertThat(nomesApos).isNotEmpty();
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve redirecionar para a Home ao clicar em Voltar para Home")
+    void shouldNavigateToHomeWhenClickingBackToHome() {
+        driver.get(baseUrl + "/personagens/lista");
+        WebElement voltarButton = driver.findElement(By.cssSelector("a.nav-button.secondary[href='/']"));
+        voltarButton.click();
+        wait.until(ExpectedConditions.urlToBe(baseUrl + "/"));
+        assertThat(driver.getCurrentUrl()).isEqualTo(baseUrl + "/");
+    }
 }
