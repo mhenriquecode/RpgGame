@@ -14,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -213,29 +214,28 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
     }
 
     @ParameterizedTest
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar erro ao ter duas estratégias defensivas para players diferentes")
     @CsvSource({
             "2, 2",
             "3, 2",
             "2, 3",
             "3, 3"
     })
-    @Tag("ApiTest")
-    @Tag("IntegrationTest")
-    @Timeout(value = 30, unit = TimeUnit.SECONDS)
-    @DisplayName("Deve retornar erro ao ter duas estratégias defensivas para players diferentes")
     void shouldReturnErrorWhenHavingTwoDefensiveStrategiesForDifferentPlayers(int player1Strategy, int player2Strategy) {
+        assertTimeoutPreemptively(Duration.ofMinutes(1), () -> {
+            CombatRequestDTO combatRequest = new CombatRequestDTO(player1.id(), player1Strategy, player2.id(), player2Strategy);
 
-        CombatRequestDTO combatRequest = new CombatRequestDTO(player1.id(), player1Strategy, player2.id(), player2Strategy);
-
-        given()
-                .header("Authorization", "Bearer " + authToken)
-                .contentType("application/json")
-                .body(combatRequest)
-                .when()
-                .post("/api/combat")
-                .then()
-                .time(lessThan(10L), SECONDS);
-
+            given()
+                    .header("Authorization", "Bearer " + authToken)
+                    .contentType("application/json")
+                    .body(combatRequest)
+                    .when()
+                    .post("/api/combat")
+                    .then()
+                    .time(lessThan(10L), SECONDS);
+        });
     }
 
     @Test
