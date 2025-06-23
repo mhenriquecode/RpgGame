@@ -24,6 +24,9 @@ public class CharacterFormPage extends BasePage {
     @FindBy(css = "button[type='submit']")
     private WebElement submitButton;
 
+    @FindBy(className = "success-message")
+    private WebElement successMessage;
+
     @FindBy(className = "error-message")
     private WebElement errorMessage;
 
@@ -33,7 +36,7 @@ public class CharacterFormPage extends BasePage {
     }
 
     public void fillCharacterForm(String name, String race, String classType, String weapon) {
-        nameInput.clear();
+        wait.until(ExpectedConditions.attributeToBe(nameInput, "value", ""));
         nameInput.sendKeys(name);
 
         Select raceDropdown = new Select(raceSelect);
@@ -51,6 +54,13 @@ public class CharacterFormPage extends BasePage {
     }
 
     public String getErrorMessage() {
+        wait.until(ExpectedConditions.visibilityOf(errorMessage));
         return errorMessage.getText();
+    }
+
+    public void createCharacter(String name, String race, String classType, String weapon) {
+        this.fillCharacterForm(name, race, classType, weapon);
+        this.submit();
+        wait.until(ExpectedConditions.visibilityOf(successMessage));
     }
 }
