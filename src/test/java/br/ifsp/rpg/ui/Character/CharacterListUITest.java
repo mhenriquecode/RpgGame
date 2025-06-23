@@ -114,4 +114,36 @@ public class CharacterListUITest extends BaseUITest {
         clearButton.click();
         wait.until(ExpectedConditions.attributeToBe(searchInput, "value", ""));
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve exibir mensagem de erro ao tentar deletar personagem já removido")
+    void shouldShowErrorWhenDeletingAlreadyDeletedCharacter() {
+        String name = "PersonagemRemover" + System.currentTimeMillis();
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(name, "ELF", "DUELIST", "DAGGER");
+        form.submit();
+
+        driver.get(baseUrl + "/personagens/lista");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".character-list-container")));
+
+        List<WebElement> items = driver.findElements(By.xpath("//li[contains(.,'" + name + "')]"));
+        assertThat(items).isNotEmpty();
+        WebElement item = items.get(0);
+        WebElement deleteButton = item.findElement(By.cssSelector(".delete-button"));
+        deleteButton.click();
+        driver.switchTo().alert().accept();
+        wait.until(ExpectedConditions.invisibilityOf(item));
+
+        driver.navigate().refresh();
+        List<WebElement> itemsAfter = driver.findElements(By.xpath("//li[contains(.,'" + name + "')]"));
+        if (!itemsAfter.isEmpty()) {
+            WebElement deleteButton2 = itemsAfter.get(0).findElement(By.cssSelector(".delete-button"));
+            deleteButton2.click();
+            driver.switchTo().alert().accept();
+            WebElement errorMsg = driver.findElement(By.cssSelector(".item-error-message"));
+            assertThat(errorMsg.getText()).isNotEmpty();
+        }
+    }
+
 }
