@@ -231,4 +231,20 @@ public class CharacterUITest extends BaseUITest {
         form.submit();
         assertThat(form.getErrorMessage()).isNotEmpty();
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Não deve permitir nome com caracteres de escape")
+    void shouldNotAllowEscapeCharactersInName() {
+        String name = "Nome\nNovo\tTab";
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(
+                name,
+                "ELF",
+                "DUELIST",
+                "DAGGER"
+        );
+        form.submit();
+        assertThat(form.getErrorMessage()).isNotEmpty();
+    }
 }
