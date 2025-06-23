@@ -232,4 +232,17 @@ public class CharacterListUITest extends BaseUITest {
         wait.until(ExpectedConditions.urlToBe(baseUrl + "/"));
         assertThat(driver.getCurrentUrl()).isEqualTo(baseUrl + "/");
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve realizar logout ao clicar no botão Sair e exibir tela de login")
+    void shouldLogoutAndShowLoginScreen() {
+        driver.get(baseUrl + "/personagens/lista");
+        WebElement logoutButton = driver.findElement(By.cssSelector("button.logout-button"));
+        logoutButton.click();
+
+        WebElement h2Login = driver.findElement(By.xpath("//h2[normalize-space(text())='Login']"));
+        assertThat(h2Login.isDisplayed()).isTrue();
+    }
+
 }
