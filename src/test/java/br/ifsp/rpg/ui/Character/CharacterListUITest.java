@@ -159,6 +159,7 @@ public class CharacterListUITest extends BaseUITest {
         WebElement infoMsg = driver.findElement(By.cssSelector(".info-message"));
         assertThat(infoMsg.getText()).contains("Nenhum personagem encontrado");
     }
+
     @Test
     @Tag("UiTest")
     @DisplayName("Deve limpar busca e exibir todos os personagens novamente")
@@ -195,5 +196,29 @@ public class CharacterListUITest extends BaseUITest {
             WebElement infoMsg = driver.findElement(By.cssSelector(".info-message"));
             assertThat(infoMsg.getText()).contains("Você ainda não criou nenhum personagem");
         }
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Não deve deletar personagem se usuário cancelar confirmação")
+    void shouldNotDeleteCharacterIfCancelConfirmation() {
+        String name = "PersonagemNaoDeletar" + System.currentTimeMillis();
+        CharacterFormPage form = new CharacterFormPage(driver, wait);
+        form.fillCharacterForm(name, "ELF", "DUELIST", "DAGGER");
+        form.submit();
+
+        driver.get(baseUrl + "/personagens/lista");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".character-list-container")));
+
+        List<WebElement> items = driver.findElements(By.xpath("//li[contains(.,'" + name + "')]"));
+        assertThat(items).isNotEmpty();
+        WebElement item = items.get(0);
+        WebElement deleteButton = item.findElement(By.cssSelector(".delete-button"));
+        deleteButton.click();
+
+        driver.switchTo().alert().dismiss();
+
+        List<WebElement> nomesApos = driver.findElements(By.xpath("//*[contains(text(),'" + name + "')]"));
+        assertThat(nomesApos).isNotEmpty();
     }
 }
