@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+
 public class CombatPage extends BasePage {
 
     @FindBy(id = "player1")
@@ -22,8 +24,8 @@ public class CombatPage extends BasePage {
     @FindBy(className = "combat-result")
     private WebElement combatResultContainer;
 
-    @FindBy(xpath = "//div[@class='combat-result']//p[contains(., 'Vencedor:')]/strong")
-    private WebElement winnerTextElement;
+    @FindBy(xpath = "//div[@class='combat-result']//strong")
+    private WebElement winnerNameElement;
 
 
     public CombatPage(WebDriver driver, WebDriverWait wait) {
@@ -32,15 +34,26 @@ public class CombatPage extends BasePage {
     }
 
 
-    public void selectCharacter1ByIndex(int index) {
-        Select select = new Select(player1SelectElement);
-        select.selectByIndex(index);
+    private void selectCharacterByPartialText(WebElement selectElement, String partialText) {
+        wait.until(ExpectedConditions.elementToBeClickable(selectElement));
+        Select select = new Select(selectElement);
+
+        for (WebElement option : select.getOptions()) {
+            if (option.getText().contains(partialText)) {
+                select.selectByVisibleText(option.getText());
+                return;
+            }
+        }
+        throw new org.openqa.selenium.NoSuchElementException("Não foi possível encontrar a opção com o texto: " + partialText);
     }
 
 
-    public void selectCharacter2ByIndex(int index) {
-        Select select = new Select(player2SelectElement);
-        select.selectByIndex(index);
+    public void selectCharacter1ByName(String characterName) {
+        selectCharacterByPartialText(player1SelectElement, characterName);
+    }
+
+    public void selectCharacter2ByName(String characterName) {
+        selectCharacterByPartialText(player2SelectElement, characterName);
     }
 
 
@@ -59,8 +72,8 @@ public class CombatPage extends BasePage {
     }
 
     public String getWinnerName() {
-        wait.until(ExpectedConditions.visibilityOf(winnerTextElement));
-        WebElement parentParagraph = winnerTextElement.findElement(By.xpath("./.."));
-        return parentParagraph.getText().replace("🎉 O vencedor é:", "").replace("🎉", "").trim();
+        WebDriverWait longWait = new WebDriverWait(driver, Duration.ofSeconds(60));
+        longWait.until(ExpectedConditions.visibilityOf(winnerNameElement));
+        return winnerNameElement.getText();
     }
 }

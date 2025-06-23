@@ -51,6 +51,17 @@ public class CombatUITest extends BaseUITest {
         combatPage = homePage.navigateToCombatPage();
     }
 
+    @Test
+    @DisplayName("Deve iniciar um combate com sucesso com entradas válidas")
+    void shouldStartCombatSuccessfullyWithValidInputs() {
+        combatPage.selectCharacter1ByName(character1Name);
+        combatPage.selectCharacter2ByName(character2Name);
 
+        combatPage.clickStartCombat();
+        String winnerName = combatPage.getWinnerName();
+
+        assertThat(winnerName).isNotBlank();
+        assertThat(winnerName).isIn(character1Name, character2Name);
+    }
 
 }
