@@ -52,6 +52,7 @@ public class CombatUITest extends BaseUITest {
     }
 
     @Test
+    @Tag("UiTest")
     @DisplayName("Deve iniciar um combate com sucesso com entradas válidas")
     void shouldStartCombatSuccessfullyWithValidInputs() {
         combatPage.selectCharacter1ByName(character1Name);
@@ -62,6 +63,21 @@ public class CombatUITest extends BaseUITest {
 
         assertThat(winnerName).isNotBlank();
         assertThat(winnerName).isIn(character1Name, character2Name);
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve navegar de volta para a tela inicial após o combate")
+    void shouldNavigateBackToHomePageAfterCombat() {
+        combatPage.selectCharacter1ByName(character1Name);
+        combatPage.selectCharacter2ByName(character2Name);
+        combatPage.clickStartCombat();
+        combatPage.getWinnerName();
+
+        HomePage newHomePage = combatPage.navigateBackToHome();
+
+        assertThat(newHomePage.isPageLoaded()).isTrue();
+        assertThat(driver.getCurrentUrl()).isEqualTo(baseUrl + "/");
     }
 
 }
