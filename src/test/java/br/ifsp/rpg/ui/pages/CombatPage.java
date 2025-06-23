@@ -25,7 +25,6 @@ public class CombatPage extends BasePage {
     @FindBy(xpath = "//div[@class='combat-result']//strong")
     private WebElement winnerNameElement;
 
-    // --- SELETOR CORRIGIDO PARA O LINK DE VOLTAR ---
     @FindBy(className = "back-home-button")
     private WebElement backToHomeButton;
 

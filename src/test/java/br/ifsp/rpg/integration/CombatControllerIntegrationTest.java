@@ -14,11 +14,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 
 class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
@@ -26,6 +29,22 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
     private String authToken;
     private CharacterDTO player1;
     private CharacterDTO player2;
+
+
+    private CharacterDTO novoPersonagem(String nome) {
+        return new CharacterDTO(
+                null,
+                nome,
+                ClassType.WARRIOR,
+                Race.HUMAN,
+                Weapon.SWORD,
+                100,
+                10,
+                5,
+                8,
+                5
+        );
+    }
 
     @BeforeEach
     void setUpData() throws Exception {
@@ -39,101 +58,117 @@ class CombatControllerIntegrationTest extends BaseApiIntegrationTest {
 
     }
 
-//    @Test
-//    @Tag("ApiTest")
-//    @Tag("IntegrationTest")
-//    @WithMockUser
-//    void deveIniciarCombateComSucesso() throws Exception {
-//        CharacterDTO p1 = novoPersonagem("Player1");
-//        CharacterDTO p2 = novoPersonagem("Player2");
-//
-//        String resp1 = mockMvc.perform(post("/api/characters")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(p1)))
-//                .andReturn().getResponse().getContentAsString();
-//        CharacterDTO created1 = objectMapper.readValue(resp1, CharacterDTO.class);
-//
-//        String resp2 = mockMvc.perform(post("/api/characters")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(p2)))
-//                .andReturn().getResponse().getContentAsString();
-//        CharacterDTO created2 = objectMapper.readValue(resp2, CharacterDTO.class);
-//
-//        CombatRequestDTO combatRequest = new CombatRequestDTO(
-//                created1.id(), 1, created2.id(), 2
-//        );
-//
-//        mockMvc.perform(post("/api/combat")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(combatRequest)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.winnerId").exists())
-//                .andExpect(jsonPath("$.winnerName").exists())
-//                .andExpect(jsonPath("$.turnLogs").isArray());
-//    }
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve iniciar combate com sucesso")
+    void shouldStartCombatSuccessfully() {
+        CharacterDTO created1 = null;
+        try {
+            created1 = createCharacterViaApi(authToken, novoPersonagem("Player1"));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        CharacterDTO created2 = null;
+        try {
+            created2 = createCharacterViaApi(authToken, novoPersonagem("Player2"));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
-//    @Test
-//    @Tag("ApiTest")
-//    @Tag("IntegrationTest")
-//    @WithMockUser
-//    void deveRetornarHistoricoDeCombates() throws Exception {
-//        mockMvc.perform(get("/api/combat/history"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$").isArray());
-//    }
+        CombatRequestDTO combatRequest = new CombatRequestDTO(
+                created1.id(), 1, created2.id(), 2
+        );
 
-//    @Test
-//    @Tag("ApiTest")
-//    @Tag("IntegrationTest")
-//    @WithMockUser
-//    void deveRetornar400QuandoIniciarCombateComPersonagemInvalido() throws Exception {
-//        CombatRequestDTO combatRequest = new CombatRequestDTO(
-//                UUID.randomUUID(), 1, UUID.randomUUID(), 2
-//        );
-//
-//        mockMvc.perform(post("/api/combat")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(combatRequest)))
-//                .andExpect(status().isBadRequest());
-//    }
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(combatRequest)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(200)
+                .body("winnerId", notNullValue())
+                .body("winnerName", notNullValue())
+                .body("turnLogs", notNullValue());
+    }
 
-//    @Test
-//    @Tag("ApiTest")
-//    @Tag("IntegrationTest")
-//    @WithMockUser
-//    void deveRetornar400QuandoIniciarCombateComStrategyInvalida() throws Exception {
-//        CharacterDTO p1 = novoPersonagem("Player1");
-//        CharacterDTO p2 = novoPersonagem("Player2");
-//
-//        String resp1 = mockMvc.perform(post("/api/characters")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(p1)))
-//                .andReturn().getResponse().getContentAsString();
-//        CharacterDTO created1 = objectMapper.readValue(resp1, CharacterDTO.class);
-//
-//        String resp2 = mockMvc.perform(post("/api/characters")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(p2)))
-//                .andReturn().getResponse().getContentAsString();
-//        CharacterDTO created2 = objectMapper.readValue(resp2, CharacterDTO.class);
-//
-//        CombatRequestDTO combatRequest = new CombatRequestDTO(
-//                created1.id(), 99, created2.id(), -1
-//        );
-//
-//        mockMvc.perform(post("/api/combat")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(combatRequest)))
-//                .andExpect(status().isBadRequest());
-//    }
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar histórico de combates")
+    void shouldReturnCombatHistory() {
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .when()
+                .get("/api/combat/history")
+                .then()
+                .statusCode(200)
+                .body("$", isA(List.class));
+    }
 
-//    @Test
-//    @Tag("ApiTest")
-//    @Tag("IntegrationTest")
-//    void deveRetornar401QuandoNaoAutenticado() throws Exception {
-//        mockMvc.perform(get("/api/combat/history"))
-//                .andExpect(status().isUnauthorized());
-//    }
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 400 quando iniciar combate com personagem inválido")
+    void shouldReturn400WhenStartingCombatWithInvalidCharacter() {
+        CombatRequestDTO combatRequest = new CombatRequestDTO(
+                UUID.randomUUID(), 1, UUID.randomUUID(), 2
+        );
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(combatRequest)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(400);
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 400 quando iniciar combate com estratégia inválida")
+    void shouldReturn400WhenStartingCombatWithInvalidStrategy() {
+        CharacterDTO created1 = null;
+        try {
+            created1 = createCharacterViaApi(authToken, novoPersonagem("Player1"));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        CharacterDTO created2 = null;
+        try {
+            created2 = createCharacterViaApi(authToken, novoPersonagem("Player2"));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        CombatRequestDTO combatRequest = new CombatRequestDTO(
+                created1.id(), 99, created2.id(), -1
+        );
+
+        given()
+                .header("Authorization", "Bearer " + authToken)
+                .contentType("application/json")
+                .body(combatRequest)
+                .when()
+                .post("/api/combat")
+                .then()
+                .statusCode(400);
+    }
+
+    @Test
+    @Tag("ApiTest")
+    @Tag("IntegrationTest")
+    @DisplayName("Deve retornar 401 quando não autenticado")
+    void shouldReturn401WhenNotAuthenticated() {
+        given()
+                .when()
+                .get("/api/combat/history")
+                .then()
+                .statusCode(401);
+    }
 
     @Test
     @Tag("ApiTest")
