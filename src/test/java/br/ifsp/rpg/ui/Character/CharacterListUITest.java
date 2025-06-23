@@ -183,4 +183,17 @@ public class CharacterListUITest extends BaseUITest {
         List<WebElement> items = driver.findElements(By.cssSelector(".character-item"));
         assertThat(items.size()).isGreaterThanOrEqualTo(1);
     }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve exibir mensagem quando não houver personagens cadastrados")
+    void shouldShowMessageWhenNoCharactersExist() {
+        driver.get(baseUrl + "/personagens/lista");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".character-list-container")));
+        List<WebElement> items = driver.findElements(By.cssSelector(".character-item"));
+        if (items.isEmpty()) {
+            WebElement infoMsg = driver.findElement(By.cssSelector(".info-message"));
+            assertThat(infoMsg.getText()).contains("Você ainda não criou nenhum personagem");
+        }
+    }
 }
