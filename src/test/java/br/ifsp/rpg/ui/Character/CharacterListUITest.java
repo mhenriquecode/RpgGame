@@ -146,4 +146,17 @@ public class CharacterListUITest extends BaseUITest {
         }
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve exibir mensagem ao buscar personagem inexistente")
+    void shouldShowMessageWhenSearchingNonExistentCharacter() {
+        driver.get(baseUrl + "/personagens/lista");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".character-list-container")));
+
+        WebElement searchInput = driver.findElement(By.cssSelector(".search-input-charlist"));
+        searchInput.sendKeys("NomeQueNaoExiste" + System.currentTimeMillis());
+
+        WebElement infoMsg = driver.findElement(By.cssSelector(".info-message"));
+        assertThat(infoMsg.getText()).contains("Nenhum personagem encontrado");
+    }
 }
