@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class CombatHistoryPage extends BasePage {
 
-    @FindBy(xpath = "//h1[text()='Histórico de Combates']")
+    @FindBy(xpath = "//h2[contains(text(), 'Histórico de Combates')]")
     private WebElement pageTitle;
 
     @FindBy(className = "history-list")

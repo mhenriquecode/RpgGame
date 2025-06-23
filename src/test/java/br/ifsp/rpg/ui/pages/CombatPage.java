@@ -78,6 +78,8 @@ public class CombatPage extends BasePage {
     public CombatHistoryPage navigateToCombatHistory() {
         wait.until(ExpectedConditions.elementToBeClickable(viewCombatHistoryButton));
         viewCombatHistoryButton.click();
+        wait.until(ExpectedConditions.urlContains("/historico-combates"));
+
         return new CombatHistoryPage(driver, wait);
     }
 }

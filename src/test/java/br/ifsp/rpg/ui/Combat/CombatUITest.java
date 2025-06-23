@@ -80,4 +80,19 @@ public class CombatUITest extends BaseUITest {
         assertThat(driver.getCurrentUrl()).isEqualTo(baseUrl + "/");
     }
 
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Deve navegar para a tela de Histórico de Combate após o combate")
+    void shouldNavigateToCombatHistoryPageAfterCombat() {
+        combatPage.selectCharacter1ByName(character1Name);
+        combatPage.selectCharacter2ByName(character2Name);
+        combatPage.clickStartCombat();
+        combatPage.getWinnerName();
+
+        CombatHistoryPage historyPage = combatPage.navigateToCombatHistory();
+
+        assertThat(historyPage.isPageLoaded()).isTrue();
+        assertThat(driver.getCurrentUrl()).endsWith("/historico-combates");
+    }
+
 }
