@@ -15,7 +15,7 @@ import org.openqa.selenium.WebElement;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CharacterCreateFormResponsivenessIT extends BaseUITest {
+public class CharacterCreateFormResponsiveness extends BaseUITest {
 
     private Faker faker;
     private String email;
@@ -61,5 +61,15 @@ public class CharacterCreateFormResponsivenessIT extends BaseUITest {
         assertThat(driver.findElement(By.id("race")).isDisplayed()).isTrue();
         assertThat(driver.findElement(By.id("classType")).isDisplayed()).isTrue();
         assertThat(driver.findElement(By.id("weapon")).isDisplayed()).isTrue();
+    }
+
+    @Test
+    @Tag("UiTest")
+    @DisplayName("Formulário deve ser exibido corretamente em tela de tablet")
+    void shouldDisplayFormCorrectlyOnTablet() {
+        driver.manage().window().setSize(new Dimension(768, 1024));
+        driver.get(baseUrl + "/personagens/criar");
+        WebElement formContainer = driver.findElement(By.cssSelector(".character-form-container"));
+        assertThat(formContainer.isDisplayed()).isTrue();
     }
 }
